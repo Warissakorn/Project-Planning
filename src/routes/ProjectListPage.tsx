@@ -5,10 +5,12 @@ import {
   Copy,
   FileUp,
   FolderKanban,
+  Lightbulb,
   Pencil,
   Plus,
   Trash2,
 } from 'lucide-react'
+import { SAMPLE_PROJECTS } from '../model/samples'
 import type { ID } from '../model/types'
 import { useAppStore, storageUsageBytes } from '../state/store'
 import { translate, useT } from '../lib/i18n'
@@ -72,6 +74,14 @@ export function ProjectListPage() {
     'newer-version': t('importErrNewerVersion'),
   }
 
+  // Samples use fixed ids, so re-clicking never duplicates them.
+  const allSamplesLoaded = SAMPLE_PROJECTS.every((s) => !!projects[s.id])
+  const loadSamples = () => {
+    for (const sample of SAMPLE_PROJECTS) {
+      if (!projects[sample.id]) addImportedProject(sample.build())
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-5xl p-6">
@@ -103,6 +113,16 @@ export function ProjectListPage() {
             >
               <FileUp size={15} />
               {t('importJson')}
+            </Button>
+            <Button
+              variant="ghost"
+              disabled={allSamplesLoaded}
+              onClick={loadSamples}
+              title={t('loadSamples')}
+              className="shrink-0"
+            >
+              <Lightbulb size={15} />
+              {t('loadSamples')}
             </Button>
             <input
               ref={fileInputRef}

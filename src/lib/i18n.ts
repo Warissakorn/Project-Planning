@@ -37,6 +37,7 @@ const th = {
   tasksCount: '{n} งาน',
   storageUsage: 'พื้นที่จัดเก็บ: {size}',
   storageWarning: 'พื้นที่ใกล้เต็ม — แนะนำส่งออกไฟล์ JSON เก็บไว้',
+  loadSamples: 'โหลดตัวอย่าง 5 โปรเจ็ค',
 
   // workspace header
   undo: 'Undo',
@@ -154,6 +155,7 @@ const en: Record<CopyKey, string> = {
   tasksCount: '{n} tasks',
   storageUsage: 'Storage: {size}',
   storageWarning: 'Storage is nearly full — consider exporting a JSON backup',
+  loadSamples: 'Load 5 sample projects',
 
   undo: 'Undo',
   redo: 'Redo',
