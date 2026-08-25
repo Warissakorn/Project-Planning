@@ -33,7 +33,7 @@ export function Modal({
         if (e.target === e.currentTarget) onClose()
       }}
     >
-      <div className={`w-full ${width} rounded-xl bg-white shadow-xl`}>
+      <div role="dialog" aria-modal="true" className={`w-full ${width} rounded-xl bg-white shadow-xl`}>
         {title ? (
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
             <h2 className="text-sm font-semibold text-slate-800">{title}</h2>
