@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มือ Breakdown Planner</title>
+<meta name="description" content="คู่มือการใช้งานภาษาไทยฉบับสมบูรณ์: WBS / OBS / CBS / RBS / PBS, Gantt Chart และ Critical Path พร้อม 5 โปรเจ็คตัวอย่าง">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600;700&display=swap">
+<style>
+/* ---------- tokens ---------- */
+:root {
+  --paper: #f6f7fb;
+  --surface: #ffffff;
+  --ink: #1b2337;
+  --muted: #5d6880;
+  --line: #dde1ee;
+  --accent: #4f46e5;
+  --accent-ink: #ffffff;
+  --accent-soft: #eceefe;
+  --critical: #dc2626;
+  --done: #059669;
+  --warn: #b45309;
+  --warn-soft: #fdf3e3;
+  --tip-soft: #eceefe;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12151f;
+    --surface: #191e2d;
+    --ink: #e7eaf5;
+    --muted: #99a2be;
+    --line: #2c3348;
+    --accent: #8f97fa;
+    --accent-ink: #14172a;
+    --accent-soft: #252c48;
+    --critical: #f07171;
+    --done: #3ecfa0;
+    --warn: #e0a34e;
+    --warn-soft: #2b2417;
+    --tip-soft: #232a45;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12151f;
+  --surface: #191e2d;
+  --ink: #e7eaf5;
+  --muted: #99a2be;
+  --line: #2c3348;
+  --accent: #8f97fa;
+  --accent-ink: #14172a;
+  --accent-soft: #252c48;
+  --critical: #f07171;
+  --done: #3ecfa0;
+  --warn: #e0a34e;
+  --warn-soft: #2b2417;
+  --tip-soft: #232a45;
+}
+
+/* ---------- base ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+a { color: var(--accent); text-decoration: none; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { font-family: "Chakra Petch", "Sarabun", sans-serif; text-wrap: balance; }
+
+/* ---------- header ---------- */
+.masthead { padding: 56px 0 40px; }
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.masthead h1 {
+  margin: 10px 0 6px;
+  font-size: clamp(30px, 4.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.masthead h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.lede { max-width: 62ch; color: var(--muted); font-size: 17px; margin: 8px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--surface);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+/* gantt motif strip */
+.motif { margin-top: 28px; overflow-x: auto; }
+.motif svg { display: block; width: min(100%, 720px); height: auto; }
+
+/* ---------- layout ---------- */
+.shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; align-items: start; padding-bottom: 96px; }
+@media (max-width: 1079px) { .shell { grid-template-columns: 1fr; gap: 0; } }
+.toc { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; }
+@media (max-width: 1079px) { .toc { display: none; } }
+.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: ch; }
+.toc li { counter-increment: ch; }
+.toc a {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 6px 12px 6px 0;
+  color: var(--muted); font-size: 14px; line-height: 1.45;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+}
+.toc a::before {
+  content: counter(ch, decimal-leading-zero);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px; color: var(--muted); opacity: 0.7;
+}
+.toc a:hover { color: var(--ink); border-left-color: var(--line); }
+.toc-title { margin: 0 0 10px; padding-left: 14px; }
+
+.mobile-toc { display: none; }
+@media (max-width: 1079px) {
+  .mobile-toc { display: block; margin-bottom: 32px; }
+  .mobile-toc summary {
+    cursor: pointer; font-family: "Chakra Petch", sans-serif; font-weight: 600;
+    padding: 10px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  }
+  .mobile-toc ol { margin: 8px 0 0; padding: 0 0 0 8px; list-style: none; }
+  .mobile-toc a { display: block; padding: 5px 8px; color: var(--muted); }
+}
+
+/* ---------- chapters ---------- */
+.chapter { padding-top: 44px; border-top: 1px solid var(--line); margin-top: 44px; }
+.chapter:first-of-type { border-top: 0; margin-top: 0; padding-top: 8px; }
+.ch-no {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px; letter-spacing: 0.18em;
+  color: var(--accent); text-transform: uppercase;
+}
+.chapter h2 { margin: 6px 0 18px; font-size: clamp(22px, 3vw, 28px); font-weight: 600; }
+.chapter h3 { margin: 26px 0 8px; font-size: 17.5px; font-weight: 600; }
+.prose > p { max-width: 70ch; margin: 10px 0; }
+.prose ul, .prose ol { max-width: 70ch; padding-left: 22px; margin: 10px 0; }
+.prose li { margin: 4px 0; }
+strong { font-weight: 700; }
+
+/* ---------- components ---------- */
+.tbl-scroll { overflow-x: auto; margin: 16px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px; }
+th {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-align: left; color: var(--muted); font-weight: 500;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+td { padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td b, td strong { font-weight: 600; }
+.num { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+.kbd {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  white-space: nowrap;
+}
+code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.86em;
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.callout {
+  max-width: 74ch;
+  margin: 18px 0;
+  padding: 13px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--tip-soft);
+  font-size: 15px;
+}
+.callout.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.callout .tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  display: block; margin-bottom: 3px; color: var(--muted); font-weight: 500;
+}
+.callout.warn .tag { color: var(--warn); }
+.callout p { margin: 4px 0; }
+
+.steps { counter-reset: step; list-style: none; padding-left: 0; }
+.steps li { counter-increment: step; position: relative; padding-left: 42px; margin: 12px 0; max-width: 68ch; }
+.steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 2px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 13px;
+  color: var(--accent); border: 1.5px solid var(--accent); border-radius: 50%;
+}
+
+.legend { margin: 20px 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+.legend svg { display: block; width: 100%; min-width: 560px; height: auto; }
+.legend figcaption { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color: var(--muted); font-size: 13.5px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <span class="eyebrow">คู่มือการใช้งาน · Manual · v0.1</span>
+    <h1>Breakdown Planner<br><em>วางแผนโปรเจ็คแบบแตกโครงสร้าง</em></h1>
+    <p class="lede">WBS · OBS · CBS · RBS · PBS ในโปรเจ็คเดียว พร้อม Gantt Chart, Critical Path
+    และ Cross-links — ทำงานในเบราว์เซอร์ทั้งหมด ไม่มี server ไม่มี login</p>
+    <div class="chips">
+      <span class="chip"><b>TH / EN</b> สลับภาษาได้</span>
+      <span class="chip"><b>Offline-first</b> localStorage</span>
+      <span class="chip"><b>Undo 50 steps</b></span>
+      <span class="chip"><b>JSON / CSV export</b></span>
+    </div>
+    <div class="motif" aria-hidden="true">
+      <svg viewBox="0 0 720 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="720" height="54" rx="8" fill="var(--accent-soft)"/>
+        <rect x="36" y="12" width="150" height="9" rx="4.5" fill="var(--accent)" opacity="0.85"/>
+        <rect x="196" y="12" width="90" height="9" rx="4.5" fill="var(--critical)"/>
+        <rect x="296" y="12" width="200" height="9" rx="4.5" fill="var(--accent)" opacity="0.55"/>
+        <rect x="506" y="12" width="60" height="9" rx="4.5" fill="var(--critical)"/>
+        <rect x="120" y="31" width="180" height="9" rx="4.5" fill="var(--accent)" opacity="0.35"/>
+        <path d="M310 27 L316 21 L322 27 L316 33 Z" fill="#f59e0b"/>
+        <rect x="420" y="31" width="110" height="9" rx="4.5" fill="var(--accent)" opacity="0.35"/>
+        <line x1="480" y1="4" x2="480" y2="50" stroke="var(--critical)" stroke-width="1.6" stroke-dasharray="3 3"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="wrap shell">
+  <nav class="toc" aria-label="สารบัญ">
+    <p class="toc-title eyebrow">สารบัญ</p>
+    <ol>
+      <li><a href="#ch1">ภาพรวม</a></li>
+      <li><a href="#ch2">เริ่มต้นใน 3 นาที</a></li>
+      <li><a href="#ch3">แนวคิดหลักที่ต้องรู้</a></li>
+      <li><a href="#ch4">สร้างและจัดโครงสร้างงาน</a></li>
+      <li><a href="#ch5">กำหนดการและต้นทุน</a></li>
+      <li><a href="#ch6">Dependencies</a></li>
+      <li><a href="#ch7">Gantt &amp; Critical Path</a></li>
+      <li><a href="#ch8">เชื่อมโยงข้ามโครงสร้าง</a></li>
+      <li><a href="#ch9">Undo · Export · Import</a></li>
+      <li><a href="#ch10">ใช้จริงได้แค่ไหน?</a></li>
+      <li><a href="#ch11">5 โปรเจ็คตัวอย่าง</a></li>
+      <li><a href="#ch12">คำถามที่พบบ่อย</a></li>
+    </ol>
+  </nav>
+
+  <main class="prose">
+    <details class="mobile-toc">
+      <summary>สารบัญ — 12 บท</summary>
+      <ol>
+        <li><a href="#ch1">ภาพรวม</a></li>
+        <li><a href="#ch2">เริ่มต้นใน 3 นาที</a></li>
+        <li><a href="#ch3">แนวคิดหลักที่ต้องรู้</a></li>
+        <li><a href="#ch4">สร้างและจัดโครงสร้างงาน</a></li>
+        <li><a href="#ch5">กำหนดการและต้นทุน</a></li>
+        <li><a href="#ch6">Dependencies</a></li>
+        <li><a href="#ch7">Gantt &amp; Critical Path</a></li>
+        <li><a href="#ch8">เชื่อมโยงข้ามโครงสร้าง</a></li>
+        <li><a href="#ch9">Undo · Export · Import</a></li>
+        <li><a href="#ch10">ใช้จริงได้แค่ไหน?</a></li>
+        <li><a href="#ch11">5 โปรเจ็คตัวอย่าง</a></li>
+        <li><a href="#ch12">คำถามที่พบบ่อย</a></li>
+      </ol>
+    </details>
+
+    <!-- ============ 1 ============ -->
+    <section class="chapter" id="ch1">
+      <span class="ch-no">บทที่ 01</span>
+      <h2>ภาพรวม</h2>
+      <p>Breakdown Planner ยึดหลัก <strong>Breakdown Structure</strong> — การ "หัก" งานใหญ่ออกเป็นงานย่อยจนชัดเจน
+      ตามแนวทางมาตรฐานของงานบริหารโปรเจ็ค (PMBOK) โปรเจ็คหนึ่งอันมีได้หลายโครงสร้างพร้อมกัน:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ประเภท</th><th>ชื่อเต็ม</th><th>ใช้ทำอะไร</th></tr></thead>
+        <tbody>
+          <tr><td><b>WBS</b></td><td>Work Breakdown Structure</td><td>แตกงาน + กำหนดการ + ต้นทุน — หัวใจของแอป</td></tr>
+          <tr><td><b>OBS</b></td><td>Organizational Breakdown Structure</td><td>ใคร / หน่วยงานใดรับผิดชอบงานไหน</td></tr>
+          <tr><td><b>CBS</b></td><td>Cost Breakdown Structure</td><td>ต้นทุนอยู่หมวดไหน รวมเท่าไร</td></tr>
+          <tr><td><b>RBS</b></td><td>Risk Breakdown Structure</td><td>ทะเบียนความเสี่ยง: โอกาสเกิด × ผลกระทบ</td></tr>
+          <tr><td><b>PBS</b></td><td>Product Breakdown Structure</td><td>ผลผลิต / โมดูลที่ต้องส่งมอบ</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>จุดเด่น:</strong> tree editor ตัวเดียวใช้ได้ทุกโครงสร้าง (ลากวาง, เลื่อนระดับ,
+      เลขลำดับอัตโนมัติ 1 / 1.1 / 1.1.1) · dependency FS/SS/FF/SF กันวงจรอัตโนมัติ ·
+      Gantt วาด critical path สีแดงพร้อม slack · เชื่อม WBS→OBS/CBS แล้ว roll-up ย้อนกลับได้ ·
+      Undo/Redo, Export JSON/CSV, Import JSON และสลับภาษาไทย–อังกฤษได้ทุกหน้าจอ</p>
+      <div class="callout">
+        <span class="tag">เหมาะกับ</span>
+        <p>โปรเจ็คขนาดเล็ก–กลาง, ทีมเล็ก/งานส่วนตัว, และการเรียนรู้ WBS–Gantt–CPM
+        อย่างเป็นรูปธรรม — ส่วนกรอบที่ควรรู้ก่อนใช้จริง อ่านใน<a href="#ch10">บทที่ 10</a></p>
+      </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="chapter" id="ch2">
+      <span class="ch-no">บทที่ 02</span>
+      <h2>เริ่มต้นใน 3 นาที</h2>
+      <h3>สร้างโปรเจ็คใหม่</h3>
+      <ol class="steps">
+        <li>เปิดแอป — หน้าแรกคือรายการโปรเจ็คของคุณ</li>
+        <li>พิมพ์ชื่อ เช่น <code>โครงการต่ออาคารสำนักงาน</code> → กด <strong>สร้างโปรเจ็คใหม่</strong></li>
+        <li>แอปพาเข้า Workspace พร้อมแท็บ WBS ที่มีรากโครงสร้างชื่อเดียวกับโปรเจ็ครออยู่ — กด <strong>เพิ่มรายการย่อย</strong> เริ่มแตกงานได้เลย</li>
+      </ol>
+      <h3>หรือลองจากตัวอย่างสำเร็จรูป</h3>
+      <p>กดปุ่ม <strong>โหลดตัวอย่าง 5 โปรเจ็ค</strong> ในหน้าแรก จะได้โปรเจ็คครบ 5 สไตล์
+      พร้อมวันที่ ความคืบหน้า dependency และ critical path เรียบร้อย (รายละเอียดใน
+      <a href="#ch11">บทที่ 11</a>) — กดซ้ำไม่เกิดตัวอย่างซ้อน เพราะ id ตายตัว</p>
+      <h3>แก้ไขชื่องาน</h3>
+      <p>ดับเบิลคลิกที่ชื่อในตารางเพื่อแก้ไข · <span class="kbd">Enter</span> บันทึก ·
+      <span class="kbd">Esc</span> ยกเลิก</p>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="chapter" id="ch3">
+      <span class="ch-no">บทที่ 03</span>
+      <h2>แนวคิดหลักที่ต้องรู้ก่อน</h2>
+      <h3>งานปลายสุด (leaf) คือ source of truth</h3>
+      <p>กฎที่สำคัญที่สุด — ข้อมูลจริงกรอกที่<strong>งานไม่มีลูก</strong>เท่านั้น ส่วนงานแม่ทุกค่าถูกคำนวณ:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ค่า</th><th>งานปลายสุด</th><th>งานแม่ (มีลูก)</th></tr></thead>
+        <tbody>
+          <tr><td>วันเริ่ม / ระยะเวลา</td><td>✏️ กรอกเอง</td><td>🔒 span ของลูก (min start – max end)</td></tr>
+          <tr><td>% ความคืบหน้า</td><td>✏️ กรอกเอง</td><td>🔒 เฉลี่ยถ่วงน้ำหนักตามระยะเวลาลูก</td></tr>
+          <tr><td>สถานะ</td><td>✏️ เลือกเอง</td><td>🔒 อนุพันธ์จาก progress</td></tr>
+          <tr><td>ต้นทุน</td><td>✏️ กรอกเอง</td><td>🔒 ผลรวมของลูกทุกระดับ</td></tr>
+        </tbody>
+      </table></div>
+      <p>แก้ที่ปลายสุดครั้งเดียว งานแม่ทุกระดับอัปเดตทันที — ไม่มีปุ่ม refresh</p>
+      <h3>เลขลำดับคำนวณสด</h3>
+      <p>เลข 1, 1.1, 1.1.1 คำนวณจากตำแหน่งจริงในต้นไม้ทุกครั้งที่ render —
+      ลากย้ายไปไหนเลขก็ถูกเสมอ เพราะไม่เคยถูกเก็บลงฐานข้อมูลตั้งแต่แรก</p>
+      <h3>แท็บ = หนึ่งโครงสร้าง</h3>
+      <p>เพิ่มโครงสร้างใหม่ด้วยปุ่ม <strong>+ เพิ่มโครงสร้าง</strong> ปลายแถบแท็บ ·
+      ดับเบิลคลิกแท็บเพื่อเปลี่ยนชื่อ · ปุ่ม × บนแท็บที่เปิดอยู่คือลบ
+      (ลบโครงสร้าง = ลบทุก node ภายใน มี dialog ยืนยัน)</p>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="chapter" id="ch4">
+      <span class="ch-no">บทที่ 04</span>
+      <h2>สร้างและจัดโครงสร้างงาน</h2>
+      <h3>Toolbar เหนือตาราง</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ปุ่ม</th><th>ผล</th></tr></thead>
+        <tbody>
+          <tr><td><b>เพิ่มรายการย่อย</b></td><td>เพิ่ม node ลูกใต้แถวที่เลือก (ไม่เลือก = ลงใต้ราก)</td></tr>
+          <tr><td><b>เพิ่มรายการข้างเคียง</b></td><td>เพิ่ม node ระดับเดียวกัน ถัดจากแถวที่เลือก</td></tr>
+          <tr><td><span class="kbd">⇥</span> / <span class="kbd">⇤</span></td><td>Indent / Outdent — เลื่อนระดับซ้าย–ขวา</td></tr>
+          <tr><td><b>พับ / กางทั้งหมด</b></td><td>Collapse / expand ทุก branch พร้อมกัน</td></tr>
+          <tr><td><b>ลบ</b></td><td>ลบแถวที่เลือกพร้อมลูกทั้งหมด (มี dialog ยืนยัน)</td></tr>
+          <tr><td><b>📋 / 📊</b></td><td>สลับมุมมอง ตาราง ↔ Gantt (เฉพาะโครงสร้างที่มี scheduling เช่น WBS)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>ลากวาง</h3>
+      <p>จับที่ handle จุด ๆ ด้านหน้าชื่อ แล้วลากไปวาง:</p>
+      <ul>
+        <li>ปล่อยบน<strong>ส่วนบน</strong>ของแถวเป้าหมาย = วาง<strong>ก่อน</strong>แถวนั้น</li>
+        <li>ปล่อยบน<strong>ส่วนล่าง</strong> = วาง<strong>หลัง</strong>แถวนั้น</li>
+        <li>ปล่อยตรง<strong>กลางแถว</strong> = วาง<strong>ใน</strong> เป็นลูกของแถวนั้น</li>
+      </ul>
+      <p>ระบบกันลาก node ไปใส่ subtree ของตัวเอง — tree วนกลับตัวไม่ได้</p>
+      <h3>คีย์บอร์ด</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ปุ่ม</th><th>ผล</th></tr></thead>
+        <tbody>
+          <tr><td><span class="kbd">↑</span> <span class="kbd">↓</span></td><td>เลื่อน selection ขึ้น–ลง</td></tr>
+          <tr><td><span class="kbd">Home</span> / <span class="kbd">End</span></td><td>ไปแถวแรก / แถวสุดท้าย</td></tr>
+          <tr><td><span class="kbd">→</span></td><td>กาง branch ที่พับอยู่ / ลงไปหาลูกตัวแรก</td></tr>
+          <tr><td><span class="kbd">←</span></td><td>พับ branch / ขึ้นไปหางานแม่</td></tr>
+          <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span></td><td>Undo / Redo</td></tr>
+        </tbody>
+      </table></div>
+      <p>แถวที่เลือก scroll ตามอัตโนมัติ</p>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="chapter" id="ch5">
+      <span class="ch-no">บทที่ 05</span>
+      <h2>กำหนดการ ความคืบหน้า และต้นทุน</h2>
+      <p>คลิกแถวใดก็ได้ → แผง Inspector ด้านขวาแสดงรายละเอียดตามชนิดโครงสร้าง:</p>
+      <ul>
+        <li><strong>WBS leaf</strong> — วันเริ่ม, ระยะเวลา (วัน), checkbox <strong>Milestone</strong>
+        (งานจุดสำคัญ 0 วัน แสดง ◆ ใน Gantt), % ความคืบหน้า, สถานะ (รอทำ / กำลังทำ / เสร็จสิ้น), ต้นทุน</li>
+        <li><strong>WBS parent</strong> — ค่าอนุพันธ์แบบ read-only พร้อม badge สถานะ</li>
+        <li><strong>OBS</strong> — ผู้รับผิดชอบ · <strong>CBS</strong> — งบประมาณ ·
+        <strong>RBS</strong> — โอกาสเกิด (%), ผลกระทบ (low/medium/high), แผนรับมือ ·
+        <strong>PBS</strong> — เวอร์ชัน</li>
+        <li>ทุก node มี <strong>โน้ต</strong> สำหรับรายละเอียดเพิ่ม</li>
+      </ul>
+      <div class="callout">
+        <span class="tag">เคล็ดลับ</span>
+        <p>คอลัมน์ในตารางแก้ตรงจุดได้เหมือน Excel — คลิกเซลล์แล้วพิมพ์ทันที</p>
+      </div>
+      <p>แถบล่างสุดของจอ (StatusBar) เตือนจำนวนงานที่ยังไม่มีวันเริ่ม/ระยะเวลา
+      และแสดงขนาดพื้นที่จัดเก็บที่ใช้</p>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="chapter" id="ch6">
+      <span class="ch-no">บทที่ 06</span>
+      <h2>ความสัมพันธ์ระหว่างงาน (Dependencies)</h2>
+      <p>เพิ่มได้ใน Inspector ของ leaf ใน WBS — กด <strong>+ เพิ่มความสัมพันธ์</strong>
+      เลือกงานก่อนหน้า (predecessor) แล้วตั้งประเภท + lag (วัน, ติดลบได้):</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ประเภท</th><th>ชื่อ</th><th>ความหมาย</th></tr></thead>
+        <tbody>
+          <tr><td><b>FS</b></td><td>Finish-to-Start</td><td>งานก่อน<b>เสร็จ</b>แล้วงานหลังค่อย<b>เริ่ม</b> — พบบ่อยที่สุด</td></tr>
+          <tr><td><b>SS</b></td><td>Start-to-Start</td><td>เริ่มพร้อมกัน (+lag = เริ่มตามหลัง lag วัน)</td></tr>
+          <tr><td><b>FF</b></td><td>Finish-to-Finish</td><td>เสร็จพร้อมกัน</td></tr>
+          <tr><td><b>SF</b></td><td>Start-to-Finish</td><td>เริ่มงานก่อนแล้วงานหลังถึงเสร็จ — พบน้อย</td></tr>
+        </tbody>
+      </table></div>
+      <p>ระบบบังคับกฎให้อัตโนมัติ พร้อมข้อความเตือนภาษาไทย:</p>
+      <ul>
+        <li>❌ ห้ามวนกลับตัวเองหรือสร้าง cycle — ตรวจทั้ง subtree ก่อนยอมรับ</li>
+        <li>❌ ห้าม edge ซ้ำเดิม</li>
+        <li>❌ เลือกได้เฉพาะ leaf ที่กำหนดการได้ และต้องอยู่โครงสร้างเดียวกัน</li>
+      </ul>
+      <p>Dependency คือ input ของ CPM ที่ใช้วาด critical path ในบทถัดไป</p>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="chapter" id="ch7">
+      <span class="ch-no">บทที่ 07</span>
+      <h2>Gantt Chart และ Critical Path</h2>
+      <p>สลับมุมมองด้วยปุ่ม 📊 — แถวชื่อฝั่งซ้าย sync กับต้นไม้ทุกแถว รวม branch ที่พับอยู่:
+      zoom รายวัน / รายสัปดาห์ / รายเดือน และ hover bar เพื่อดูลงวันที่ + slack</p>
+      <figure class="legend">
+        <svg viewBox="0 0 640 168" role="img" aria-label="ตัวอย่าง Gantt: bar ปกติ, bar critical, milestone, today marker">
+          <!-- grid days -->
+          <g stroke="var(--line)" stroke-width="1">
+            <line x1="170" y1="8" x2="170" y2="160"/><line x1="230" y1="8" x2="230" y2="160"/>
+            <line x1="290" y1="8" x2="290" y2="160"/><line x1="350" y1="8" x2="350" y2="160"/>
+            <line x1="410" y1="8" x2="410" y2="160"/><line x1="470" y1="8" x2="470" y2="160"/>
+            <line x1="530" y1="8" x2="530" y2="160"/><line x1="590" y1="8" x2="590" y2="160"/>
+          </g>
+          <!-- today marker -->
+          <line x1="380" y1="4" x2="380" y2="164" stroke="var(--critical)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="386" y="14" font-size="10" fill="var(--critical)" font-family="Sarabun,sans-serif">วันนี้</text>
+          <!-- row 1: normal task -->
+          <text x="10" y="41" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">งานปกติ</text>
+          <rect x="170" y="30" width="120" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
+          <!-- row 2: critical chain -->
+          <text x="10" y="73" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">Critical (slack ≤ 0)</text>
+          <rect x="230" y="62" width="90" height="14" rx="7" fill="var(--critical)"/>
+          <rect x="330" y="62" width="80" height="14" rx="7" fill="var(--critical)"/>
+          <rect x="420" y="62" width="110" height="14" rx="7" fill="var(--critical)"/>
+          <path d="M320 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
+          <path d="M410 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
+          <!-- row 3: slack float -->
+          <text x="10" y="105" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">มี slack (เผื่อวัน)</text>
+          <rect x="290" y="94" width="80" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
+          <rect x="370" y="98" width="70" height="6" rx="3" fill="var(--line)"/>
+          <text x="446" y="106" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">← แถบจาง = slack</text>
+          <!-- row 4: milestone + parent span -->
+          <text x="10" y="137" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">Milestone / span</text>
+          <path d="M540 123 L548 130 L540 137 L532 130 Z" fill="#f59e0b"/>
+          <text x="556" y="134" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">◆ 0 วัน</text>
+          <rect x="170" y="146" width="360" height="9" rx="4.5" fill="var(--accent)" opacity="0.3"/>
+          <text x="536" y="155" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">งานแม่ = span</text>
+        </svg>
+        <figcaption>ธาตุที่พบใน Gantt: bar ปกติ (indigo), critical path (แดง — งานสายแม้วันเดียว
+        โครงการเลยแผน), แถบจางคือ slack, milestone ◆ สีเหลือง, เส้นประแดงคือ today marker,
+        และแถวงานแม่แสดง span รวมของลูก</figcaption>
+      </figure>
+      <div class="callout warn">
+        <span class="tag">หลักการสำคัญ</span>
+        <p>ตำแหน่ง bar มาจาก forward pass ของ network (dependency) โดย "วันเริ่ม" ที่กรอก
+        ทำหน้าที่เป็น pin — ถ้า constraint บังคับให้เริ่มช้ากว่า pin ระบบใช้วัน constraint
+        งานที่ยังไม่ใส่วันที่จะเป็นแถวว่าง (StatusBar จะเตือน)</p>
+      </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="chapter" id="ch8">
+      <span class="ch-no">บทที่ 08</span>
+      <h2>เชื่อมโยงข้ามโครงสร้าง (Links)</h2>
+      <p>หัวใจของการวางแผนหลายโครงสร้าง — เชื่อมจาก Inspector ของ node ใน WBS:</p>
+      <ul>
+        <li><strong>🏢 มอบหมายให้หน่วยงาน (assigns)</strong> — WBS → OBS: งานนี้ใครทำ</li>
+        <li><strong>🪙 ผูกต้นทุนกับหมวด (charges)</strong> — WBS → CBS: เงินงานนี้เข้าหมวดไหน</li>
+      </ul>
+      <p>ฝั่งรับ (เปิดแท็บ OBS/CBS แล้วคลิก node) จะเห็น inbound links แบบ roll-up สด:
+      "n งานที่เชื่อมโยง" และ "ต้นทุนรวม x" — เช่น คลิกหมวด "ค่าวัสดุ" แล้วเห็นว่างานเสาเข็มและฐานราก
+      ผูกเข้ามารวมกันเท่าไร</p>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="chapter" id="ch9">
+      <span class="ch-no">บทที่ 09</span>
+      <h2>Undo, Export และ Import</h2>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ฟีเจอร์</th><th>วิธีใช้</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Undo / Redo</b></td>
+            <td><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> /
+            <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">Z</span> หรือ
+            <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> — stack ลึก 50 ชั้น ครอบคลุมทุก action</td>
+          </tr>
+          <tr><td><b>Export JSON</b></td><td>Header → ส่งออก → Export JSON — backup ทั้งโปรเจ็ค มี schemaVersion สำหรับ migration</td></tr>
+          <tr><td><b>Export CSV</b></td><td>Header → ส่งออก → Export CSV — เฉพาะแท็บที่เปิด, มี BOM UTF-8 (Excel อ่านไทยถูก), มีคอลัมน์ Code / Level / ค่า roll-up</td></tr>
+          <tr><td><b>Import JSON</b></td><td>หน้าแรก → นำเข้า JSON — validate 3 กรณี: JSON พัง / ไม่ใช่ไฟล์แอปนี้ / เวอร์ชันใหม่กว่า — แจ้ง error เป็นภาษาไทย</td></tr>
+        </tbody>
+      </table></div>
+      <p>Import โปรเจ็คที่ id ชนกับของเดิม → ระบบตั้ง id ใหม่ให้เอง สองโปรเจ็คอยู่ร่วมกันได้</p>
+      <div class="callout warn">
+        <span class="tag">สำคัญ</span>
+        <p>ข้อมูลทั้งหมดอยู่ใน localStorage ของ browser เครื่องนี้เท่านั้น — ล้าง site data
+        หรือสลับ browser คือข้อมูลไม่ติดไปด้วย Export JSON เก็บไว้เป็นระยะคือ backup ที่ดีที่สุด</p>
+      </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="chapter" id="ch10">
+      <span class="ch-no">บทที่ 10</span>
+      <h2>แอปนี้ควบคุมงานได้จริงแค่ไหน?</h2>
+      <h3>✅ ใช้ได้ดีกับ</h3>
+      <ul>
+        <li>โปรเจ็คเล็ก–กลาง (หลักร้อย tasks) ที่ planner คนเดียวดูแลแผน</li>
+        <li>งานที่ต้องพิสูจน์ scope: ก่อสร้าง, software, event, campaign, ที่ปรึกษา, ย้ายที่ทำการ</li>
+        <li>การสอน PM fundamentals — WBS, dependency, CPM, cost roll-up ในที่เดียว</li>
+        <li>ข้อมูล confidential / สภาพแวดล้อม offline — ไม่มี byte ไหนออก internet</li>
+      </ul>
+      <h3>⚠️ กรอบที่ควรรู้ก่อนใช้</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>ข้อจำกัด</th><th>ผลต่อการใช้งาน</th></tr></thead>
+        <tbody>
+          <tr><td>ไม่มี backend / account</td><td>ไม่มี sharing หรือ collab real-time — ข้อมูลอยู่เฉพาะเครื่อง + browser นั้น</td></tr>
+          <tr><td>Calendar แบบ consecutive days</td><td>เสาร์–อาทิตย์ / วันหยุดนับเป็นวันทำงาน — ระยะเวลาจริงยาวกว่าที่เห็น</td></tr>
+          <tr><td>ไม่มี resource leveling / baseline</td><td>กัน over-allocation ไม่ได้, เทียบ plan vs actual ยังไม่มี</td></tr>
+          <tr><td>Storage ~5 MB</td><td>พอหลักร้อย–พัน nodes; เกินแล้ว StatusBar เตือนสีแดง</td></tr>
+          <tr><td>CSV เฉพาะ export</td><td>ยัง import CSV ไม่ได้ — import ได้เฉพาะ JSON ของแอป</td></tr>
+          <tr><td>Type preset ตายตัว 5 แบบ</td><td>UI สร้าง custom structure type ยังไม่เปิด</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout">
+        <span class="tag">สรุป</span>
+        <p>ในฐานะเครื่องมือวางแผนส่วนบุคคลและสื่อการสอน — <strong>ครบเครื่องและควบคุมได้จริง</strong>·
+        ในฐานะ enterprise suite ที่ต้อง collab + resource management — ยังไม่ใช่ และไม่ได้ตั้งใจจะเป็น</p>
+      </div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="chapter" id="ch11">
+      <span class="ch-no">บทที่ 11</span>
+      <h2>5 โปรเจ็คตัวอย่างเพื่อการเรียนรู้</h2>
+      <p>กด <strong>โหลดตัวอย่าง 5 โปรเจ็ค</strong> ในหน้าแรก — แต่ละอันสอน feature ต่างกัน:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>#</th><th>ตัวอย่าง</th><th>สอนอะไร</th><th>Structures</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td><b>ก่อสร้างอาคารสำนักงาน</b></td>
+            <td>Full showcase: FS chain ยาว, SS+lag, milestone, critical path จริง, assigns + charges, ทะเบียนความเสี่ยง</td>
+            <td>WBS + OBS + CBS + RBS</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td><b>พัฒนาแอป FoodieGo</b></td>
+            <td>Parallel branches (design ∥ dev) มาบรรจบ, milestone launch, PBS แยกผลผลิตเป็นโมดูล+เวอร์ชัน</td>
+            <td>WBS + PBS + OBS</td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td><b>จัดสัมมนา Digital Transformation</b></td>
+            <td>Timeline กระชับกำลังรันจริง — งานผ่านแล้ว done, ช่วงวันนี้ in_progress; งานที่มี predecessor หลายตัว</td>
+            <td>WBS + OBS + CBS</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td><b>แคมเปญเปิดตัว AIRA X1</b></td>
+            <td>ใช้ RBS จริงจัง (โอกาส×ผลกระทบ + แผนรับมือ), งบแคมเปญแบบ CBS</td>
+            <td>WBS + CBS + RBS</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td><b>ย้ายสำนักงาน</b></td>
+            <td>Minimalism — WBS อย่างเดียวก็วางแผนได้ครบ เหมาะเริ่มจากศูนย์</td>
+            <td>WBS</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <p>ทุกตัวอย่างคำนวณวันที่ด้วย CPM engine ตัวจริงและตั้งสถานะตามวันที่เทียบ "วันนี้"
+      — เปิดวันไหน งานที่ควร done / in_progress จะถูกต้องตามเวลาจริงเสมอ</p>
+    </section>
+
+    <!-- ============ 12 ============ -->
+    <section class="chapter" id="ch12">
+      <span class="ch-no">บทที่ 12</span>
+      <h2>คำถามที่พบบ่อย</h2>
+      <h3>ข้อมูลหายไหมถ้าปิดเบราว์เซอร์?</h3>
+      <p>ไม่หาย — persist ลง localStorage ทุกครั้งที่แก้ แต่ถ้าล้าง site data จะหายจริง
+      จึงควร export JSON เป็นระยะ</p>
+      <h3>ทำไมแก้วันเริ่มของงานแม่ไม่ได้?</h3>
+      <p>By design — งานแม่ derive จากลูก แก้ที่ leaf แล้วงานแม่ขยับเอง</p>
+      <h3>ทำไม bar ใน Gantt ไม่ตรงกับวันเริ่มที่กรอก?</h3>
+      <p>CPM เลือกวันที่ช้ากว่าระหว่าง pin ที่กรอก กับ constraint จาก dependency —
+      อยากให้ตรงก็ปรับ dependency/lag ให้สอดคล้องกับวันที่</p>
+      <h3>ใช้หลายเครื่องได้ไหม?</h3>
+      <p>Export JSON จากเครื่อง A → Import ที่เครื่อง B (ไม่มี sync อัตโนมัติ)</p>
+      <h3>เปิด CSV แล้วภาษาไทยเพี้ยน?</h3>
+      <p>ไฟล์มี BOM UTF-8 แล้ว — ถ้าเปิดผ่าน editor อื่นให้เลือก encoding UTF-8</p>
+    </section>
+  </main>
+</div>
+
+<footer class="colophon">
+  <div class="wrap">คู่มือฉบับ v0.1 · Breakdown Planner — Vite + React + zustand · ข้อมูลเก็บในเครื่องผู้ใช้ทั้งหมด</div>
+</footer>
+</body>
+</html>
