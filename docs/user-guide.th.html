@@ -502,6 +502,14 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
         ทำหน้าที่เป็น pin — ถ้า constraint บังคับให้เริ่มช้ากว่า pin ระบบใช้วัน constraint
         งานที่ยังไม่ใส่วันที่จะเป็นแถวว่าง (StatusBar จะเตือน)</p>
       </div>
+      <div class="callout">
+        <span class="tag">ขอบเขตของ Critical Path</span>
+        <p>CPM มีเฉพาะโครงสร้างที่ "มีกำหนดการ" (WBS) — critical path วิเคราะห์จาก network
+        ของงานที่มีระยะเวลา + dependency ส่วน OBS (องค์กร), CBS (ต้นทุน), RBS (ความเสี่ยง),
+        PBS (ผลผลิต) ไม่มีระยะเวลา/dependency เชิงเวลา จึงไม่มี network ให้วิเคราะห์ —
+        ตามหลัก PM มาตรฐานก็ใช้ CPM กับ activity network ที่ derive จาก WBS เท่านั้น
+        โครงสร้างอื่นรับ roll-up ผ่าน Links แทน (<a href="#ch8">บทที่ 8</a>)</p>
+      </div>
     </section>
 
     <!-- ============ 8 ============ -->
@@ -585,35 +593,56 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
           <tr>
             <td class="num">1</td>
             <td><b>ก่อสร้างอาคารสำนักงาน</b></td>
-            <td>Full showcase: FS chain ยาว, SS+lag, milestone, critical path จริง, assigns + charges, ทะเบียนความเสี่ยง</td>
+            <td>Full showcase ~35 งานย่อย 4 ระดับ: critical path ยาว 273 วัน (~9 เดือน),
+            เสาเข็ม 2 โซนขนานแล้วมาบรรจบ, branch เกือบวิกฤต (ทาสี slack ~8 วัน), slack เห็นชัด
+            (ลิฟต์ 48 / แอร์ 38 / ภูมิทัศน์ 37 วัน), milestone topping-out + handover</td>
             <td>WBS + OBS + CBS + RBS</td>
           </tr>
           <tr>
             <td class="num">2</td>
             <td><b>พัฒนาแอป FoodieGo</b></td>
-            <td>Parallel branches (design ∥ dev) มาบรรจบ, milestone launch, PBS แยกผลผลิตเป็นโมดูล+เวอร์ชัน</td>
+            <td>Parallel branches (design ∥ backend ∥ mobile app) มาบรรจบที่ QA, dev แยกเป็น 2 ทีมย่อย
+            3 ระดับ, milestone launch, PBS แยกโมดูล+เวอร์ชัน</td>
             <td>WBS + PBS + OBS</td>
           </tr>
           <tr>
             <td class="num">3</td>
             <td><b>จัดสัมมนา Digital Transformation</b></td>
-            <td>Timeline กระชับกำลังรันจริง — งานผ่านแล้ว done, ช่วงวันนี้ in_progress; งานที่มี predecessor หลายตัว</td>
+            <td>Timeline กระชับกำลังรันจริง — งานผ่านแล้ว done, ช่วงวันนี้ in_progress;
+            dependency เชิงตรรกะ (พิมพ์ของแจกหลังปิดรับสมัครเพราะต้องรู้จำนวนคน)</td>
             <td>WBS + OBS + CBS</td>
           </tr>
           <tr>
             <td class="num">4</td>
             <td><b>แคมเปญเปิดตัว AIRA X1</b></td>
-            <td>ใช้ RBS จริงจัง (โอกาส×ผลกระทบ + แผนรับมือ), งบแคมเปญแบบ CBS</td>
+            <td>ใช้ RBS จริงจัง (โอกาส×ผลกระทบ + แผนรับมือ), หลาย branch มาบรรจบที่ milestone เปิดขาย,
+            งบแคมเปญแบบ CBS</td>
             <td>WBS + CBS + RBS</td>
           </tr>
           <tr>
             <td class="num">5</td>
             <td><b>ย้ายสำนักงาน</b></td>
-            <td>Minimalism — WBS อย่างเดียวก็วางแผนได้ครบ เหมาะเริ่มจากศูนย์</td>
+            <td>WBS อย่างเดียวก็วางแผนครบ: lag บวก (รอฉาบแล้วค่อยเดินสายเน็ต), branch เฟอร์นิเจอร์
+            มี slack เยอะ, milestone วันย้าย</td>
             <td>WBS</td>
           </tr>
         </tbody>
       </table></div>
+
+      <h3>แนวทางฝึกดู Critical Path จากตัวอย่างที่ 1</h3>
+      <ol class="steps">
+        <li>เปิดแท็บ WBS → มุมมอง Gantt — bar สีแดงคือ critical path (slack ≤ 0)</li>
+        <li>ตาม chain สีแดง: สำรวจหน้างาน → ออกแบบ → BOQ → ขออนุญาต → เสาเข็มโซน A → ฐานราก →
+        ชั้น 1–3 → topping out → ก่อฉาก → กระเบื้อง → ฝ้าเพดาน → ล็อบบี้ → commissioning →
+        ส่งมอบ (รวม 273 วัน)</li>
+        <li>Hover bar สีคราม เช่น "ติดตั้งลิฟต์โดยสาร" (slack 48 วัน) หรือ "งานภูมิทัศน์"
+        (37 วัน) — delay ได้มากโดยไม่กระทบวันส่งมอบ</li>
+        <li>เทียบกับ "งานทาสีทั้งอาคาร" (slack ~8 วัน) — branch เกือบวิกฤต ถ้าล่าช้าเกิน 8 วัน
+        จะกลายเป็น critical ทันที</li>
+        <li>ลองแก้ duration ของ "ขอใบอนุญาตก่อสร้าง" 30 → 45 วัน แล้วดูทั้ง chain ขยับและ
+        วันส่งมอบเลื่อนตาม</li>
+      </ol>
+
       <p>ทุกตัวอย่างคำนวณวันที่ด้วย CPM engine ตัวจริงและตั้งสถานะตามวันที่เทียบ "วันนี้"
       — เปิดวันไหน งานที่ควร done / in_progress จะถูกต้องตามเวลาจริงเสมอ</p>
     </section>
@@ -634,6 +663,13 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
       <p>Export JSON จากเครื่อง A → Import ที่เครื่อง B (ไม่มี sync อัตโนมัติ)</p>
       <h3>เปิด CSV แล้วภาษาไทยเพี้ยน?</h3>
       <p>ไฟล์มี BOM UTF-8 แล้ว — ถ้าเปิดผ่าน editor อื่นให้เลือก encoding UTF-8</p>
+      <h3>OBS / CBS / RBS / PBS มี critical path ไหม?</h3>
+      <p>ไม่มีตามหลักการ — Critical Path Method วิเคราะห์ network ของ "งานที่มีระยะเวลา +
+      dependency" เท่านั้น ซึ่งมีอยู่ใน WBS (activity network) OBS เป็นโครงสร้างองค์กร,
+      CBS รวมเงิน, RBS/PBS ไม่มีความสัมพันธ์เชิงเวลา จึงไม่มี network ให้หา critical path —
+      มาตรฐาน PM (PMBOK) กำหนดให้ CPM ใช้กับ project schedule เท่านั้นเช่นกัน
+      ในแอป แท็บ Gantt/dependency จึงเปิดเฉพาะ WBS; OBS/CBS/RBS/PBS ทำหน้าที่รับ roll-up
+      (จำนวนงาน, ต้นทุนรวม) ผ่าน Links แทน</p>
     </section>
   </main>
 </div>

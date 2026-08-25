@@ -194,6 +194,13 @@ Dependency คือสิ่งที่ CPM ใช้คำนวณ Critical 
 
 งานที่ยังไม่ใส่วันที่จะเป็นแถวว่างใน Gantt — StatusBar จะเตือนให้
 
+> 📌 **ขอบเขตของ Critical Path:** CPM มีเฉพาะโครงสร้างที่ "มีกำหนดการ" (WBS)
+> เพราะ critical path วิเคราะห์จาก network ของงานที่มีระยะเวลา + dependency
+> ส่วน OBS (องค์กร), CBS (ต้นทุน), RBS (ความเสี่ยง), PBS (ผลผลิต) ไม่มี
+> ระยะเวลา/dependency เชิงเวลา จึงไม่มี network ให้วิเคราะห์ — ตามหลัก PM
+> มาตรฐาน CPM ก็ใช้กับ activity network ที่ derive จาก WBS เท่านั้น
+> โครงสร้างอื่นทำหน้าที่รับ roll-up ผ่าน Links (บทที่ 8) แทน
+
 ---
 
 ## 8. เชื่อมโยงข้ามโครงสร้าง (Links)
@@ -256,11 +263,23 @@ Import โปรเจ็คที่มี id ซ้ำกับที่มี
 
 | # | ตัวอย่าง | สอนอะไร | Structures ที่ใช้ |
 |---|---|---|---|
-| 1 | **ก่อสร้างอาคารสำนักงาน** | Full showcase: FS chain ยาว, SS+lag, milestone, critical path จริง, มอบหมายงาน+ผูกต้นทุน, ทะเบียนความเสี่ยง | WBS + OBS + CBS + RBS |
-| 2 | **พัฒนาแอป FoodieGo** | Parallel branches (design ∥ dev) มาบรรจบกัน, milestone launch, แยกผลผลิตด้วย PBS | WBS + PBS + OBS |
-| 3 | **จัดสัมมนา Digital Transformation** | Timeline กระชับกำลังรันอยู่ (งานผ่านแล้ว=done, กำลังทำ=in_progress), หลาย predecessor | WBS + OBS + CBS |
-| 4 | **แคมเปญเปิดตัว AIRA X1** | การใช้ RBS จริงจัง (โอกาส×ผลกระทบ+แผนรับมือ), งบแคมเปญเป็น CBS | WBS + CBS + RBS |
-| 5 | **ย้ายสำนักงาน** | Minimalism: WBS อย่างเดียวก็วางแผนได้ — เหมาะเริ่มจากศูนย์ | WBS |
+| 1 | **ก่อสร้างอาคารสำนักงาน** | Full showcase ~35 งานย่อย 4 ระดับ: critical path ยาว 273 วัน (~9 เดือน), เสาเข็ม 2 โซนขนานแล้วมาบรรจบ, branch เกือบวิกฤต (ทาสี slack ~8 วัน), slack เห็นชัด (ลิฟต์ 48 / แอร์ 38 / ภูมิทัศน์ 37 วัน), milestone topping-out + handover | WBS + OBS + CBS + RBS |
+| 2 | **พัฒนาแอป FoodieGo** | Parallel branches (design ∥ backend ∥ mobile app) มาบรรจบที่ QA, dev แยกเป็น 2 ทีมย่อย 3 ระดับ, milestone launch, PBS แยกโมดูล+เวอร์ชัน | WBS + PBS + OBS |
+| 3 | **จัดสัมมนา Digital Transformation** | Timeline กระชับกำลังรันอยู่ (งานผ่านแล้ว=done, กำลังทำ=in_progress), dependency เชิงตรรกะ (พิมพ์ของแจกหลังปิดรับสมัครเพราะต้องรู้จำนวนคน) | WBS + OBS + CBS |
+| 4 | **แคมเปญเปิดตัว AIRA X1** | ใช้ RBS จริงจัง (โอกาส×ผลกระทบ+แผนรับมือ), หลาย branch มาบรรจบที่ milestone เปิดขาย, CBS งบแคมเปญ | WBS + CBS + RBS |
+| 5 | **ย้ายสำนักงาน** | WBS อย่างเดียวก็วางแผนครบ: lag บวก (รอฉาบแล้วค่อยเดินสายเน็ต), branch เฟอร์นิเจอร์มี slack เยอะ, milestone วันย้าย | WBS |
+
+**แนวทางฝึกดู Critical Path จากตัวอย่างที่ 1:**
+
+1. เปิดแท็บ WBS → มุมมอง Gantt — bar สีแดงคือ critical path (slack ≤ 0)
+2. ตาม chain สีแดง: สำรวจหน้างาน → ออกแบบ → BOQ → ขออนุญาต → เสาเข็มโซน A → ฐานราก →
+   ชั้น 1–3 → topping out → ก่อฉาก → กระเบื้อง → ฝ้าเพดาน → ล็อบบี้ → commissioning → ส่งมอบ
+   (รวม 273 วัน)
+3. Hover bar สีคราม เช่น "ติดตั้งลิฟต์โดยสาร" (slack 48 วัน) หรือ "งานภูมิทัศน์"
+   (37 วัน) — delay ได้มากโดยไม่กระทบวันส่งมอบ
+4. เทียบกับ "งานทาสีทั้งอาคาร" (slack ~8 วัน) — branch เกือบวิกฤต ถ้าล่าช้าเกิน 8 วัน
+   จะกลายเป็น critical ทันที
+5. ลองแก้ duration ของ "ขอใบอนุญาตก่อสร้าง" 30 → 45 วัน แล้วดูว่าทั้ง chain ขยับและวันส่งมอบเลื่อนตาม
 
 ทุกตัวอย่างคำนวณวันที่ด้วย CPM engine ตัวจริง และกำหนดสถานะตามวันที่เทียบ "วันนี้"
 ดังนั้นเปิดวันไหน งานที่ควร done/in_progress จะถูกต้องตามเวลาจริงเสมอ
@@ -284,6 +303,12 @@ Export JSON จากเครื่อง A → Import ที่เครื่
 
 **Q: เปิด CSV แล้วภาษาไทยเพี้ยน?**
 ไฟล์มี BOM แล้ว — ถ้าเปิดด้วย editor อื่น ให้เลือก encoding UTF-8
+
+**Q: OBS / CBS / RBS / PBS มี critical path ไหม?**
+ไม่มีตามหลักการ — Critical Path Method วิเคราะห์ network ของ "งานที่มีระยะเวลา + dependency" เท่านั้น
+ซึ่งมีอยู่ใน WBS (activity network) OBS เป็นโครงสร้างองค์กร, CBS รวมเงิน, RBS/PBS ไม่มีความสัมพันธ์เชิงเวลา
+จึงไม่มี network ให้หา critical path — มาตรฐาน PM (PMBOK) กำหนดให้ CPM ใช้กับ project schedule เท่านั้นเช่นกัน
+ในแอป แท็บ Gantt/dependency จึงเปิดเฉพาะ WBS; OBS/CBS/RBS/PBS ทำหน้าที่รับ roll-up (จำนวนงาน, ต้นทุนรวม) ผ่าน Links แทน
 
 ---
 
