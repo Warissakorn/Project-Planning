@@ -1,4 +1,13 @@
-import { addDays, differenceInCalendarDays, format, parseISO } from 'date-fns'
+import {
+  addDays,
+  addMonths,
+  differenceInCalendarDays,
+  endOfMonth,
+  format,
+  parseISO,
+  startOfMonth,
+  startOfWeek,
+} from 'date-fns'
 import { th as thLocale } from 'date-fns/locale'
 import type { Lang } from '../model/types'
 
@@ -32,3 +41,23 @@ export const formatDate = (iso: string | undefined, lang: Lang): string => {
 
 export const formatDateShort = (d: Date, lang: Lang): string =>
   format(d, 'd MMM', { locale: lang === 'th' ? thLocale : undefined })
+
+/** Monday-start week containing `iso` (explicit so it is locale-independent). */
+export const startOfWeekIso = (iso: string): string =>
+  format(startOfWeek(parseISO(iso), { weekStartsOn: 1 }), 'yyyy-MM-dd')
+
+/** First day of the month containing `iso`. */
+export const startOfMonthIso = (iso: string): string => format(startOfMonth(parseISO(iso)), 'yyyy-MM-dd')
+
+/** Last day of the month containing `iso`. */
+export const endOfMonthIso = (iso: string): string => format(endOfMonth(parseISO(iso)), 'yyyy-MM-dd')
+
+export const addMonthsIso = (iso: string, months: number): string =>
+  format(addMonths(parseISO(iso), months), 'yyyy-MM-dd')
+
+/** Month label like "ม.ค. 2026" / "Jan 2026" for chart axes. */
+export const formatMonthIso = (iso: string, lang: Lang): string => {
+  const d = isoToDate(iso)
+  if (!d) return ''
+  return format(d, 'MMM yyyy', { locale: lang === 'th' ? thLocale : undefined })
+}
