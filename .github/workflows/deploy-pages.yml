@@ -16,6 +16,9 @@ concurrency:
 
 jobs:
   build:
+    # Only the public release repo hosts Pages; dev pushes to the private
+    # mirror must skip this workflow instead of failing on deploy.
+    if: github.repository == 'Warissakorn/Project-Planning'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +34,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.repository == 'Warissakorn/Project-Planning'
     needs: build
     runs-on: ubuntu-latest
     environment:
