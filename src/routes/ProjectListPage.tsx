@@ -6,12 +6,14 @@ import {
   Copy,
   FileUp,
   FolderKanban,
+  LayoutTemplate,
   Lightbulb,
   Pencil,
   Plus,
   Trash2,
 } from 'lucide-react'
 import { SAMPLE_PROJECTS } from '../model/samples'
+import type { TemplateEntry } from '../model/templates'
 import type { ID } from '../model/types'
 import { useAppStore, storageUsageBytes } from '../state/store'
 import { translate, useT } from '../lib/i18n'
@@ -21,6 +23,7 @@ import { Field, Input } from '../components/ui/Input'
 import { Modal } from '../components/ui/Modal'
 import { ConfirmDialog, EmptyState } from '../components/ui/Misc'
 import { UserGuideOverlay } from '../components/help/UserGuideOverlay'
+import { TemplatePickerModal } from '../components/projects/TemplatePickerModal'
 import { LangToggle } from '../components/layout/LangToggle'
 
 const fmtKB = (bytes: number) => `${Math.max(1, Math.round(bytes / 1024))} KB`
@@ -47,6 +50,7 @@ export function ProjectListPage() {
   const [importErrorKey, setImportErrorKey] =
     useState<'invalid-json' | 'invalid-format' | 'newer-version' | null>(null)
   const [helpOpen, setHelpOpen] = useState(false)
+  const [templatePickerOpen, setTemplatePickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const create = () => {
@@ -85,6 +89,12 @@ export function ProjectListPage() {
     }
   }
 
+  // Templates carry no fixed id — each pick creates a brand-new project.
+  const createFromTemplate = (entry: TemplateEntry) => {
+    const id = addImportedProject(entry.build())
+    navigate(`/project/${id}`)
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-5xl p-6">
@@ -112,6 +122,15 @@ export function ProjectListPage() {
             <Button variant="primary" onClick={create} className="shrink-0">
               <Plus size={15} />
               {t('newProject')}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setTemplatePickerOpen(true)}
+              title={t('createFromTemplate')}
+              className="shrink-0"
+            >
+              <LayoutTemplate size={15} />
+              {t('createFromTemplate')}
             </Button>
             <Button
               variant="outline"
@@ -289,6 +308,13 @@ export function ProjectListPage() {
       />
 
       <UserGuideOverlay open={helpOpen} onClose={() => setHelpOpen(false)} />
+
+      {/* --- template picker ------------------------------------------------ */}
+      <TemplatePickerModal
+        open={templatePickerOpen}
+        onClose={() => setTemplatePickerOpen(false)}
+        onPick={createFromTemplate}
+      />
     </div>
   )
 }

@@ -42,6 +42,13 @@ const th = {
   // help
   helpTitle: 'คู่มือการใช้งาน',
 
+  // templates
+  createFromTemplate: 'สร้างจาก Template',
+  templatesTitle: 'เลือก Template',
+  templatesSearchPlaceholder: 'ค้นหา template…',
+  templatesNoMatch: 'ไม่พบ template ที่ตรงกับคำค้นหา',
+  tplPhaseTaskStats: '{phases} งานหลัก · {tasks} งานย่อย',
+
   // workspace header
   undo: 'Undo',
   redo: 'Redo',
@@ -186,6 +193,13 @@ const en: Record<CopyKey, string> = {
 
   // help
   helpTitle: 'User Guide',
+
+  // templates
+  createFromTemplate: 'Create from Template',
+  templatesTitle: 'Choose a Template',
+  templatesSearchPlaceholder: 'Search templates…',
+  templatesNoMatch: 'No template matches your search',
+  tplPhaseTaskStats: '{phases} phases · {tasks} tasks',
 
   undo: 'Undo',
   redo: 'Redo',
