@@ -136,6 +136,9 @@ const th = {
   scurveNoCosts: 'งานที่มีกำหนดการยังไม่มีต้นทุน — ใส่ต้นทุนในแผงรายละเอียด',
   reportsUndatedWarning: '{n} งานมีต้นทุนแต่ไม่มีกำหนดการ (รวม {cost}) — ไม่ถูกนับในเส้นโค้ง',
   scurveMultiChargedFootnote: '{n} งานถูกผูกกับหลายหมวดต้นทุน — แต่ละหมวดนับต้นทุนเต็มจำนวนของงานนั้น',
+  resourceTaskDays: '{n} วัน-งาน',
+  resourceNoAssigns: 'ยังไม่มีการมอบหมายงานให้หน่วยงาน — เปิดงานใน WBS แล้วกด “มอบหมายให้หน่วยงาน”',
+  resourceUnassigned: 'ไม่ได้มอบหมาย',
 
   // structures tabs
   addStructure: 'เพิ่มโครงสร้าง',
@@ -269,6 +272,9 @@ const en: Record<CopyKey, string> = {
   scurveNoCosts: 'Scheduled tasks carry no cost yet — enter costs in the inspector',
   reportsUndatedWarning: '{n} task(s) have cost but no schedule (total {cost}) — excluded from the curve',
   scurveMultiChargedFootnote: '{n} task(s) are charged to several categories — each category counts their full cost',
+  resourceTaskDays: '{n} task-days',
+  resourceNoAssigns: 'No org assignments yet — open a WBS task and use “Assign to org unit”',
+  resourceUnassigned: 'Unassigned',
 
   addStructure: 'Add structure',
   structureNameLabel: 'Structure name',

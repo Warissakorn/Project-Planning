@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
-import { buildCostCurve } from '../../engine/analytics'
+import { buildCostCurve, buildResourceLoading } from '../../engine/analytics'
 import { useT } from '../../lib/i18n'
 import { useAppStore } from '../../state/store'
 import { useStructureData } from '../../state/selectors'
 import { cx } from '../../lib/cx'
+import { ResourceHeatmap } from './ResourceHeatmap'
 import { SCurveChart } from './SCurveChart'
 
 export type Granularity = 'week' | 'month'
@@ -22,6 +23,10 @@ export function ReportsView() {
 
   const curve = useMemo(
     () => (project ? buildCostCurve(project, granularity) : null),
+    [project, granularity],
+  )
+  const loading = useMemo(
+    () => (project ? buildResourceLoading(project, granularity) : null),
     [project, granularity],
   )
 
@@ -57,9 +62,7 @@ export function ReportsView() {
           <header className="flex items-center gap-2 border-b border-slate-100 px-3 py-2">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('resourceLoadingTitle')}</h2>
           </header>
-          <div className="p-3">
-            {/* ResourceHeatmap lands here */}
-          </div>
+          <div className="p-3">{loading ? <ResourceHeatmap loading={loading} lang={lang} granularity={granularity} /> : null}</div>
         </section>
       </div>
     </div>
