@@ -7,6 +7,7 @@ import { useAppStore } from '../../state/store'
 import { useStructureData } from '../../state/selectors'
 import { cx } from '../../lib/cx'
 import { ROW_H } from '../tree/TreeNodeRow'
+import { ColGrip } from '../tree/StructureTree'
 import { EmptyState } from '../ui/Misc'
 import { buildGanttModel, type GanttBar } from './ganttModel'
 import { GanttHeader } from './GanttHeader'
@@ -14,7 +15,8 @@ import { TaskBar } from './TaskBar'
 import { DependencyArrows } from './DependencyArrows'
 import { TodayMarker } from './TodayMarker'
 
-const LEFT_W = 220
+const DEFAULT_LEFT_W = 220
+const GANTT_LEFT_KEY = '__ganttLeft'
 const HEADER_H = 42
 
 type Zoom = 'day' | 'week' | 'month'
@@ -31,6 +33,8 @@ export function GanttView() {
   const selectedNodeId = useAppStore((s) => s.selectedNodeId)
   const selectNode = useAppStore.getState().selectNode
   const { project, structure } = useStructureData()
+  const leftW = useAppStore((s) => s.columnWidths[GANTT_LEFT_KEY]) ?? DEFAULT_LEFT_W
+  const setColumnWidth = useAppStore.getState().setColumnWidth
 
   const [zoom, setZoom] = useState<Zoom>('day')
   const pxPerDay = PX_PER_DAY[zoom]
@@ -88,14 +92,22 @@ export function GanttView() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-auto">
-        <div className="relative" style={{ width: LEFT_W + totalPx }}>
+        <div className="relative" style={{ width: leftW + totalPx }}>
           {/* header row: sticky corner + calendar */}
           <div className="sticky top-0 z-20 flex shadow-sm">
             <div
               className="sticky left-0 z-30 flex shrink-0 items-center border-b border-r border-slate-200 bg-white px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
-              style={{ width: LEFT_W, height: HEADER_H }}
+              style={{ width: leftW, height: HEADER_H }}
             >
               {t('nameLabel')}
+              <ColGrip
+                width={leftW}
+                min={140}
+                max={480}
+                title={t('colResizeHint')}
+                onResize={(w) => setColumnWidth(GANTT_LEFT_KEY, w)}
+                onReset={() => setColumnWidth(GANTT_LEFT_KEY, null)}
+              />
             </div>
             <GanttHeader
               anchorIso={model.anchorIso}
@@ -115,7 +127,7 @@ export function GanttView() {
                   'sticky left-0 z-10 flex shrink-0 items-center gap-1 truncate border-r border-slate-100 bg-white text-left text-[13px] hover:bg-slate-50',
                   selectedNodeId === b.id && 'bg-indigo-50',
                 )}
-                style={{ width: LEFT_W, paddingLeft: Math.max(0, b.depth) * 14 + 8 }}
+                style={{ width: leftW, paddingLeft: Math.max(0, b.depth) * 14 + 8 }}
                 title={b.name || t('untitled')}
               >
                 {b.code ? (
@@ -134,7 +146,7 @@ export function GanttView() {
           ))}
 
           {/* overlays over the rows region only */}
-          <div className="pointer-events-none absolute bottom-0" style={{ left: LEFT_W, top: HEADER_H }}>
+          <div className="pointer-events-none absolute bottom-0" style={{ left: leftW, top: HEADER_H }}>
             <DependencyArrows model={model} pxPerDay={pxPerDay} rowH={ROW_H} />
             <TodayMarker
               anchorIso={model.anchorIso}

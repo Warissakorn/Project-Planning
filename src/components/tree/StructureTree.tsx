@@ -22,7 +22,53 @@ import { ListTree, Plus } from 'lucide-react'
 import { TreeNodeRow, type DropHint } from './TreeNodeRow'
 
 const NAME_COL = 'minmax(260px, 38fr)'
-const ATTR_COL = 'minmax(84px, 1fr)'
+const ATTR_COL = 'minmax(96px, 1fr)'
+const NAME_KEY = '__name'
+
+/** Drag handle on a column header's right edge; double-click resets the width. */
+export function ColGrip({
+  width,
+  min,
+  max,
+  title,
+  onResize,
+  onReset,
+}: {
+  width: number
+  min: number
+  max: number
+  title: string
+  onResize: (w: number) => void
+  onReset: () => void
+}) {
+  const drag = useRef<{ startX: number; startW: number } | null>(null)
+  return (
+    <span
+      role="separator"
+      aria-orientation="vertical"
+      title={title}
+      className="absolute inset-y-0 right-0 z-20 w-1.5 cursor-col-resize touch-none hover:bg-indigo-400/50"
+      onPointerDown={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        drag.current = { startX: e.clientX, startW: width }
+        ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+      }}
+      onPointerMove={(e) => {
+        if (!drag.current) return
+        onResize(Math.min(max, Math.max(min, drag.current.startW + e.clientX - drag.current.startX)))
+      }}
+      onPointerUp={(e) => {
+        drag.current = null
+        ;(e.target as HTMLElement).releasePointerCapture(e.pointerId)
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation()
+        onReset()
+      }}
+    />
+  )
+}
 
 /**
  * The main grid: header + sortable flattened rows. dnd-kit owns pointer
@@ -50,9 +96,21 @@ export function StructureTree() {
   const [dropHint, setDropHint] = useState<DropHint | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
+  // Column widths: persisted per column key; a stored width pins the column
+  // (name keeps flexing above its stored minimum), unset columns share the rest.
+  const columnWidths = useAppStore((s) => s.columnWidths)
+  const setColumnWidth = useAppStore.getState().setColumnWidth
+  const nameWidth = columnWidths[NAME_KEY]
+
   const gridTemplate = useMemo(
-    () => [NAME_COL, ...(typeConfig?.columns ?? []).map(() => ATTR_COL)].join(' '),
-    [typeConfig],
+    () => [
+      nameWidth ? `minmax(${Math.max(nameWidth, 220)}px, 38fr)` : NAME_COL,
+      ...(typeConfig?.columns ?? []).map((c) => {
+        const w = columnWidths[c.key]
+        return w ? `${Math.max(w, 72)}px` : ATTR_COL
+      }),
+    ].join(' '),
+    [typeConfig, columnWidths, nameWidth],
   )
 
   // Keep the selected row in view (also fires right after expand reveals it).
@@ -197,14 +255,32 @@ export function StructureTree() {
       <div ref={listRef} className="min-h-0 flex-1 overflow-auto">
         {/* header */}
         <div
-          className="sticky top-0 z-10 grid items-center border-b border-slate-200 bg-slate-50 px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
+          className="sticky top-0 z-10 grid select-none items-center border-b border-slate-200 bg-slate-50 px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
           style={{ gridTemplateColumns: gridTemplate, height: 30 }}
         >
-          <span className="pl-[68px]">{t('nameLabel')}</span>
+          <div className="relative min-w-0">
+            <span className="block truncate pl-[68px] pr-1.5">{t('nameLabel')}</span>
+            <ColGrip
+              width={nameWidth ?? 400}
+              min={220}
+              max={800}
+              title={t('colResizeHint')}
+              onResize={(w) => setColumnWidth(NAME_KEY, w)}
+              onReset={() => setColumnWidth(NAME_KEY, null)}
+            />
+          </div>
           {typeConfig.columns.map((col) => (
-            <span key={col.key} className="truncate px-1">
-              {bl(col.label, lang)}
-            </span>
+            <div key={col.key} className="relative min-w-0">
+              <span className="block truncate px-1.5">{bl(col.label, lang)}</span>
+              <ColGrip
+                width={columnWidths[col.key] ?? 140}
+                min={72}
+                max={480}
+                title={t('colResizeHint')}
+                onResize={(w) => setColumnWidth(col.key, w)}
+                onReset={() => setColumnWidth(col.key, null)}
+              />
+            </div>
           ))}
         </div>
 

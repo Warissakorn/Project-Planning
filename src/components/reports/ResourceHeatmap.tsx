@@ -12,8 +12,10 @@ import type { Lang } from '../../model/types'
 import { useAppStore } from '../../state/store'
 import { cx } from '../../lib/cx'
 import { EmptyState } from '../ui/Misc'
+import { ColGrip } from '../tree/StructureTree'
 
 export const LEFT_W = 220
+const HEAT_LEFT_KEY = '__heatLeft'
 const ROW_H = 28
 
 /**
@@ -50,6 +52,8 @@ export function ResourceHeatmap({
   granularity: ReportGranularity
 }) {
   const t = useT()
+  const leftW = useAppStore((s) => s.columnWidths[HEAT_LEFT_KEY]) ?? LEFT_W
+  const setColumnWidth = useAppStore.getState().setColumnWidth
 
   const maxDays = useMemo(
     () => Math.max(0, ...loading.rows.map((r) => Math.max(...r.cells))),
@@ -85,9 +89,17 @@ export function ResourceHeatmap({
           <div className="sticky top-0 z-20 flex h-7 border-b border-slate-200 bg-white shadow-sm">
             <div
               className="sticky left-0 z-30 flex shrink-0 items-center border-r border-slate-200 bg-white px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
-              style={{ width: LEFT_W }}
+              style={{ width: leftW }}
             >
               {t('nameLabel')}
+              <ColGrip
+                width={leftW}
+                min={140}
+                max={480}
+                title={t('colResizeHint')}
+                onResize={(w) => setColumnWidth(HEAT_LEFT_KEY, w)}
+                onReset={() => setColumnWidth(HEAT_LEFT_KEY, null)}
+              />
             </div>
             {loading.buckets.map((b) => (
               <div
@@ -110,6 +122,7 @@ export function ResourceHeatmap({
               granularity={granularity}
               maxDays={maxDays}
               cellW={cellW}
+              leftW={leftW}
             />
           ))}
 
@@ -118,7 +131,7 @@ export function ResourceHeatmap({
             <div className="flex border-t border-slate-200 bg-slate-50" style={{ height: ROW_H }}>
               <div
                 className="sticky left-0 z-10 flex shrink-0 items-center border-r border-slate-200 bg-slate-50 px-2 text-xs italic text-slate-400"
-                style={{ width: LEFT_W }}
+                style={{ width: leftW }}
               >
                 {t('resourceUnassigned')}
               </div>
@@ -147,6 +160,7 @@ function ResourceHeatmapRow({
   granularity,
   maxDays,
   cellW,
+  leftW,
 }: {
   row: ResourceRow
   loading: ResourceLoading
@@ -154,6 +168,7 @@ function ResourceHeatmapRow({
   granularity: ReportGranularity
   maxDays: number
   cellW: number
+  leftW: number
 }) {
   const t = useT()
   const selectNode = useAppStore.getState().selectNode
@@ -178,7 +193,7 @@ function ResourceHeatmapRow({
     >
       <span
         className="sticky left-0 z-10 flex shrink-0 items-center gap-1 truncate border-r border-slate-100 bg-white pr-2 hover:bg-slate-50"
-        style={{ width: LEFT_W, paddingLeft: row.depth * 14 + 8 }}
+        style={{ width: leftW, paddingLeft: row.depth * 14 + 8 }}
         title={`${row.code ? row.code + ' ' : ''}${row.name}`}
       >
         {row.code ? (

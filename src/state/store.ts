@@ -34,6 +34,7 @@ export const useAppStore = create<AppState>()(
         activeStructureId: s.activeStructureId,
         selectedNodeId: s.selectedNodeId,
         viewMode: s.viewMode,
+        columnWidths: s.columnWidths,
       }),
       // Breaking schema changes bump `version` and migrate here; exported JSON
       // files run through the same chain (see lib/jsonFile.ts).

@@ -14,6 +14,11 @@ export interface UiSlice {
   viewMode: ViewMode
 
   setViewMode: (mode: ViewMode) => void
+
+  /** Persisted column widths (px) keyed by column key; '__name' = tree name column, '__ganttLeft' = Gantt name pane. */
+  columnWidths: Record<string, number>
+  /** `w === null` resets a width back to its flexible default. */
+  setColumnWidth: (key: string, w: number | null) => void
 }
 
 export const createUiSlice: StateCreator<AppState, [['zustand/immer', never]], [], UiSlice> = (
@@ -34,6 +39,14 @@ export const createUiSlice: StateCreator<AppState, [['zustand/immer', never]], [
   setViewMode: (mode) => {
     set((d) => {
       d.viewMode = mode
+    })
+  },
+
+  columnWidths: {},
+  setColumnWidth: (key, w) => {
+    set((d) => {
+      if (w === null) delete d.columnWidths[key]
+      else d.columnWidths[key] = w
     })
   },
 })

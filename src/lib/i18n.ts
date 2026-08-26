@@ -73,6 +73,7 @@ const th = {
   expandAll: 'กางทั้งหมด',
   emptyTree: 'ยังไม่มีรายการ — กด “เพิ่มรายการย่อย” เพื่อเริ่มสร้างโครงสร้าง',
   rootRow: 'รากโครงสร้าง',
+  colResizeHint: 'ลากขอบเพื่อปรับความกว้าง · ดับเบิลคลิกเพื่อรีเซ็ต',
 
   // inspector
   details: 'รายละเอียด',
@@ -223,6 +224,7 @@ const en: Record<CopyKey, string> = {
   expandAll: 'Expand all',
   emptyTree: 'Nothing here yet — use “Add child” to start building the structure',
   rootRow: 'Structure root',
+  colResizeHint: 'Drag the edge to resize · double-click to reset',
 
   details: 'Details',
   nameLabel: 'Name',

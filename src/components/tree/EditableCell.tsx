@@ -118,17 +118,18 @@ export function EditableCell({
     )
   }
 
+  const shown = displayOf(kind, value, lang)
   return (
     <div
       onClick={start}
-      title={derived ? t('derivedHint') : undefined}
+      title={derived ? t('derivedHint') : shown || undefined}
       className={cx(
         'flex h-7 cursor-default items-center truncate px-1 text-[13px]',
         align === 'right' && 'justify-end tabular-nums',
         derived ? 'italic text-slate-400' : 'text-slate-700 hover:bg-slate-50 hover:ring-1 hover:ring-slate-200',
       )}
     >
-      {displayOf(kind, value, lang)}
+      {shown}
     </div>
   )
 }
