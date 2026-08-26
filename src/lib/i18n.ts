@@ -135,7 +135,7 @@ const th = {
   ganttZoom_month: 'รายเดือน',
 
   // reports
-  reportsSubtitle: 'รายงานรวมจากทุกโครงสร้าง — เข็มขัดเวลาทำงานจริงของโครงการ',
+  reportsSubtitle: 'รายงานรวมจากทุกโครงสร้าง — ไทม์ไลน์การทำงานจริงของโครงการ',
   scurveTitle: 'เส้นโค้งต้นทุนสะสม (S-Curve)',
   resourceLoadingTitle: 'การใช้ทรัพยากร (OBS × กำหนดการ)',
   bucketWeek: 'รายสัปดาห์',
@@ -182,7 +182,7 @@ const en: Record<CopyKey, string> = {
   projects: 'My projects',
   newProject: 'New project',
   projectNameLabel: 'Project name',
-  projectNamePlaceholder: 'e.g. Office Building Construction',
+  projectNamePlaceholder: 'e.g. Office building extension',
   noProjects: 'No projects yet — click “New project” to start',
   createdLabel: 'Created',
   updatedLabel: 'Updated',
@@ -193,11 +193,11 @@ const en: Record<CopyKey, string> = {
   loadSamples: 'Load 5 sample projects',
 
   // help
-  helpTitle: 'User Guide',
+  helpTitle: 'User guide',
 
   // templates
-  createFromTemplate: 'Create from Template',
-  templatesTitle: 'Choose a Template',
+  createFromTemplate: 'Create from template',
+  templatesTitle: 'Choose a template',
   templatesSearchPlaceholder: 'Search templates…',
   templatesNoMatch: 'No template matches your search',
   tplPhaseTaskStats: '{phases} phases · {tasks} tasks',
@@ -247,10 +247,10 @@ const en: Record<CopyKey, string> = {
   dependencyTypeLabel: 'Type',
   lagDaysLabel: 'Lag (days)',
   noDependencies: 'No dependencies',
-  dep_FS: 'FS — finish to start',
-  dep_SS: 'SS — start to start',
-  dep_FF: 'FF — finish to finish',
-  dep_SF: 'SF — start to finish',
+  dep_FS: 'FS — finish-to-start',
+  dep_SS: 'SS — start-to-start',
+  dep_FF: 'FF — finish-to-finish',
+  dep_SF: 'SF — start-to-finish',
   depCycleError: 'Cannot add: this would create a cycle',
   depDuplicateError: 'This dependency already exists',
   depSelfError: 'A task cannot depend on itself',
@@ -273,7 +273,7 @@ const en: Record<CopyKey, string> = {
   inboundMore: '+ {n} more tasks',
   showLess: 'Show less',
 
-  ganttCritical: 'Critical path',
+  ganttCritical: 'Critical Path',
   ganttSlack: 'Slack: {n} days',
   today: 'Today',
   ganttNeedsDates: 'Give tasks start dates and durations to see the Gantt',
@@ -283,8 +283,8 @@ const en: Record<CopyKey, string> = {
 
   // reports
   reportsSubtitle: 'Aggregated across structures — the project’s real work timeline',
-  scurveTitle: 'Cost S-Curve',
-  resourceLoadingTitle: 'Resource Loading (OBS × schedule)',
+  scurveTitle: 'Cost S-curve',
+  resourceLoadingTitle: 'Resource loading (OBS × schedule)',
   bucketWeek: 'Week',
   bucketMonth: 'Month',
   scurveLegendTotal: 'Total',
@@ -292,8 +292,8 @@ const en: Record<CopyKey, string> = {
   scurveLegendOther: 'Other',
   reportsNoDates: 'No scheduled tasks yet — add start dates in the WBS to see reports',
   scurveNoCosts: 'Scheduled tasks carry no cost yet — enter costs in the inspector',
-  reportsUndatedWarning: '{n} task(s) have cost but no schedule (total {cost}) — excluded from the curve',
-  scurveMultiChargedFootnote: '{n} task(s) are charged to several categories — each category counts their full cost',
+  reportsUndatedWarning: '{n} tasks have cost but no schedule (total {cost}) — excluded from the curve',
+  scurveMultiChargedFootnote: '{n} tasks are charged to several categories — each category counts their full cost',
   resourceTaskDays: '{n} task-days',
   resourceNoAssigns: 'No org assignments yet — open a WBS task and use “Assign to org unit”',
   resourceUnassigned: 'Unassigned',

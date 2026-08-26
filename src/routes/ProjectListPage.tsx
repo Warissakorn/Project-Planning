@@ -85,13 +85,13 @@ export function ProjectListPage() {
   const allSamplesLoaded = SAMPLE_PROJECTS.every((s) => !!projects[s.id])
   const loadSamples = () => {
     for (const sample of SAMPLE_PROJECTS) {
-      if (!projects[sample.id]) addImportedProject(sample.build())
+      if (!projects[sample.id]) addImportedProject(sample.build(lang))
     }
   }
 
   // Templates carry no fixed id — each pick creates a brand-new project.
   const createFromTemplate = (entry: TemplateEntry) => {
-    const id = addImportedProject(entry.build())
+    const id = addImportedProject(entry.build(lang))
     navigate(`/project/${id}`)
   }
 
