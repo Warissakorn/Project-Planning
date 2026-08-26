@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>คู่มือ Breakdown Planner</title>
 <meta name="description" content="คู่มือการใช้งานภาษาไทยฉบับสมบูรณ์: WBS / OBS / CBS / RBS / PBS, Gantt Chart และ Critical Path พร้อม 5 โปรเจ็คตัวอย่าง">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@400;500;600;700&display=swap">
+<!-- __BASE__ is substituted with the app base URL when the guide is rendered
+     in-app, so the self-hosted fonts resolve both in dev and on GitHub Pages. -->
+<link rel="stylesheet" href="__BASE__fonts/fonts.css">
 <style>
 /* ---------- tokens ---------- */
 :root {
@@ -65,7 +65,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: "Sarabun", "Noto Sans Thai", system-ui, sans-serif;
+  font-family: "IBM Plex Sans Thai", "Leelawadee UI", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
@@ -73,7 +73,7 @@ body {
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 a { color: var(--accent); text-decoration: none; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
-h1, h2, h3 { font-family: "Chakra Petch", "Sarabun", sans-serif; text-wrap: balance; }
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
 
 /* ---------- header ---------- */
 .masthead { padding: 56px 0 40px; }
@@ -136,7 +136,7 @@ h1, h2, h3 { font-family: "Chakra Petch", "Sarabun", sans-serif; text-wrap: bala
 @media (max-width: 1079px) {
   .mobile-toc { display: block; margin-bottom: 32px; }
   .mobile-toc summary {
-    cursor: pointer; font-family: "Chakra Petch", sans-serif; font-weight: 600;
+    cursor: pointer; font-weight: 600;
     padding: 10px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
   }
   .mobile-toc ol { margin: 8px 0 0; padding: 0 0 0 8px; list-style: none; }
@@ -218,7 +218,7 @@ code {
   position: absolute; left: 0; top: 2px;
   width: 26px; height: 26px;
   display: flex; align-items: center; justify-content: center;
-  font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 13px;
+  font-weight: 600; font-size: 13px;
   color: var(--accent); border: 1.5px solid var(--accent); border-radius: 50%;
 }
 
@@ -487,28 +487,28 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
           </g>
           <!-- today marker -->
           <line x1="380" y1="4" x2="380" y2="164" stroke="var(--critical)" stroke-width="1.6" stroke-dasharray="4 3"/>
-          <text x="386" y="14" font-size="10" fill="var(--critical)" font-family="Sarabun,sans-serif">วันนี้</text>
+          <text x="386" y="14" font-size="10" fill="var(--critical)" font-family="IBM Plex Sans Thai,sans-serif">วันนี้</text>
           <!-- row 1: normal task -->
-          <text x="10" y="41" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">งานปกติ</text>
+          <text x="10" y="41" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">งานปกติ</text>
           <rect x="170" y="30" width="120" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
           <!-- row 2: critical chain -->
-          <text x="10" y="73" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">Critical (slack ≤ 0)</text>
+          <text x="10" y="73" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Critical (slack ≤ 0)</text>
           <rect x="230" y="62" width="90" height="14" rx="7" fill="var(--critical)"/>
           <rect x="330" y="62" width="80" height="14" rx="7" fill="var(--critical)"/>
           <rect x="420" y="62" width="110" height="14" rx="7" fill="var(--critical)"/>
           <path d="M320 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
           <path d="M410 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
           <!-- row 3: slack float -->
-          <text x="10" y="105" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">มี slack (เผื่อวัน)</text>
+          <text x="10" y="105" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">มี slack (เผื่อวัน)</text>
           <rect x="290" y="94" width="80" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
           <rect x="370" y="98" width="70" height="6" rx="3" fill="var(--line)"/>
-          <text x="446" y="106" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">← แถบจาง = slack</text>
+          <text x="446" y="106" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">← แถบจาง = slack</text>
           <!-- row 4: milestone + parent span -->
-          <text x="10" y="137" font-size="11.5" fill="var(--muted)" font-family="Sarabun,sans-serif">Milestone / span</text>
+          <text x="10" y="137" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Milestone / span</text>
           <path d="M540 123 L548 130 L540 137 L532 130 Z" fill="#f59e0b"/>
-          <text x="556" y="134" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">◆ 0 วัน</text>
+          <text x="556" y="134" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">◆ 0 วัน</text>
           <rect x="170" y="146" width="360" height="9" rx="4.5" fill="var(--accent)" opacity="0.3"/>
-          <text x="536" y="155" font-size="10" fill="var(--muted)" font-family="Sarabun,sans-serif">งานแม่ = span</text>
+          <text x="536" y="155" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">งานแม่ = span</text>
         </svg>
         <figcaption>ธาตุที่พบใน Gantt: bar ปกติ (indigo), critical path (แดง — งานสายแม้วันเดียว
         โครงการเลยแผน), แถบจางคือ slack, milestone ◆ สีเหลือง, เส้นประแดงคือ today marker,
