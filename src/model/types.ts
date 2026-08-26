@@ -22,7 +22,7 @@ export interface Bilingual {
 /** Open-ended: builtin ids ('wbs'|'obs'|...) plus any future custom type. */
 export type StructureTypeId = string
 
-export type LinkKind = 'assigns' | 'charges'
+export type LinkKind = 'assigns' | 'charges' | 'delivers' | 'mitigates'
 
 export interface StructureTypeCapabilities {
   /** Has dates / duration / status / progress scheduling fields (WBS). */
@@ -139,4 +139,4 @@ export interface Project {
 // Views
 // ---------------------------------------------------------------------------
 
-export type ViewMode = 'tree' | 'gantt'
+export type ViewMode = 'tree' | 'gantt' | 'reports'

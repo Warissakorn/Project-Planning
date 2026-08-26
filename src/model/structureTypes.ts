@@ -76,7 +76,7 @@ export const STRUCTURE_TYPE_PRESETS: StructureTypeConfig[] = [
       scheduling: true,
       costing: true,
       dependencySource: true,
-      linkableFrom: ['assigns', 'charges'],
+      linkableFrom: ['assigns', 'charges', 'delivers', 'mitigates'],
     }),
     columns: wbsColumns,
   },
@@ -95,13 +95,13 @@ export const STRUCTURE_TYPE_PRESETS: StructureTypeConfig[] = [
   {
     id: 'rbs',
     label: { th: 'โครงสร้างความเสี่ยง (RBS)', en: 'Risk (RBS)' },
-    capabilities: caps(),
+    capabilities: caps({ linkableTo: ['mitigates'] }),
     columns: rbsColumns,
   },
   {
     id: 'pbs',
     label: { th: 'โครงสร้างผลผลิต (PBS)', en: 'Product (PBS)' },
-    capabilities: caps(),
+    capabilities: caps({ linkableTo: ['delivers'] }),
     columns: pbsColumns,
   },
 ]
