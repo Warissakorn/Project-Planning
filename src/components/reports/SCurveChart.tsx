@@ -170,11 +170,19 @@ export function SCurveChart({
   for (let v = 0; v <= yMax + step / 2; v += step) ticks.push(v)
   const yOf = (v: number) => M.top + plotH * (1 - v / yMax)
 
-  // Week view labels only each month's first bucket; month view labels all.
-  const labeled = buckets.filter((b, i) => {
-    if (granularity === 'month') return true
-    if (xOf(b.startIso) > width - M.right - 40) return false
-    return i === 0 || b.startIso.slice(0, 7) !== buckets[i - 1].startIso.slice(0, 7)
+  // X labels: month view marks every bucket, week view each month's first —
+  // both thinned so adjacent labels never collide on narrow containers.
+  const MIN_LABEL_GAP = 52
+  const labeled: ReportBucket[] = []
+  let lastLabelX = -Infinity
+  buckets.forEach((b, i) => {
+    const x = xOf(b.startIso)
+    if (x > width - M.right - 40) return
+    const isMonthStart = i === 0 || b.startIso.slice(0, 7) !== buckets[i - 1].startIso.slice(0, 7)
+    if ((granularity === 'month' || isMonthStart) && x - lastLabelX >= MIN_LABEL_GAP) {
+      labeled.push(b)
+      lastLabelX = x
+    }
   })
 
   const totalEndX = endXOf(buckets[buckets.length - 1])
