@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import {
+  CircleHelp,
   Copy,
   FileUp,
   FolderKanban,
@@ -19,6 +20,7 @@ import { Button } from '../components/ui/Button'
 import { Field, Input } from '../components/ui/Input'
 import { Modal } from '../components/ui/Modal'
 import { ConfirmDialog, EmptyState } from '../components/ui/Misc'
+import { UserGuideOverlay } from '../components/help/UserGuideOverlay'
 import { LangToggle } from '../components/layout/LangToggle'
 
 const fmtKB = (bytes: number) => `${Math.max(1, Math.round(bytes / 1024))} KB`
@@ -44,6 +46,7 @@ export function ProjectListPage() {
   const [deletingId, setDeletingId] = useState<ID | null>(null)
   const [importErrorKey, setImportErrorKey] =
     useState<'invalid-json' | 'invalid-format' | 'newer-version' | null>(null)
+  const [helpOpen, setHelpOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const create = () => {
@@ -87,7 +90,12 @@ export function ProjectListPage() {
       <div className="mx-auto max-w-5xl p-6">
         <header className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-slate-800">{t('appName')}</h1>
-          <LangToggle />
+          <div className="flex items-center gap-1.5">
+            <Button variant="ghost" size="sm" onClick={() => setHelpOpen(true)} title={t('helpTitle')}>
+              <CircleHelp size={16} />
+            </Button>
+            <LangToggle />
+          </div>
         </header>
 
         {/* --- new project / import ----------------------------------------- */}
@@ -279,6 +287,8 @@ export function ProjectListPage() {
           setDeletingId(null)
         }}
       />
+
+      <UserGuideOverlay open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   )
 }

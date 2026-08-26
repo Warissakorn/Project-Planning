@@ -1,5 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, FileJson, FileSpreadsheet, Redo2, Undo2 } from 'lucide-react'
+import {
+  ArrowLeft,
+  CircleHelp,
+  FileJson,
+  FileSpreadsheet,
+  Redo2,
+  Undo2,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAppStore } from '../../state/store'
 import { useActiveStructure } from '../../state/selectors'
@@ -9,6 +16,7 @@ import { downloadFile, safeFilename } from '../../lib/jsonFile'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { DropdownMenu, MenuItem } from '../ui/DropdownMenu'
+import { UserGuideOverlay } from '../help/UserGuideOverlay'
 import { LangToggle } from './LangToggle'
 
 /**
@@ -30,6 +38,7 @@ export function AppHeader() {
 
   const [editingName, setEditingName] = useState(false)
   const [nameDraft, setNameDraft] = useState('')
+  const [helpOpen, setHelpOpen] = useState(false)
 
   // Reset the inline editor whenever we land on a different project.
   useEffect(() => {
@@ -86,6 +95,9 @@ export function AppHeader() {
       )}
 
       <div className="ml-auto flex items-center gap-1">
+        <Button size="sm" onClick={() => setHelpOpen(true)} title={t('helpTitle')}>
+          <CircleHelp size={15} />
+        </Button>
         <Button size="sm" disabled={!canUndo} onClick={undo} title={`${t('undo')} (Ctrl+Z)`}>
           <Undo2 size={15} />
         </Button>
@@ -121,6 +133,8 @@ export function AppHeader() {
         <div className="mx-1 h-5 w-px bg-slate-200" />
         <LangToggle />
       </div>
+
+      <UserGuideOverlay open={helpOpen} onClose={() => setHelpOpen(false)} />
     </header>
   )
 }

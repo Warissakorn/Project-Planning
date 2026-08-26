@@ -39,6 +39,9 @@ const th = {
   storageWarning: 'พื้นที่ใกล้เต็ม — แนะนำส่งออกไฟล์ JSON เก็บไว้',
   loadSamples: 'โหลดตัวอย่าง 5 โปรเจ็ค',
 
+  // help
+  helpTitle: 'คู่มือการใช้งาน',
+
   // workspace header
   undo: 'Undo',
   redo: 'Redo',
@@ -180,6 +183,9 @@ const en: Record<CopyKey, string> = {
   storageUsage: 'Storage: {size}',
   storageWarning: 'Storage is nearly full — consider exporting a JSON backup',
   loadSamples: 'Load 5 sample projects',
+
+  // help
+  helpTitle: 'User Guide',
 
   undo: 'Undo',
   redo: 'Redo',
