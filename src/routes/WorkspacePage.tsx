@@ -2,12 +2,14 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAppStore } from '../state/store'
 import { useStructureData } from '../state/selectors'
+import { hasSchedulingStructure } from '../engine/validation'
 import { AppHeader } from '../components/layout/AppHeader'
 import { StatusBar } from '../components/layout/StatusBar'
 import { StructureTabs } from '../components/tree/StructureTabs'
 import { TreeToolbar } from '../components/tree/TreeToolbar'
 import { StructureTree } from '../components/tree/StructureTree'
 import { GanttView } from '../components/gantt/GanttView'
+import { ReportsView } from '../components/reports/ReportsView'
 import { NodeInspector } from '../components/inspector/NodeInspector'
 
 /**
@@ -20,7 +22,7 @@ export function WorkspacePage() {
   const navigate = useNavigate()
   const exists = useAppStore((s) => !!projectId && !!s.projects[projectId])
   const viewMode = useAppStore((s) => s.viewMode)
-  const { typeConfig } = useStructureData()
+  const { project, typeConfig } = useStructureData()
 
   // URL → store sync; unknown ids bounce back to the list.
   useEffect(() => {
@@ -64,6 +66,9 @@ export function WorkspacePage() {
   if (!projectId || !exists) return null
 
   const showGantt = viewMode === 'gantt' && !!typeConfig?.capabilities.scheduling
+  // Guards a stale persisted 'reports' in a project that lost its scheduling
+  // structure — falls back to the tree instead of stranding the user.
+  const canReport = !!project && hasSchedulingStructure(project.structures)
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
@@ -72,7 +77,7 @@ export function WorkspacePage() {
         <main className="flex min-w-0 flex-1 flex-col">
           <StructureTabs />
           <TreeToolbar />
-          {showGantt ? <GanttView /> : <StructureTree />}
+          {viewMode === 'reports' && canReport ? <ReportsView /> : showGantt ? <GanttView /> : <StructureTree />}
         </main>
         <NodeInspector />
       </div>

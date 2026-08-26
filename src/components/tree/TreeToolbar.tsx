@@ -8,18 +8,26 @@ import {
   Plus,
   Table2,
   Trash2,
+  TrendingUp,
 } from 'lucide-react'
 import { useAppStore } from '../../state/store'
 import { useStructureData } from '../../state/selectors'
-import { useT } from '../../lib/i18n'
+import { hasSchedulingStructure } from '../../engine/validation'
+import { useT, type CopyKey } from '../../lib/i18n'
 import { cx } from '../../lib/cx'
 import { Button } from '../ui/Button'
 import { ConfirmDialog } from '../ui/Misc'
 
+const VIEW_SEGMENTS = [
+  { mode: 'tree', icon: Table2, titleKey: 'treeView' },
+  { mode: 'gantt', icon: BarChart3, titleKey: 'ganttView' },
+  { mode: 'reports', icon: TrendingUp, titleKey: 'reportsView' },
+] as const
+
 /** Action strip above the tree: add/indent/outdent/collapse + view toggle. */
 export function TreeToolbar() {
   const t = useT()
-  const { structure, typeConfig } = useStructureData()
+  const { project, structure, typeConfig } = useStructureData()
   const selectedNodeId = useAppStore((s) => s.selectedNodeId)
   const viewMode = useAppStore((s) => s.viewMode)
   const {
@@ -38,6 +46,9 @@ export function TreeToolbar() {
   if (!structure || !typeConfig) return null
 
   const canScheduling = typeConfig.capabilities.scheduling
+  // The view switch is visible whenever the PROJECT can schedule (reports work
+  // from any tab); only the gantt segment is gated on the active structure.
+  const canReport = !!project && hasSchedulingStructure(project.structures)
   // With no selection, "add" targets the structure root (= a top-level row).
   const target = selectedNodeId ?? structure.rootId
   const hasSelection = !!selectedNodeId && selectedNodeId !== structure.rootId
@@ -78,22 +89,27 @@ export function TreeToolbar() {
           </Button>
         ) : null}
 
-        {canScheduling ? (
+        {canReport ? (
           <div className="flex items-center rounded-md border border-slate-300 p-0.5">
-            {(['tree', 'gantt'] as const).map((mode) => (
-              <button
-                key={mode}
-                type="button"
-                onClick={() => setMode(mode)}
-                title={mode === 'tree' ? t('treeView') : t('ganttView')}
-                className={cx(
-                  'inline-flex h-6 items-center gap-1 rounded px-2 text-xs font-medium',
-                  viewMode === mode ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-100',
-                )}
-              >
-                {mode === 'tree' ? <Table2 size={13} /> : <BarChart3 size={13} />}
-              </button>
-            ))}
+            {VIEW_SEGMENTS.map(({ mode, icon: Icon, titleKey }) => {
+              const ganttBlocked = mode === 'gantt' && !canScheduling
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  disabled={ganttBlocked}
+                  onClick={() => setMode(mode)}
+                  title={ganttBlocked ? t('ganttUnavailableHere') : t(titleKey as CopyKey)}
+                  className={cx(
+                    'inline-flex h-6 items-center gap-1 rounded px-2 text-xs font-medium',
+                    viewMode === mode ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-100',
+                    ganttBlocked && 'cursor-not-allowed opacity-40 hover:bg-transparent',
+                  )}
+                >
+                  <Icon size={13} />
+                </button>
+              )
+            })}
           </div>
         ) : null}
       </div>

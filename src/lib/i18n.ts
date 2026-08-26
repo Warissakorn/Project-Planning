@@ -53,6 +53,8 @@ const th = {
   // workspace / tree
   treeView: 'ตาราง',
   ganttView: 'Gantt',
+  reportsView: 'รายงาน',
+  ganttUnavailableHere: 'Gantt ใช้ได้เฉพาะโครงสร้างที่มีกำหนดการ (เช่น WBS)',
   addChild: 'เพิ่มรายการย่อย',
   addSibling: 'เพิ่มรายการข้างเคียง',
   indent: 'ย่อหน้าเข้า',
@@ -121,6 +123,13 @@ const th = {
   ganttZoom_week: 'รายสัปดาห์',
   ganttZoom_month: 'รายเดือน',
 
+  // reports
+  reportsSubtitle: 'รายงานรวมจากทุกโครงสร้าง — เข็มขัดเวลาทำงานจริงของโครงการ',
+  scurveTitle: 'เส้นโค้งต้นทุนสะสม (S-Curve)',
+  resourceLoadingTitle: 'การใช้ทรัพยากร (OBS × กำหนดการ)',
+  bucketWeek: 'รายสัปดาห์',
+  bucketMonth: 'รายเดือน',
+
   // structures tabs
   addStructure: 'เพิ่มโครงสร้าง',
   structureNameLabel: 'ชื่อโครงสร้าง',
@@ -174,6 +183,8 @@ const en: Record<CopyKey, string> = {
 
   treeView: 'Table',
   ganttView: 'Gantt',
+  reportsView: 'Reports',
+  ganttUnavailableHere: 'Gantt is available on scheduling structures (e.g. WBS) only',
   addChild: 'Add child',
   addSibling: 'Add sibling',
   indent: 'Indent',
@@ -237,6 +248,13 @@ const en: Record<CopyKey, string> = {
   ganttZoom_day: 'Day',
   ganttZoom_week: 'Week',
   ganttZoom_month: 'Month',
+
+  // reports
+  reportsSubtitle: 'Aggregated across structures — the project’s real work timeline',
+  scurveTitle: 'Cost S-Curve',
+  resourceLoadingTitle: 'Resource Loading (OBS × schedule)',
+  bucketWeek: 'Week',
+  bucketMonth: 'Month',
 
   addStructure: 'Add structure',
   structureNameLabel: 'Structure name',

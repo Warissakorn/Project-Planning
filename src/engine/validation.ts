@@ -27,6 +27,11 @@ export function schedulingStructureIds(structures: Structure[]): Set<ID> {
   )
 }
 
+/** Whether the project has ANY schedulable structure — gates the reports view. */
+export function hasSchedulingStructure(structures: Structure[]): boolean {
+  return schedulingStructureIds(structures).size > 0
+}
+
 /** Leaf nodes inside scheduling-capable structures — the only CPM participants. */
 export function schedulableLeafIds(nodes: Nodes, structures: Structure[]): ID[] {
   const sched = schedulingStructureIds(structures)
