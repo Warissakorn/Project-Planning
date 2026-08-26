@@ -3,6 +3,8 @@
 > เว็บแอปวางแผนโปรเจ็คด้วย Breakdown Structure (WBS / OBS / CBS / RBS / PBS)
 > พร้อม Gantt Chart และ Critical Path — ทำงานในเบราว์เซอร์ 100% ไม่ต้องต่อเน็ต
 
+> 🇬🇧 [Read this guide in English](user-guide.en.md)
+
 ---
 
 ## สารบัญ

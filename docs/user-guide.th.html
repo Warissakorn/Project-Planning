@@ -228,6 +228,8 @@ code {
 
 footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color: var(--muted); font-size: 13.5px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.lang-switch { margin: 10px 0 0; font-size: 13px; }
+.lang-switch a { color: inherit; opacity: .75; }
 </style>
 </head>
 <body>
@@ -237,6 +239,7 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
     <h1>Breakdown Planner<br><em>วางแผนโปรเจ็คแบบแตกโครงสร้าง</em></h1>
     <p class="lede">WBS · OBS · CBS · RBS · PBS ในโปรเจ็คเดียว พร้อม Gantt Chart, Critical Path
     และ Cross-links — ทำงานในเบราว์เซอร์ทั้งหมด ไม่มี server ไม่มี login</p>
+    <p class="lang-switch"><a href="user-guide.en.html">Read this guide in English →</a></p>
     <div class="chips">
       <span class="chip"><b>TH / EN</b> สลับภาษาได้</span>
       <span class="chip"><b>Offline-first</b> localStorage</span>
@@ -755,5 +758,12 @@ footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color
 <footer class="colophon">
   <div class="wrap">คู่มือฉบับ v0.1 · Breakdown Planner — Vite + React + zustand · ข้อมูลเก็บในเครื่องผู้ใช้ทั้งหมด</div>
 </footer>
+<script>
+  // In-app the guide is an iframe whose language already follows the app's own
+  // toggle, and a relative link there would navigate the frame to nowhere.
+  if (window.parent !== window) {
+    for (const el of document.querySelectorAll('.lang-switch')) el.hidden = true
+  }
+</script>
 </body>
 </html>

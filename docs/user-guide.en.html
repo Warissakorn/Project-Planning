@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breakdown Planner guide</title>
+<meta name="description" content="The complete user guide: WBS / OBS / CBS / RBS / PBS, Gantt charts and the critical path, with five sample projects">
+<!-- __BASE__ is substituted with the app base URL when the guide is rendered
+     in-app, so the self-hosted fonts resolve both in dev and on GitHub Pages. -->
+<link rel="stylesheet" href="__BASE__fonts/fonts.css">
+<style>
+/* ---------- tokens ---------- */
+:root {
+  --paper: #f6f7fb;
+  --surface: #ffffff;
+  --ink: #1b2337;
+  --muted: #5d6880;
+  --line: #dde1ee;
+  --accent: #4f46e5;
+  --accent-ink: #ffffff;
+  --accent-soft: #eceefe;
+  --critical: #dc2626;
+  --done: #059669;
+  --warn: #b45309;
+  --warn-soft: #fdf3e3;
+  --tip-soft: #eceefe;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12151f;
+    --surface: #191e2d;
+    --ink: #e7eaf5;
+    --muted: #99a2be;
+    --line: #2c3348;
+    --accent: #8f97fa;
+    --accent-ink: #14172a;
+    --accent-soft: #252c48;
+    --critical: #f07171;
+    --done: #3ecfa0;
+    --warn: #e0a34e;
+    --warn-soft: #2b2417;
+    --tip-soft: #232a45;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12151f;
+  --surface: #191e2d;
+  --ink: #e7eaf5;
+  --muted: #99a2be;
+  --line: #2c3348;
+  --accent: #8f97fa;
+  --accent-ink: #14172a;
+  --accent-soft: #252c48;
+  --critical: #f07171;
+  --done: #3ecfa0;
+  --warn: #e0a34e;
+  --warn-soft: #2b2417;
+  --tip-soft: #232a45;
+}
+
+/* ---------- base ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans Thai", "Leelawadee UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+a { color: var(--accent); text-decoration: none; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+
+/* ---------- header ---------- */
+.masthead { padding: 56px 0 40px; }
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.masthead h1 {
+  margin: 10px 0 6px;
+  font-size: clamp(30px, 4.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.masthead h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+.lede { max-width: 62ch; color: var(--muted); font-size: 17px; margin: 8px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--surface);
+}
+.chip b { color: var(--ink); font-weight: 500; }
+/* gantt motif strip */
+.motif { margin-top: 28px; overflow-x: auto; }
+.motif svg { display: block; width: min(100%, 720px); height: auto; }
+
+/* ---------- layout ---------- */
+.shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; align-items: start; padding-bottom: 96px; }
+@media (max-width: 1079px) { .shell { grid-template-columns: 1fr; gap: 0; } }
+.toc { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; }
+@media (max-width: 1079px) { .toc { display: none; } }
+.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: ch; }
+.toc li { counter-increment: ch; }
+.toc a {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 6px 12px 6px 0;
+  color: var(--muted); font-size: 14px; line-height: 1.45;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+}
+.toc a::before {
+  content: counter(ch, decimal-leading-zero);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px; color: var(--muted); opacity: 0.7;
+}
+.toc a:hover { color: var(--ink); border-left-color: var(--line); }
+.toc-title { margin: 0 0 10px; padding-left: 14px; }
+
+.mobile-toc { display: none; }
+@media (max-width: 1079px) {
+  .mobile-toc { display: block; margin-bottom: 32px; }
+  .mobile-toc summary {
+    cursor: pointer; font-weight: 600;
+    padding: 10px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  }
+  .mobile-toc ol { margin: 8px 0 0; padding: 0 0 0 8px; list-style: none; }
+  .mobile-toc a { display: block; padding: 5px 8px; color: var(--muted); }
+}
+
+/* ---------- chapters ---------- */
+.chapter { padding-top: 44px; border-top: 1px solid var(--line); margin-top: 44px; }
+.chapter:first-of-type { border-top: 0; margin-top: 0; padding-top: 8px; }
+.ch-no {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px; letter-spacing: 0.18em;
+  color: var(--accent); text-transform: uppercase;
+}
+.chapter h2 { margin: 6px 0 18px; font-size: clamp(22px, 3vw, 28px); font-weight: 600; }
+.chapter h3 { margin: 26px 0 8px; font-size: 17.5px; font-weight: 600; }
+.prose > p { max-width: 70ch; margin: 10px 0; }
+.prose ul, .prose ol { max-width: 70ch; padding-left: 22px; margin: 10px 0; }
+.prose li { margin: 4px 0; }
+strong { font-weight: 700; }
+
+/* ---------- components ---------- */
+.tbl-scroll { overflow-x: auto; margin: 16px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 520px; }
+th {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  text-align: left; color: var(--muted); font-weight: 500;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+td { padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td b, td strong { font-weight: 600; }
+.num { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+.kbd {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface);
+  white-space: nowrap;
+}
+code {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.86em;
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.callout {
+  max-width: 74ch;
+  margin: 18px 0;
+  padding: 13px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--tip-soft);
+  font-size: 15px;
+}
+.callout.warn { border-left-color: var(--warn); background: var(--warn-soft); }
+.callout .tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  display: block; margin-bottom: 3px; color: var(--muted); font-weight: 500;
+}
+.callout.warn .tag { color: var(--warn); }
+.callout p { margin: 4px 0; }
+
+.steps { counter-reset: step; list-style: none; padding-left: 0; }
+.steps li { counter-increment: step; position: relative; padding-left: 42px; margin: 12px 0; max-width: 68ch; }
+.steps li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 2px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 13px;
+  color: var(--accent); border: 1.5px solid var(--accent); border-radius: 50%;
+}
+
+.legend { margin: 20px 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+.legend svg { display: block; width: 100%; min-width: 560px; height: auto; }
+.legend figcaption { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+footer.colophon { border-top: 1px solid var(--line); padding: 28px 0 64px; color: var(--muted); font-size: 13.5px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.lang-switch { margin: 10px 0 0; font-size: 13px; }
+.lang-switch a { color: inherit; opacity: .75; }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <span class="eyebrow">User guide · Manual · v0.1</span>
+    <h1>Breakdown Planner<br><em>Planning by breakdown structure</em></h1>
+    <p class="lede">WBS · OBS · CBS · RBS · PBS in one project, with a Gantt chart, critical path
+    and cross-links — all in the browser, no server, no login</p>
+    <p class="lang-switch"><a href="user-guide.th.html">อ่านคู่มือฉบับภาษาไทย →</a></p>
+    <div class="chips">
+      <span class="chip"><b>TH / EN</b> Bilingual</span>
+      <span class="chip"><b>Offline-first</b> localStorage</span>
+      <span class="chip"><b>Undo 50 steps</b></span>
+      <span class="chip"><b>JSON / CSV export</b></span>
+    </div>
+    <div class="motif" aria-hidden="true">
+      <svg viewBox="0 0 720 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="720" height="54" rx="8" fill="var(--accent-soft)"/>
+        <rect x="36" y="12" width="150" height="9" rx="4.5" fill="var(--accent)" opacity="0.85"/>
+        <rect x="196" y="12" width="90" height="9" rx="4.5" fill="var(--critical)"/>
+        <rect x="296" y="12" width="200" height="9" rx="4.5" fill="var(--accent)" opacity="0.55"/>
+        <rect x="506" y="12" width="60" height="9" rx="4.5" fill="var(--critical)"/>
+        <rect x="120" y="31" width="180" height="9" rx="4.5" fill="var(--accent)" opacity="0.35"/>
+        <path d="M310 27 L316 21 L322 27 L316 33 Z" fill="#f59e0b"/>
+        <rect x="420" y="31" width="110" height="9" rx="4.5" fill="var(--accent)" opacity="0.35"/>
+        <line x1="480" y1="4" x2="480" y2="50" stroke="var(--critical)" stroke-width="1.6" stroke-dasharray="3 3"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="wrap shell">
+  <nav class="toc" aria-label="Contents">
+    <p class="toc-title eyebrow">Contents</p>
+    <ol>
+      <li><a href="#ch1">Overview</a></li>
+      <li><a href="#ch2">Start in 3 minutes</a></li>
+      <li><a href="#ch3">Concepts to know first</a></li>
+      <li><a href="#ch4">Building the structure</a></li>
+      <li><a href="#ch5">Schedule and cost</a></li>
+      <li><a href="#ch6">Dependencies</a></li>
+      <li><a href="#ch7">Gantt &amp; Critical Path</a></li>
+      <li><a href="#ch8">Cross-structure links</a></li>
+      <li><a href="#ch9">Undo · Export · Import</a></li>
+      <li><a href="#ch10">How far does it go?</a></li>
+      <li><a href="#ch11">5 sample projects</a></li>
+      <li><a href="#ch12">FAQ</a></li>
+      <li><a href="#ch13">Reports: S-curve &amp; resources</a></li>
+    </ol>
+  </nav>
+
+  <main class="prose">
+    <details class="mobile-toc">
+      <summary>Contents — 13 chapters</summary>
+      <ol>
+        <li><a href="#ch1">Overview</a></li>
+        <li><a href="#ch2">Start in 3 minutes</a></li>
+        <li><a href="#ch3">Concepts to know first</a></li>
+        <li><a href="#ch4">Building the structure</a></li>
+        <li><a href="#ch5">Schedule and cost</a></li>
+        <li><a href="#ch6">Dependencies</a></li>
+        <li><a href="#ch7">Gantt &amp; Critical Path</a></li>
+        <li><a href="#ch8">Cross-structure links</a></li>
+        <li><a href="#ch9">Undo · Export · Import</a></li>
+        <li><a href="#ch10">How far does it go?</a></li>
+        <li><a href="#ch11">5 sample projects</a></li>
+        <li><a href="#ch12">FAQ</a></li>
+        <li><a href="#ch13">Reports: S-curve &amp; resources</a></li>
+      </ol>
+    </details>
+
+    <!-- ============ 1 ============ -->
+    <section class="chapter" id="ch1">
+      <span class="ch-no">Chapter 01</span>
+      <h2>Overview</h2>
+      <p>Breakdown Planner is built on the <strong>Breakdown Structure</strong> — breaking a large piece of work down until each part is unambiguous, the
+      standard project management approach (PMBOK). One project can carry several structures at once:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Type</th><th>Full name</th><th>What it is for</th></tr></thead>
+        <tbody>
+          <tr><td><b>WBS</b></td><td>Work Breakdown Structure</td><td>Tasks + schedule + cost — the heart of the app</td></tr>
+          <tr><td><b>OBS</b></td><td>Organizational Breakdown Structure</td><td>Who or which unit is responsible for what</td></tr>
+          <tr><td><b>CBS</b></td><td>Cost Breakdown Structure</td><td>Which category a cost falls into, and the totals</td></tr>
+          <tr><td><b>RBS</b></td><td>Risk Breakdown Structure</td><td>Risk register: likelihood × impact</td></tr>
+          <tr><td><b>PBS</b></td><td>Product Breakdown Structure</td><td>Products and modules to deliver</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Highlights:</strong> one tree editor for every structure (drag and drop, indent and outdent,
+      automatic numbering 1 / 1.1 / 1.1.1) · FS/SS/FF/SF dependencies with automatic cycle protection ·
+      a Gantt that draws the critical path in red alongside slack · WBS→OBS/CBS links that roll up in reverse ·
+      undo/redo, JSON/CSV export, JSON import, and a Thai-English toggle on every screen</p>
+      <div class="callout">
+        <span class="tag">Best for</span>
+        <p>small to mid-sized projects, small teams and personal work, and learning
+        WBS, Gantt and CPM through something concrete — for the limits worth knowing first, see <a href="#ch10">chapter 10</a></p>
+      </div>
+    </section>
+
+    <!-- ============ 2 ============ -->
+    <section class="chapter" id="ch2">
+      <span class="ch-no">Chapter 02</span>
+      <h2>Start in 3 minutes</h2>
+      <h3>Create a new project</h3>
+      <ol class="steps">
+        <li>Open the app — the first page is your project list</li>
+        <li>Type a name, for example <code>Office building extension</code> → click <strong>Create a new project</strong></li>
+        <li>The app opens the workspace on a WBS tab whose root carries the project name — click <strong>Add child</strong> and start breaking the work down</li>
+      </ol>
+      <h3>Or start from a ready-made sample</h3>
+      <p>Click <strong>Load 5 sample projects</strong> on the first page and you get five projects in five different styles,
+      complete with dates, progress, dependencies and a critical path (details in
+      <a href="#ch11">chapter 11</a>) — clicking again never duplicates them, because their ids are fixed</p>
+      <h3>Start real work from a template</h3>
+      <p>Click <strong>Create from template</strong> on the first page — choose from
+      <strong>16 templates in 6 categories</strong> (🏗️ construction · 💻 IT/software · 📣 marketing ·
+      🎪 events · 🏪 business · 🎓 personal) — building a house, a mobile app MVP,
+      a product launch, a seminar, a coffee shop, a thesis, a house move. The search box matches Thai and English names alike</p>
+      <p>Every template ships with <strong>phases, tasks, durations, dependencies and milestones</strong>
+      in the standard WBS shape. Pick one and the app creates the project immediately: CPM computes every
+      start and finish from today and draws the Gantt and critical path, leaving you to rename, add or remove
+      tasks and enter real progress. Instantiate the same template as often as you like — each one is a new
+      project — and add OBS/CBS/RBS/PBS later through <strong>+ Add structure</strong>
+      in the workspace</p>
+      <div class="callout">
+        <span class="tag">💡 Tip</span>
+        <p>The <strong>? (guide)</strong> button in the header of both the project list and the workspace opens this guide
+        inside the app at any time — no separate file needed</p>
+      </div>
+      <h3>Rename a task</h3>
+      <p>Double-click the name in the table to edit it · <span class="kbd">Enter</span> save ·
+      <span class="kbd">Esc</span> cancel</p>
+    </section>
+
+    <!-- ============ 3 ============ -->
+    <section class="chapter" id="ch3">
+      <span class="ch-no">Chapter 03</span>
+      <h2>Concepts to know first</h2>
+      <h3>Leaf tasks are the source of truth</h3>
+      <p>The most important rule — real data is entered on <strong>tasks with no children</strong> only. Every value on a parent is computed:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Value</th><th>Leaf task</th><th>Parent (has children)</th></tr></thead>
+        <tbody>
+          <tr><td>Start date / duration</td><td>✏️ Entered</td><td>🔒 Span of its children (min start - max end)</td></tr>
+          <tr><td>Progress %</td><td>✏️ Entered</td><td>🔒 Weighted by child duration</td></tr>
+          <tr><td>Status</td><td>✏️ Chosen</td><td>🔒 Derived from progress</td></tr>
+          <tr><td>Cost</td><td>✏️ Entered</td><td>🔒 Sum of all descendants</td></tr>
+        </tbody>
+      </table></div>
+      <p>Edit a leaf once and every parent above it updates immediately — there is no refresh button</p>
+      <h3>Numbering is computed live</h3>
+      <p>1, 1.1 and 1.1.1 are derived from the node's actual position on every render, so
+      the numbers stay correct wherever you drag a row — they were never stored in the first place</p>
+      <h3>One tab, one structure</h3>
+      <p>Add a structure with the <strong>+ Add structure</strong> button at the end of the tab bar ·
+      double-click a tab to rename it · the × on the active tab deletes it
+      (deleting a structure deletes every node inside it, behind a confirmation dialog)</p>
+    </section>
+
+    <!-- ============ 4 ============ -->
+    <section class="chapter" id="ch4">
+      <span class="ch-no">Chapter 04</span>
+      <h2>Building the structure</h2>
+      <h3>The toolbar above the table</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>The</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><b>Add child</b></td><td>Adds a child under the selected row (nothing selected = under the root)</td></tr>
+          <tr><td><b>Add sibling</b></td><td>Adds a node at the same level, after the selected row</td></tr>
+          <tr><td><span class="kbd">⇥</span> / <span class="kbd">⇤</span></td><td>Indent / outdent — move a row one level in or out</td></tr>
+          <tr><td><b>Collapse / expand all</b></td><td>Collapses or expands every branch at once</td></tr>
+          <tr><td><b>Delete</b></td><td>Deletes the selected row and all its children (behind a confirmation dialog)</td></tr>
+          <tr><td><b>📋 / 📊 / 📈</b></td><td>Switches between table, Gantt and reports — the Gantt button works only on scheduling structures (such as WBS), while reports open from any tab (<a href="#ch13">chapter 13</a>)</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Drag and drop</h3>
+      <p>Grab the dotted handle in front of the name and drag:</p>
+      <ul>
+        <li>drop on the <strong>upper part</strong> of the target row to place it <strong>before</strong> that row</li>
+        <li>drop on the <strong>lower part</strong> to place it <strong>after</strong> that row</li>
+        <li>drop on the <strong>middle of a row</strong> to place it <strong>to place it</strong> as a child of that row</li>
+      </ul>
+      <p>A node cannot be dropped into its own subtree, so the tree can never loop back on itself</p>
+      <h3>Keyboard</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>The</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><span class="kbd">↑</span> <span class="kbd">↓</span></td><td>Move the selection up and down</td></tr>
+          <tr><td><span class="kbd">Home</span> / <span class="kbd">End</span></td><td>Jump to the first or last row</td></tr>
+          <tr><td><span class="kbd">→</span></td><td>Expand a collapsed branch, or step into the first child</td></tr>
+          <tr><td><span class="kbd">←</span></td><td>Collapse a branch, or step up to the parent</td></tr>
+          <tr><td><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span></td><td>Undo / Redo</td></tr>
+        </tbody>
+      </table></div>
+      <p>The selected row scrolls into view on its own</p>
+    </section>
+
+    <!-- ============ 5 ============ -->
+    <section class="chapter" id="ch5">
+      <span class="ch-no">Chapter 05</span>
+      <h2>Schedule, progress and cost</h2>
+      <p>Click any row and the inspector on the right shows the fields for that structure type:</p>
+      <ul>
+        <li><strong>WBS leaf</strong> — start date, duration in days, a <strong>Milestone</strong>
+        checkbox (a zero-day marker, drawn as ◆ on the Gantt), progress %, status (to do / in progress / done) and cost</li>
+        <li><strong>WBS parent</strong> — read-only derived values with a status badge</li>
+        <li><strong>OBS</strong> — owner · <strong>CBS</strong> — budget ·
+        <strong>RBS</strong> — likelihood (%), impact (low/medium/high) and response plan ·
+        <strong>PBS</strong> — version</li>
+        <li>Every node has <strong>notes</strong> for anything else</li>
+      </ul>
+      <div class="callout">
+        <span class="tag">Tips</span>
+        <p>Table columns edit in place like a spreadsheet — click a cell and type</p>
+      </div>
+      <p>The status bar at the bottom warns how many tasks still lack a start date or duration,
+      and shows how much storage is in use</p>
+    </section>
+
+    <!-- ============ 6 ============ -->
+    <section class="chapter" id="ch6">
+      <span class="ch-no">Chapter 06</span>
+      <h2>Dependencies</h2>
+      <p>Add them from the inspector of a WBS leaf — click <strong>+ Add dependency</strong>
+      pick the predecessor, then set the type and lag (in days, negative allowed):</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Type</th><th>Name</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><b>FS</b></td><td>Finish-to-Start</td><td>The predecessor <b>finishes</b> before the successor can <b>start</b> — by far the most common</td></tr>
+          <tr><td><b>SS</b></td><td>Start-to-Start</td><td>Both start together (+lag starts the successor that many days later)</td></tr>
+          <tr><td><b>FF</b></td><td>Finish-to-Finish</td><td>Both finish together</td></tr>
+          <tr><td><b>SF</b></td><td>Start-to-Finish</td><td>The predecessor starts before the successor can finish — rare</td></tr>
+        </tbody>
+      </table></div>
+      <p>The rules are enforced automatically, each with its own message:</p>
+      <ul>
+        <li>❌ No self-links and no cycles — the whole subtree is checked before a link is accepted</li>
+        <li>❌ No duplicate edges</li>
+        <li>❌ Only schedulable leaves, and both ends must be in the same structure</li>
+      </ul>
+      <p>Dependencies are the input to the CPM pass that draws the critical path in the next chapter</p>
+    </section>
+
+    <!-- ============ 7 ============ -->
+    <section class="chapter" id="ch7">
+      <span class="ch-no">Chapter 07</span>
+      <h2>Gantt chart and critical path</h2>
+      <p>Switch with the 📊 button — the name pane on the left stays in sync with the tree, collapsed branches included.
+      Zoom by day, week or month, and hover a bar for its dates and slack</p>
+      <figure class="legend">
+        <svg viewBox="0 0 640 168" role="img" aria-label="Gantt example: normal bar, critical bar, milestone, today marker">
+          <!-- grid days -->
+          <g stroke="var(--line)" stroke-width="1">
+            <line x1="170" y1="8" x2="170" y2="160"/><line x1="230" y1="8" x2="230" y2="160"/>
+            <line x1="290" y1="8" x2="290" y2="160"/><line x1="350" y1="8" x2="350" y2="160"/>
+            <line x1="410" y1="8" x2="410" y2="160"/><line x1="470" y1="8" x2="470" y2="160"/>
+            <line x1="530" y1="8" x2="530" y2="160"/><line x1="590" y1="8" x2="590" y2="160"/>
+          </g>
+          <!-- today marker -->
+          <line x1="380" y1="4" x2="380" y2="164" stroke="var(--critical)" stroke-width="1.6" stroke-dasharray="4 3"/>
+          <text x="386" y="14" font-size="10" fill="var(--critical)" font-family="IBM Plex Sans Thai,sans-serif">Today</text>
+          <!-- row 1: normal task -->
+          <text x="10" y="41" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Normal task</text>
+          <rect x="170" y="30" width="120" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
+          <!-- row 2: critical chain -->
+          <text x="10" y="73" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Critical (slack ≤ 0)</text>
+          <rect x="230" y="62" width="90" height="14" rx="7" fill="var(--critical)"/>
+          <rect x="330" y="62" width="80" height="14" rx="7" fill="var(--critical)"/>
+          <rect x="420" y="62" width="110" height="14" rx="7" fill="var(--critical)"/>
+          <path d="M320 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
+          <path d="M410 69 h8 m-3 -3 l3 3 l-3 3" stroke="var(--critical)" fill="none" stroke-width="1.4"/>
+          <!-- row 3: slack float -->
+          <text x="10" y="105" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Has slack (spare days)</text>
+          <rect x="290" y="94" width="80" height="14" rx="7" fill="var(--accent)" opacity="0.75"/>
+          <rect x="370" y="98" width="70" height="6" rx="3" fill="var(--line)"/>
+          <text x="446" y="106" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">← pale bar = slack</text>
+          <!-- row 4: milestone + parent span -->
+          <text x="10" y="137" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Milestone / span</text>
+          <path d="M540 123 L548 130 L540 137 L532 130 Z" fill="#f59e0b"/>
+          <text x="556" y="134" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">◆ 0 days</text>
+          <rect x="170" y="146" width="360" height="9" rx="4.5" fill="var(--accent)" opacity="0.3"/>
+          <text x="536" y="155" font-size="10" fill="var(--muted)" font-family="IBM Plex Sans Thai,sans-serif">Parent = span</text>
+        </svg>
+        <figcaption>What you see on the Gantt: normal bars in indigo, the critical path in red (a single day late there
+        and the whole project slips), slack as a pale extension, milestones as yellow ◆, the red dashed
+        line as today, and parent rows drawn as the span of their children</figcaption>
+      </figure>
+      <div class="callout warn">
+        <span class="tag">The principle</span>
+        <p>Bar positions come from a forward pass over the dependency network, in which the start date you enter
+        acts as a pin: where a constraint forces a later start, the constraint wins. Tasks with no dates
+        leave an empty row, and the status bar says so</p>
+      </div>
+      <div class="callout">
+        <span class="tag">The scope of the critical path</span>
+        <p>CPM applies only to scheduling structures such as the WBS, because a critical path needs a network of
+        durations and dependencies. OBS (organisation), CBS (cost), RBS (risk) and PBS (products) carry
+        neither, so there is no network to analyse — and standard practice likewise runs CPM only over the
+        activity network derived from the WBS. The other structures receive roll-ups through links instead (<a href="#ch8">chapter 8</a>)</p>
+      </div>
+    </section>
+
+    <!-- ============ 8 ============ -->
+    <section class="chapter" id="ch8">
+      <span class="ch-no">Chapter 08</span>
+      <h2>Cross-structure links</h2>
+      <p>The heart of planning across structures — link from the inspector of a WBS node:</p>
+      <ul>
+        <li><strong>🏢 Assign to org unit (assigns)</strong> — WBS → OBS: who does this work</li>
+        <li><strong>🪙 Charge to category (charges)</strong> — WBS → CBS: which budget this work draws on</li>
+        <li><strong>📦 Deliver to product (delivers)</strong> — WBS → PBS: which product or module this work delivers</li>
+        <li><strong>🛡️ Mitigate risk (mitigates)</strong> — WBS → RBS: which risk this work responds to</li>
+      </ul>
+      <p>Each link button filters the picker down to the right structure, the same pair cannot be linked twice,
+      and every link is undoable like any other action</p>
+      <p>On the receiving side (open an OBS/CBS/RBS/PBS tab and click a node) you get <strong>inbound mini-schedule</strong>:
+      the WBS tasks pointing at it, each with a status dot, date range and progress, ordered by start date,
+      eight at a time with the rest one click away. Click a "materials" category, for instance, and you see the
+      piling and foundation tasks charged to it with their schedules — not just a total</p>
+      <div class="callout">
+        <span class="tag">Technique</span>
+        <p>You can link a <strong>parent node (a branch)</strong> and the app expands it across every task inside, without double-counting a
+        child that is also linked directly</p>
+      </div>
+    </section>
+
+    <!-- ============ 9 ============ -->
+    <section class="chapter" id="ch9">
+      <span class="ch-no">Chapter 09</span>
+      <h2>Undo, export and import</h2>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Feature</th><th>How to use it</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Undo / Redo</b></td>
+            <td><span class="kbd">Ctrl</span>+<span class="kbd">Z</span> /
+            <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">Z</span> or
+            <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> — 50 levels deep, covering every action</td>
+          </tr>
+          <tr><td><b>Export JSON</b></td><td>Header → Export → Export JSON — a full project backup, carrying a schemaVersion for migration</td></tr>
+          <tr><td><b>Export CSV</b></td><td>Header → Export → Export CSV — the open tab only, with a UTF-8 BOM so Excel reads Thai correctly, plus Code / Level / roll-up columns</td></tr>
+          <tr><td><b>Import JSON</b></td><td>First page → Import JSON — three checks: broken JSON, not an export of this app, or a newer version — each with its own message</td></tr>
+        </tbody>
+      </table></div>
+      <p>Importing a project whose id already exists gets a fresh id, so both can live side by side</p>
+      <div class="callout warn">
+        <span class="tag">Important</span>
+        <p>Everything lives in this browser's localStorage and nowhere else — clearing site data or switching
+        browsers leaves it behind. Exporting JSON now and then is the best backup you have</p>
+      </div>
+    </section>
+
+    <!-- ============ 10 ============ -->
+    <section class="chapter" id="ch10">
+      <span class="ch-no">chapter 10</span>
+      <h2>How far does this app really go?</h2>
+      <h3>✅ Works well for</h3>
+      <ul>
+        <li>Small to mid-sized projects (hundreds of tasks) with a single planner holding the plan</li>
+        <li>Work whose scope has to be argued: construction, software, events, campaigns, consulting, relocations</li>
+        <li>Teaching PM fundamentals — WBS, dependencies, CPM and cost roll-up in one place</li>
+        <li>Confidential data and offline environments — not a byte leaves the machine</li>
+      </ul>
+      <h3>⚠️ Limits worth knowing first</h3>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Limitation</th><th>What it means in practice</th></tr></thead>
+        <tbody>
+          <tr><td>No backend or accounts</td><td>No sharing and no real-time collaboration — the data stays on that machine and browser</td></tr>
+          <tr><td>Consecutive-day calendar</td><td>Weekends and holidays count as working days, so real elapsed time runs longer than shown</td></tr>
+          <tr><td>No resource levelling or baseline</td><td>Over-allocation is not prevented, and there is no plan-versus-actual comparison</td></tr>
+          <tr><td>Storage ~5 MB</td><td>Comfortable into the hundreds and low thousands of nodes; beyond that the status bar turns red</td></tr>
+          <tr><td>CSV is export-only</td><td>CSV cannot be imported — only this app's own JSON</td></tr>
+          <tr><td>Five fixed structure types</td><td>There is no UI yet for a custom structure type</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout">
+        <span class="tag">In short</span>
+        <p>as a personal planning tool and a teaching aid it is <strong>complete and genuinely in control</strong> ·
+        as an enterprise suite with collaboration and resource management, it is not — and was never meant to be</p>
+      </div>
+    </section>
+
+    <!-- ============ 11 ============ -->
+    <section class="chapter" id="ch11">
+      <span class="ch-no">chapter 11</span>
+      <h2>Five sample projects to learn from</h2>
+      <p>Click <strong>Load 5 sample projects</strong> on the first page — each one teaches something different:</p>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>#</th><th>Sample</th><th>What it teaches</th><th>Structures</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td><b>Office building construction</b></td>
+            <td>The full showcase: ~35 leaf tasks over four levels, a 273-day critical path (~9 months),
+            two pile zones running in parallel before they converge, a near-critical branch (painting, ~8 days of slack),
+            slack you can see (lift 48, air conditioning 38, landscaping 37 days), and topping-out and handover milestones</td>
+            <td>WBS + OBS + CBS + RBS</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td><b>FoodieGo app development</b></td>
+            <td>Parallel branches (design ∥ backend ∥ mobile app) converging on QA, development split across two
+            sub-teams over three levels, a launch milestone, and a PBS broken out by module and version</td>
+            <td>WBS + PBS + OBS</td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td><b>Digital Transformation seminar</b></td>
+            <td>A tight timeline mid-flight — past tasks done, today's in progress — with dependencies that carry real logic
+            (handouts print only after registration closes, because the headcount decides the quantity)</td>
+            <td>WBS + OBS + CBS</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td><b>AIRA X1 launch campaign</b></td>
+            <td>A serious RBS (likelihood × impact plus response plans), several branches converging on the on-sale
+            milestone, and a campaign budget as a CBS</td>
+            <td>WBS + CBS + RBS</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td><b>Office relocation</b></td>
+            <td>A complete plan from the WBS alone: positive lag (cabling waits for the plaster to dry), a furniture
+            branch with plenty of slack, and a moving-day milestone</td>
+            <td>WBS</td>
+          </tr>
+        </tbody>
+      </table></div>
+
+      <h3>How to read the critical path in sample 1</h3>
+      <ol class="steps">
+        <li>Open the WBS tab and switch to the Gantt — the red bars are the critical path (slack ≤ 0)</li>
+        <li>Follow the red chain: site survey → design → BOQ → permit → piling zone A → foundations →
+        levels 1-3 → topping out → partitions → tiling → ceilings → lobby → commissioning →
+        handover (273 days in total)</li>
+        <li>Hover an indigo bar such as "Install the passenger lift" (48 days of slack) or "Landscaping"
+        (37 days) — either can slip a long way without moving the handover date</li>
+        <li>Compare that with "Painting throughout the building" (~8 days) — a near-critical branch that turns
+        critical the moment it slips past eight days</li>
+        <li>Change the duration of "Apply for the construction permit" from 30 to 45 days and watch the whole
+        chain — and the handover date — move with it</li>
+      </ol>
+
+      <p>Every sample is scheduled by the real CPM engine and has its statuses stamped against today's date,
+      so whenever you open one, the tasks that should read done or in progress do</p>
+    </section>
+
+    <!-- ============ 12 ============ -->
+    <section class="chapter" id="ch12">
+      <span class="ch-no">Chapter 12</span>
+      <h2>FAQ</h2>
+      <h3>Do I lose my data when I close the browser?</h3>
+      <p>No — every edit persists to localStorage. Clearing site data does erase it, though, which is why
+      exporting JSON now and then is worth the habit</p>
+      <h3>Why can't I edit a parent's start date?</h3>
+      <p>By design — a parent is derived from its children. Edit the leaf and the parent follows</p>
+      <h3>Why doesn't the Gantt bar match the start date I entered?</h3>
+      <p>CPM takes the later of the two: your pinned date and the constraint from its dependencies. To make them
+      agree, adjust the dependency or its lag</p>
+      <h3>Can I use it on more than one machine?</h3>
+      <p>Export JSON on machine A and import it on machine B — there is no automatic sync</p>
+      <h3>Thai comes out garbled when I open the CSV?</h3>
+      <p>The file already carries a UTF-8 BOM — in another editor, open it as UTF-8</p>
+      <h3>Do OBS / CBS / RBS / PBS have a critical path?</h3>
+      <p>Not in principle. The critical path method analyses a network of tasks that carry durations and
+      dependencies, which is what the WBS provides as an activity network. OBS is an organisation chart,
+      CBS aggregates money, and RBS and PBS hold no relationships in time — none of them offer a network to
+      analyse, and standard practice (PMBOK) likewise confines CPM to the project schedule.
+      So the Gantt and dependency features open on the WBS only; OBS, CBS, RBS and PBS instead receive
+      roll-ups (task counts, total cost) through links</p>
+      <h3>Why doesn't the cost in the S-curve match the CBS budget column?</h3>
+      <p>They are different fields. The S-curve uses the <b>cost of each individual WBS task</b> spread across its schedule,
+      while "budget" is an attribute you type on the CBS side. They do not sync, by design: per-task cost is
+      the source of truth for the reports, and budget serves as the ceiling or target you compare against later</p>
+    </section>
+
+    <!-- ============ 13 ============ -->
+    <section class="chapter" id="ch13">
+      <span class="ch-no">chapter 13</span>
+      <h2>Reports: S-curve and resource loading</h2>
+      <p>The workspace's third view (the 📈 button beside table and Gantt) — it draws on <strong>every structure</strong>
+      at once: the WBS supplies schedule and cost, the CBS supplies cost categories, and the OBS supplies org units.
+      It opens from any tab as long as the project has at least one schedulable structure</p>
+
+      <h3>Cumulative cost (S-curve)</h3>
+      <ul>
+        <li><strong>The heavy line is the total</strong> — cumulative cost across every scheduled task, each counted once</li>
+        <li><strong>The coloured lines are CBS cost categories</strong> from charges links, so you can see when money flows into which category</li>
+        <li>The red dashed vertical is today · switch between <b>weekly and monthly</b> in the bar above · hover for the cumulative value of every line</li>
+      </ul>
+      <div class="tbl-scroll"><table>
+        <thead><tr><th>Calculation rules</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Cost spreads evenly</td><td>A 100,000 baht task over 4 days is 25,000 a day</td></tr>
+          <tr><td>Milestones land on one day</td><td>The whole amount falls on the start date (zero duration)</td></tr>
+          <tr><td>Tasks with no start date</td><td>Excluded from the curve, with a yellow note under the chart naming the value left out</td></tr>
+          <tr><td>Tasks charged to several categories</td><td>Each category counts the <b>full</b> cost of that task, as the footnote says — the total line still counts it once</td></tr>
+          <tr><td>Tasks charged to nothing</td><td>Collected into the grey "unassigned" line</td></tr>
+        </tbody>
+      </table></div>
+      <p>Beyond four CBS categories, the fifth onwards fold into an "other" line so the chart stays readable</p>
+
+      <h3>Resource loading (OBS × schedule)</h3>
+      <p>A heatmap of <strong>task-days</strong> — how many days each org unit is committed:</p>
+      <ul>
+        <li>One row per OBS unit, with parent rows rolling up the work of every unit beneath them</li>
+        <li>Darker means heavier load (against the table's own maximum), white means free · click a row to open that unit in the inspector</li>
+        <li>Hover a cell for the tasks consuming those days · the "unassigned" row is the task-days nobody owns yet</li>
+      </ul>
+      <div class="callout">
+        <span class="tag">Finding the bottleneck</span>
+        <p>Which unit is under most pressure, and in which week? Which work still has no owner?
+        This one screen answers both</p>
+      </div>
+
+      <h3>The links that came with the reports</h3>
+      <p><code>delivers</code> (WBS→PBS) and <code>mitigates</code> (WBS→RBS) — how to use them is in
+      <a href="#ch8">chapter 8</a> Both reports count assigns and charges only; delivers and mitigates connect the product and risk views to the
+      work instead — click a product in the PBS, for instance, and you get a mini-schedule of the tasks that
+      deliver it</p>
+    </section>
+  </main>
+</div>
+
+<footer class="colophon">
+  <div class="wrap">Guide v0.1 · Breakdown Planner — Vite + React + zustand · all data stays on the user's own machine</div>
+</footer>
+<script>
+  // In-app the guide is an iframe whose language already follows the app's own
+  // toggle, and a relative link there would navigate the frame to nowhere.
+  if (window.parent !== window) {
+    for (const el of document.querySelectorAll('.lang-switch')) el.hidden = true
+  }
+</script>
+</body>
+</html>
