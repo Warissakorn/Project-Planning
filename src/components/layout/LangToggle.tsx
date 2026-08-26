@@ -11,9 +11,9 @@ export function LangToggle() {
       type="button"
       onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
       title="Language / ภาษา"
-      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+      className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-[13px] font-semibold text-slate-600 hover:bg-slate-50"
     >
-      <Languages size={14} />
+      <Languages size={15} />
       {lang === 'th' ? 'TH' : 'EN'}
     </button>
   )

@@ -31,15 +31,15 @@ export function StatusBar() {
   const kb = Math.round(bytes / 102.4) / 10
 
   return (
-    <footer className="flex h-7 shrink-0 items-center gap-3 border-t border-slate-200 bg-white px-3 text-[11px] text-slate-500">
+    <footer className="flex h-8 shrink-0 items-center gap-3 border-t border-slate-200 bg-white px-3 text-xs text-slate-500">
       {missingDates > 0 ? (
         <span className="inline-flex items-center gap-1 text-amber-600">
-          <AlertTriangle size={12} />
+          <AlertTriangle size={13} />
           {translate(lang, 'warnNoDates', { n: missingDates })}
         </span>
       ) : (
         <span className="inline-flex items-center gap-1 text-emerald-600">
-          <CheckCircle2 size={12} />
+          <CheckCircle2 size={13} />
           {t('ok')}
         </span>
       )}
@@ -49,7 +49,7 @@ export function StatusBar() {
           bytes > STORAGE_SOFT_LIMIT ? 'text-red-600' : ''
         }`}
       >
-        <HardDrive size={12} />
+        <HardDrive size={13} />
         {kb.toLocaleString()} KB
       </span>
     </footer>

@@ -96,17 +96,17 @@ export function AppHeader() {
 
       <div className="ml-auto flex items-center gap-1">
         <Button size="sm" onClick={() => setHelpOpen(true)} title={t('helpTitle')}>
-          <CircleHelp size={15} />
+          <CircleHelp size={16} />
         </Button>
         <Button size="sm" disabled={!canUndo} onClick={undo} title={`${t('undo')} (Ctrl+Z)`}>
-          <Undo2 size={15} />
+          <Undo2 size={16} />
         </Button>
         <Button size="sm" disabled={!canRedo} onClick={redo} title={`${t('redo')} (Ctrl+Y)`}>
-          <Redo2 size={15} />
+          <Redo2 size={16} />
         </Button>
         <DropdownMenu
           className="mx-0.5"
-          triggerClassName="inline-flex h-7 items-center justify-center gap-1 rounded-md border border-slate-300 bg-white px-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
+          triggerClassName="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
           button={t('exportMenu')}
         >
           {(close) => (

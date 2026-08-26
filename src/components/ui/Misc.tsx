@@ -12,7 +12,7 @@ export function StatusBadge({ status, label }: { status: TaskStatus; label: stri
   return (
     <span
       className={cx(
-        'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ring-1',
+        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1',
         statusStyles[status],
       )}
     >
@@ -47,7 +47,7 @@ export function ConfirmDialog({
       }}
     >
       <div className="w-full max-w-sm rounded-xl bg-white p-4 shadow-xl">
-        <h2 className="text-sm font-semibold text-slate-800">{title}</h2>
+        <h2 className="text-base font-semibold text-slate-800">{title}</h2>
         {message ? <p className="mt-1.5 text-sm text-slate-500">{message}</p> : null}
         <div className="mt-4 flex justify-end gap-2">
           <button

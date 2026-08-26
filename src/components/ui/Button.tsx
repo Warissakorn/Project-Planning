@@ -13,7 +13,9 @@ const variants: Record<Variant, string> = {
 }
 
 const sizes: Record<Size, string> = {
-  sm: 'h-7 px-2 text-xs gap-1',
+  // sm stays compact for toolbars/headers but keeps a 32px hit target and
+  // 13px text so Thai labels and icons stay legible.
+  sm: 'h-8 px-2.5 text-[13px] gap-1.5',
   md: 'h-9 px-3 text-sm gap-1.5',
 }
 
