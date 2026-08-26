@@ -129,6 +129,13 @@ const th = {
   resourceLoadingTitle: 'การใช้ทรัพยากร (OBS × กำหนดการ)',
   bucketWeek: 'รายสัปดาห์',
   bucketMonth: 'รายเดือน',
+  scurveLegendTotal: 'รวมทั้งหมด',
+  scurveLegendUnassigned: 'ไม่ได้ผูกหมวด',
+  scurveLegendOther: 'อื่น ๆ',
+  reportsNoDates: 'ยังไม่มีงานที่มีกำหนดการ — ใส่วันเริ่มใน WBS เพื่อดูรายงาน',
+  scurveNoCosts: 'งานที่มีกำหนดการยังไม่มีต้นทุน — ใส่ต้นทุนในแผงรายละเอียด',
+  reportsUndatedWarning: '{n} งานมีต้นทุนแต่ไม่มีกำหนดการ (รวม {cost}) — ไม่ถูกนับในเส้นโค้ง',
+  scurveMultiChargedFootnote: '{n} งานถูกผูกกับหลายหมวดต้นทุน — แต่ละหมวดนับต้นทุนเต็มจำนวนของงานนั้น',
 
   // structures tabs
   addStructure: 'เพิ่มโครงสร้าง',
@@ -255,6 +262,13 @@ const en: Record<CopyKey, string> = {
   resourceLoadingTitle: 'Resource Loading (OBS × schedule)',
   bucketWeek: 'Week',
   bucketMonth: 'Month',
+  scurveLegendTotal: 'Total',
+  scurveLegendUnassigned: 'Unassigned',
+  scurveLegendOther: 'Other',
+  reportsNoDates: 'No scheduled tasks yet — add start dates in the WBS to see reports',
+  scurveNoCosts: 'Scheduled tasks carry no cost yet — enter costs in the inspector',
+  reportsUndatedWarning: '{n} task(s) have cost but no schedule (total {cost}) — excluded from the curve',
+  scurveMultiChargedFootnote: '{n} task(s) are charged to several categories — each category counts their full cost',
 
   addStructure: 'Add structure',
   structureNameLabel: 'Structure name',

@@ -1,6 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { buildCostCurve } from '../../engine/analytics'
 import { useT } from '../../lib/i18n'
+import { useAppStore } from '../../state/store'
+import { useStructureData } from '../../state/selectors'
 import { cx } from '../../lib/cx'
+import { SCurveChart } from './SCurveChart'
 
 export type Granularity = 'week' | 'month'
 
@@ -12,7 +16,14 @@ export type Granularity = 'week' | 'month'
  */
 export function ReportsView() {
   const t = useT()
+  const lang = useAppStore((s) => s.lang)
+  const { project } = useStructureData()
   const [granularity, setGranularity] = useState<Granularity>('month')
+
+  const curve = useMemo(
+    () => (project ? buildCostCurve(project, granularity) : null),
+    [project, granularity],
+  )
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -39,9 +50,7 @@ export function ReportsView() {
           <header className="flex items-center gap-2 border-b border-slate-100 px-3 py-2">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('scurveTitle')}</h2>
           </header>
-          <div className="p-3">
-            {/* SCurveChart lands here */}
-          </div>
+          <div className="p-3">{curve ? <SCurveChart curve={curve} lang={lang} granularity={granularity} /> : null}</div>
         </section>
 
         <section className="rounded-lg border border-slate-200 bg-white">
