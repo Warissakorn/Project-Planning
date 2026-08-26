@@ -205,7 +205,7 @@ export function NodeInspector() {
               </>
             ) : (
               <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs">
-                <span className="col-span-2 text-[11px] italic text-slate-400">{t('derivedHint')}</span>
+                <span className="col-span-2 text-xs italic text-slate-400">{t('derivedHint')}</span>
                 <Derived label={t('startDateField')} v={formatDate(values.startDate, lang)} />
                 <Derived label={t('durationField')} v={values.durationDays?.toLocaleString()} />
                 <Derived
@@ -284,13 +284,13 @@ export function NodeInspector() {
                 {t('dependencies')}
               </span>
               <Button size="sm" onClick={() => setDepPickerOpen(true)}>
-                <Plus size={13} />
+                <Plus size={14} />
                 {t('add')}
               </Button>
             </div>
 
             {deps.length === 0 ? (
-              <p className="px-0.5 py-1 text-[11px] text-slate-400">{t('noDependencies')}</p>
+              <p className="px-0.5 py-1 text-xs text-slate-400">{t('noDependencies')}</p>
             ) : (
               <ul className="space-y-1">
                 {deps.map(({ dep, direction }) => {
@@ -304,7 +304,7 @@ export function NodeInspector() {
                           <ArrowDown size={12} className="shrink-0 -rotate-45 text-orange-400" />
                         )}
                         <span
-                          className="min-w-0 flex-1 truncate text-[12px] text-slate-700"
+                          className="min-w-0 flex-1 truncate text-[13px] text-slate-700"
                           title={nodeLabel(project, otherId)}
                         >
                           {nodeLabel(project, otherId)}
@@ -313,14 +313,14 @@ export function NodeInspector() {
                           type="button"
                           aria-label={t('delete')}
                           onClick={() => removeDependencyAction(dep.id)}
-                          className="rounded p-1 text-slate-300 hover:bg-red-50 hover:text-red-500"
+                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-slate-300 hover:bg-red-50 hover:text-red-500"
                         >
-                          <Trash2 size={12} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                       <div className="mt-1 flex gap-1">
                         <Select
-                          className="h-6 flex-1 px-1 py-0 text-[11px]"
+                          className="h-7 flex-1 px-1 py-0 text-xs"
                           value={dep.type}
                           onChange={(e) =>
                             updateDependencyAction(dep.id, { type: e.target.value as DependencyType })
@@ -334,7 +334,7 @@ export function NodeInspector() {
                         </Select>
                         <Input
                           type="number"
-                          className="h-6 w-16 px-1 py-0 text-[11px]"
+                          className="h-7 w-16 px-1 py-0 text-xs"
                           title={t('lagDaysLabel')}
                           value={dep.lagDays}
                           onChange={(e) => {
@@ -348,7 +348,7 @@ export function NodeInspector() {
                 })}
               </ul>
             )}
-            {depError ? <p className="mt-1 text-[11px] text-red-500">{depError}</p> : null}
+            {depError ? <p className="mt-1 text-xs font-medium text-red-500">{depError}</p> : null}
           </section>
         ) : null}
 
@@ -371,7 +371,7 @@ export function NodeInspector() {
 function Derived({ label, v, badge }: { label: string; v?: string; badge?: React.ReactNode }) {
   return (
     <div>
-      <span className="block text-[10px] uppercase tracking-wide text-slate-400">{label}</span>
+      <span className="block text-[11px] uppercase tracking-wide text-slate-400">{label}</span>
       <span className="inline-flex items-center gap-1 font-medium tabular-nums text-slate-600">
         {v}
         {badge}

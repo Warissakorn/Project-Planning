@@ -167,14 +167,14 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
               </Button>
             </div>
             {links.length === 0 ? (
-              <p className="px-0.5 py-1 text-[11px] text-slate-400">{t('noDependencies')}</p>
+              <p className="px-0.5 py-1 text-xs text-slate-400">{t('noDependencies')}</p>
             ) : (
               <ul className="space-y-0.5">
                 {links.map((l) => {
                   const target = project.nodes[l.toNodeId]
                   return (
                     <li key={l.id} className="group flex items-center gap-1 rounded px-0.5 py-0.5 hover:bg-slate-50">
-                      <span className="min-w-0 flex-1 truncate text-[12px] text-slate-700">
+                      <span className="min-w-0 flex-1 truncate text-[13px] text-slate-700">
                         {target ? nodeLabel(project, l.toNodeId) : '—'}
                       </span>
                       <button
@@ -182,9 +182,9 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
                         aria-label={t('removeLink')}
                         title={t('removeLink')}
                         onClick={() => removeLinkAction(l.id)}
-                        className="rounded p-1 text-slate-300 opacity-0 transition-opacity hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-slate-300 opacity-0 transition-opacity hover:bg-red-50 hover:text-red-500 focus-visible:opacity-100 group-hover:opacity-100"
                       >
-                        <Unlink size={12} />
+                        <Unlink size={14} />
                       </button>
                     </li>
                   )
@@ -199,7 +199,7 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
         <div className="rounded-lg border border-slate-200 p-2">
           <span className="text-xs font-medium text-slate-600">{t('inboundLinks')}</span>
           {inboundRows.length === 0 ? (
-            <p className="px-0.5 py-1 text-[11px] text-slate-400">{t('noDependencies')}</p>
+            <p className="px-0.5 py-1 text-xs text-slate-400">{t('noDependencies')}</p>
           ) : (
             <>
               <ul className="mt-1 space-y-1">
@@ -208,7 +208,7 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
                     <div className="flex items-center gap-1.5">
                       {KIND_ICON[row.kind]}
                       <StatusDot status={row.info.status} />
-                      <span className="min-w-0 flex-1 truncate text-[12px] text-slate-600">
+                      <span className="min-w-0 flex-1 truncate text-[13px] text-slate-600">
                         {nodeLabel(project, row.fromNodeId)}
                       </span>
                       {row.info.progress !== undefined ? (
@@ -217,7 +217,7 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
                         </span>
                       ) : null}
                     </div>
-                    <p className="pl-[22px] text-[10px] tabular-nums text-slate-400">
+                    <p className="pl-[22px] text-[11px] tabular-nums text-slate-400">
                       {row.info.startDate
                         ? `${formatDate(row.info.startDate, lang)} – ${formatDate(row.info.endDate ?? row.info.startDate, lang)}`
                         : t('inboundNoDates')}
@@ -229,9 +229,9 @@ export function LinkPanel({ nodeId }: { nodeId: ID }) {
                 <button
                   type="button"
                   onClick={() => setExpanded((v) => !v)}
-                  className="mt-1 inline-flex items-center gap-1 rounded px-1 py-0.5 text-[11px] font-medium text-indigo-600 hover:bg-indigo-50"
+                  className="mt-1 inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-indigo-600 hover:bg-indigo-50"
                 >
-                  {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                   {expanded ? t('showLess') : t('inboundMore', { n: inboundRows.length - INBOUND_CAP })}
                 </button>
               ) : null}

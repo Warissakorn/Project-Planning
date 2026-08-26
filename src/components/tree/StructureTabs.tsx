@@ -52,7 +52,7 @@ export function StructureTabs() {
               {editingId === s.id ? (
                 <Input
                   autoFocus
-                  className="h-6 w-32 px-1 py-0 text-sm"
+                  className="h-7 w-32 px-1 py-0 text-sm"
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   onBlur={() => {
@@ -72,13 +72,13 @@ export function StructureTabs() {
                 <button
                   type="button"
                   aria-label={t('delete')}
-                  className="ml-0.5 rounded p-0.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                  className="ml-0.5 flex h-6 w-6 items-center justify-center rounded text-slate-400 hover:bg-red-50 hover:text-red-600"
                   onClick={(e) => {
                     e.stopPropagation()
                     setConfirmDelete(true)
                   }}
                 >
-                  <X size={13} />
+                  <X size={14} />
                 </button>
               ) : null}
             </div>
@@ -90,9 +90,9 @@ export function StructureTabs() {
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
-          className="inline-flex h-7 items-center gap-1 rounded-md px-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+          className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
         >
-          <Plus size={14} />
+          <Plus size={15} />
           {t('addStructure')}
         </button>
         {menuOpen ? (
@@ -111,7 +111,7 @@ export function StructureTabs() {
                 >
                   <span className={cx('size-2 shrink-0 rounded-full', dotFor(preset.id))} />
                   <span className="flex-1">{bl(preset.label, lang)}</span>
-                  <span className="text-[11px] text-slate-400">{translate(lang, 'add')}</span>
+                  <span className="text-xs text-slate-400">{translate(lang, 'add')}</span>
                 </button>
               ))}
             </div>

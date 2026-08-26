@@ -66,7 +66,7 @@ export function ResourceHeatmap({
   return (
     <div>
       {/* scale legend: 0 → ramp → max */}
-      <div className="mb-2 flex flex-wrap items-center gap-1 text-[11px] text-slate-400">
+      <div className="mb-2 flex flex-wrap items-center gap-1 text-xs text-slate-400">
         <span className="tabular-nums">0</span>
         {HEAT_CLASSES.map((c) => (
           <span
@@ -84,7 +84,7 @@ export function ResourceHeatmap({
           {/* header */}
           <div className="sticky top-0 z-20 flex h-7 border-b border-slate-200 bg-white shadow-sm">
             <div
-              className="sticky left-0 z-30 flex shrink-0 items-center border-r border-slate-200 bg-white px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+              className="sticky left-0 z-30 flex shrink-0 items-center border-r border-slate-200 bg-white px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
               style={{ width: LEFT_W }}
             >
               {t('nameLabel')}
@@ -92,7 +92,7 @@ export function ResourceHeatmap({
             {loading.buckets.map((b) => (
               <div
                 key={b.startIso}
-                className="flex shrink-0 items-end justify-center pb-0.5 text-[10px] text-slate-500"
+                className="flex shrink-0 items-end justify-center pb-0.5 text-[11px] text-slate-500"
                 style={{ width: cellW }}
               >
                 {bucketLabel(b, granularity, lang)}
@@ -117,7 +117,7 @@ export function ResourceHeatmap({
           {showFooter ? (
             <div className="flex border-t border-slate-200 bg-slate-50" style={{ height: ROW_H }}>
               <div
-                className="sticky left-0 z-10 flex shrink-0 items-center border-r border-slate-200 bg-slate-50 px-2 text-[11px] italic text-slate-400"
+                className="sticky left-0 z-10 flex shrink-0 items-center border-r border-slate-200 bg-slate-50 px-2 text-xs italic text-slate-400"
                 style={{ width: LEFT_W }}
               >
                 {t('resourceUnassigned')}
@@ -182,9 +182,9 @@ function ResourceHeatmapRow({
         title={`${row.code ? row.code + ' ' : ''}${row.name}`}
       >
         {row.code ? (
-          <span className="shrink-0 font-mono text-[10px] tabular-nums text-slate-400">{row.code}</span>
+          <span className="shrink-0 font-mono text-[11px] tabular-nums text-slate-400">{row.code}</span>
         ) : null}
-        <span className="truncate">{row.name}</span>
+        <span className="truncate text-[13px]">{row.name}</span>
       </span>
       {row.cells.map((days, i) => {
         const idx = heatIndex(days, maxDays)

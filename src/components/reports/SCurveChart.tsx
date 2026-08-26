@@ -224,7 +224,7 @@ export function SCurveChart({
               x={M.left - 8}
               y={yOf(v) + 3.5}
               textAnchor="end"
-              fontSize={10}
+              fontSize={11}
               fill="#94a3b8"
               className="tabular-nums"
             >
@@ -235,7 +235,7 @@ export function SCurveChart({
 
         {/* x labels */}
         {labeled.map((b) => (
-          <text key={b.startIso} x={xOf(b.startIso)} y={SVG_H - 8} fontSize={10} fill="#64748b">
+          <text key={b.startIso} x={xOf(b.startIso)} y={SVG_H - 8} fontSize={11} fill="#64748b">
             {granularity === 'month'
               ? formatMonthIso(b.startIso, lang)
               : formatDateShort(isoToDate(b.startIso) ?? new Date(), lang)}
@@ -255,7 +255,7 @@ export function SCurveChart({
               strokeDasharray="3 3"
               opacity={0.7}
             />
-            <text x={xOf(todayIso()) + 3} y={M.top + 8} fontSize={9} fill="#ef4444">
+            <text x={xOf(todayIso()) + 3} y={M.top + 9} fontSize={10} fill="#ef4444">
               {t('today')}
             </text>
           </g>
@@ -285,8 +285,8 @@ export function SCurveChart({
         {/* selective direct label: total endpoint only */}
         <text
           x={totalEndX + 5}
-          y={Math.max(totalLastY + 3.5, M.top + 8)}
-          fontSize={11}
+          y={Math.max(totalLastY + 4, M.top + 9)}
+          fontSize={12}
           fontWeight={600}
           fill={TOTAL_COLOR}
           className="tabular-nums"
@@ -312,12 +312,12 @@ export function SCurveChart({
       {/* legend — hidden when the total line stands alone */}
       {visible.length > 0 ? (
         <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600">
             <span className="inline-block h-1 w-4 rounded-full" style={{ background: TOTAL_COLOR }} />
             {t('scurveLegendTotal')}
           </span>
           {visible.map((s) => (
-            <span key={s.key} className="inline-flex items-center gap-1.5 text-[11px] text-slate-500">
+            <span key={s.key} className="inline-flex items-center gap-1.5 text-xs text-slate-500">
               <span className="inline-block h-1 w-4 rounded-full" style={{ background: s.color }} />
               {s.name}
             </span>
@@ -329,7 +329,7 @@ export function SCurveChart({
       {curve.stats.undatedTaskCount > 0 || curve.stats.multiChargedTaskCount > 0 ? (
         <div className="mt-2 space-y-1">
           {curve.stats.undatedTaskCount > 0 ? (
-            <p className="inline-flex items-center rounded border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] text-amber-700">
+            <p className="inline-flex items-center rounded border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
               {t('reportsUndatedWarning', {
                 n: curve.stats.undatedTaskCount,
                 cost: compactNumber(curve.stats.undatedCost),
@@ -337,7 +337,7 @@ export function SCurveChart({
             </p>
           ) : null}
           {curve.stats.multiChargedTaskCount > 0 ? (
-            <p className="text-[11px] text-slate-400">
+            <p className="text-xs text-slate-400">
               {t('scurveMultiChargedFootnote', { n: curve.stats.multiChargedTaskCount })}
             </p>
           ) : null}

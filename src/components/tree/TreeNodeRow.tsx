@@ -111,9 +111,9 @@ export function TreeNodeRow({
             e.stopPropagation()
             if (row.hasChildren) onToggle(row.id)
           }}
-          className={cx('flex size-5 shrink-0 items-center justify-center rounded', row.hasChildren ? 'text-slate-400 hover:bg-slate-200 hover:text-slate-600' : 'invisible')}
+          className={cx('flex size-6 shrink-0 items-center justify-center rounded', row.hasChildren ? 'text-slate-400 hover:bg-slate-200 hover:text-slate-600' : 'invisible')}
         >
-          <ChevronRight size={14} className={cx('transition-transform', !collapsed && 'rotate-90')} />
+          <ChevronRight size={15} className={cx('transition-transform', !collapsed && 'rotate-90')} />
         </button>
 
         <span
@@ -122,9 +122,9 @@ export function TreeNodeRow({
           ref={setActivatorNodeRef}
           onClick={(e) => e.stopPropagation()}
           title="drag"
-          className="flex h-full cursor-grab touch-none items-center text-slate-300 hover:text-slate-500 active:cursor-grabbing"
+          className="flex h-full w-5 cursor-grab touch-none items-center justify-center text-slate-300 hover:text-slate-500 active:cursor-grabbing"
         >
-          <GripVertical size={13} />
+          <GripVertical size={14} />
         </span>
 
         {row.code ? (
@@ -135,7 +135,7 @@ export function TreeNodeRow({
         {editingName ? (
           <Input
             autoFocus
-            className="h-6 px-1 py-0 text-[13px]"
+            className="h-7 px-1 py-0 text-[13px]"
             value={nameDraft}
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => setNameDraft(e.target.value)}

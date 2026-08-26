@@ -193,7 +193,8 @@ export function ProjectListPage() {
                     <h2 className="min-w-0 flex-1 truncate font-semibold text-slate-800">
                       {p.name}
                     </h2>
-                    <div className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                    {/* Touch has no hover: keep the actions dimmed-but-visible below sm. */}
+                    <div className="flex shrink-0 gap-0.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100">
                       <button
                         type="button"
                         aria-label={t('rename')}
@@ -203,9 +204,9 @@ export function ProjectListPage() {
                           setRenamingId(id)
                           setRenameDraft(p.name)
                         }}
-                        className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                        className="flex h-7 w-7 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                       >
-                        <Pencil size={14} />
+                        <Pencil size={15} />
                       </button>
                       <button
                         type="button"
@@ -215,9 +216,9 @@ export function ProjectListPage() {
                           e.stopPropagation()
                           duplicateProjectById(id)
                         }}
-                        className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                        className="flex h-7 w-7 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                       >
-                        <Copy size={14} />
+                        <Copy size={15} />
                       </button>
                       <button
                         type="button"
@@ -227,9 +228,9 @@ export function ProjectListPage() {
                           e.stopPropagation()
                           setDeletingId(id)
                         }}
-                        className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500"
+                        className="flex h-7 w-7 items-center justify-center rounded text-slate-400 hover:bg-red-50 hover:text-red-500"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </div>
@@ -238,7 +239,7 @@ export function ProjectListPage() {
                     {' · '}
                     {translate(lang, 'tasksCount', { n: taskCount })}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-slate-400">
+                  <p className="mt-0.5 text-xs text-slate-400">
                     {t('updatedLabel')}{' '}
                     {new Date(p.updatedAt).toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US')}
                   </p>
@@ -248,7 +249,7 @@ export function ProjectListPage() {
           </div>
         )}
 
-        <p className={`mt-8 text-center text-[11px] ${bytes > 4_000_000 ? 'text-red-500' : 'text-slate-400'}`}>
+        <p className={`mt-8 text-center text-xs ${bytes > 4_000_000 ? 'text-red-500' : 'text-slate-400'}`}>
           {bytes > 4_000_000 ? `${t('storageWarning')} — ` : ''}
           {translate(lang, 'storageUsage', { size: fmtKB(bytes) })}
         </p>

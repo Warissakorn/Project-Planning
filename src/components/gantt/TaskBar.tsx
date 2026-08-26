@@ -31,7 +31,7 @@ export function TaskBar({
         className="absolute z-[5] flex items-center justify-center"
         style={{ left: left + pxPerDay / 2 - 7, top: 9 }}
       >
-        <span className="block size-3 rotate-45 rounded-[2px] bg-amber-500 ring-1 ring-amber-600" />
+        <span className="block size-3.5 rotate-45 rounded-[2px] bg-amber-500 ring-1 ring-amber-600" />
       </button>
     )
   }
@@ -45,7 +45,7 @@ export function TaskBar({
         title={title}
         onClick={() => onSelect(bar.id)}
         className="absolute z-[5] rounded-full bg-slate-400 hover:bg-slate-500"
-        style={{ left: left + 1, width: w, top: 13, height: 6 }}
+        style={{ left: left + 1, width: w, top: 12, height: 8 }}
       >
         {bar.progress !== undefined ? (
           <span
@@ -67,7 +67,7 @@ export function TaskBar({
         'absolute z-[5] overflow-hidden rounded-sm shadow-sm',
         bar.critical ? 'bg-red-500 hover:bg-red-400' : 'bg-indigo-500 hover:bg-indigo-400',
       )}
-      style={{ left: left + 1, width: w, top: 9, height: 14 }}
+      style={{ left: left + 1, width: w, top: 8, height: 16 }}
     >
       {bar.progress !== undefined && bar.progress > 0 ? (
         <span

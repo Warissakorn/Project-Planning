@@ -42,7 +42,7 @@ export function TemplatePickerModal({
   return (
     <Modal open={open} title={t('templatesTitle')} onClose={onClose} width="max-w-2xl">
       <div className="relative">
-        <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Search size={15} className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" />
         <Input
           autoFocus
           className="pl-7"
@@ -58,7 +58,7 @@ export function TemplatePickerModal({
         ) : (
           groups.map((cat) => (
             <section key={cat.id}>
-              <h3 className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="sticky top-0 z-10 border-b border-slate-100 bg-slate-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 {cat.emoji} {bl(cat.label, lang)}
               </h3>
               {cat.templates.map((entry) => {
@@ -81,7 +81,7 @@ export function TemplatePickerModal({
                         {bl(entry.desc, lang)}
                       </span>
                     </span>
-                    <span className="mt-0.5 shrink-0 whitespace-nowrap text-[11px] tabular-nums text-slate-400">
+                    <span className="mt-0.5 shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-400">
                       {translate(lang, 'tplPhaseTaskStats', counts)}
                     </span>
                   </button>

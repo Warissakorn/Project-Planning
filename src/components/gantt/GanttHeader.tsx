@@ -37,7 +37,7 @@ export function GanttHeader({
         {segments.map((s, i) => (
           <div
             key={`${s.key}-${i}`}
-            className="truncate border-r border-slate-200 px-1.5 text-[11px] font-semibold leading-[24px] text-slate-500"
+            className="truncate border-r border-slate-200 px-1.5 text-xs font-semibold leading-[24px] text-slate-500"
             style={{ width: s.days * pxPerDay }}
           >
             {s.label}
@@ -71,7 +71,7 @@ export function GanttHeader({
 
 function cxDay(weekend: boolean): string {
   return [
-    'shrink-0 text-center text-[9px] leading-[18px] tabular-nums',
+    'shrink-0 text-center text-[10px] leading-[18px] tabular-nums',
     weekend ? 'bg-slate-100 text-slate-400' : 'text-slate-500',
     'border-b border-slate-200',
   ].join(' ')

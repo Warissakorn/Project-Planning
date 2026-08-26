@@ -197,7 +197,7 @@ export function StructureTree() {
       <div ref={listRef} className="min-h-0 flex-1 overflow-auto">
         {/* header */}
         <div
-          className="sticky top-0 z-10 grid items-center border-b border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+          className="sticky top-0 z-10 grid items-center border-b border-slate-200 bg-slate-50 px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
           style={{ gridTemplateColumns: gridTemplate, height: 30 }}
         >
           <span className="pl-[68px]">{t('nameLabel')}</span>
@@ -214,7 +214,7 @@ export function StructureTree() {
             title={t('emptyTree')}
             action={
               <Button variant="primary" size="sm" onClick={() => addChildNode(structure.rootId)}>
-                <Plus size={14} />
+                <Plus size={15} />
                 {t('addChild')}
               </Button>
             }

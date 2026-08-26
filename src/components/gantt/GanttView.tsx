@@ -71,14 +71,14 @@ export function GanttView() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* zoom switch */}
-      <div className="flex h-8 shrink-0 items-center justify-end gap-1 border-b border-slate-200 bg-slate-50 px-2">
+      <div className="flex h-9 shrink-0 items-center justify-end gap-1 border-b border-slate-200 bg-slate-50 px-2">
         {(['day', 'week', 'month'] as const).map((z) => (
           <button
             key={z}
             type="button"
             onClick={() => setZoom(z)}
             className={cx(
-              'rounded px-2 py-0.5 text-xs font-medium',
+              'inline-flex h-7 items-center rounded px-2.5 text-xs font-medium transition-colors',
               zoom === z ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-200',
             )}
           >
@@ -92,7 +92,7 @@ export function GanttView() {
           {/* header row: sticky corner + calendar */}
           <div className="sticky top-0 z-20 flex shadow-sm">
             <div
-              className="sticky left-0 z-30 flex shrink-0 items-center border-b border-r border-slate-200 bg-white px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+              className="sticky left-0 z-30 flex shrink-0 items-center border-b border-r border-slate-200 bg-white px-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
               style={{ width: LEFT_W, height: HEADER_H }}
             >
               {t('nameLabel')}
@@ -112,14 +112,14 @@ export function GanttView() {
                 type="button"
                 onClick={() => selectNode(b.id)}
                 className={cx(
-                  'sticky left-0 z-10 flex shrink-0 items-center gap-1 truncate border-r border-slate-100 bg-white text-left text-[12px] hover:bg-slate-50',
+                  'sticky left-0 z-10 flex shrink-0 items-center gap-1 truncate border-r border-slate-100 bg-white text-left text-[13px] hover:bg-slate-50',
                   selectedNodeId === b.id && 'bg-indigo-50',
                 )}
                 style={{ width: LEFT_W, paddingLeft: Math.max(0, b.depth) * 14 + 8 }}
                 title={b.name || t('untitled')}
               >
                 {b.code ? (
-                  <span className="shrink-0 font-mono text-[10px] tabular-nums text-slate-400">
+                  <span className="shrink-0 font-mono text-[11px] tabular-nums text-slate-400">
                     {b.code}
                   </span>
                 ) : null}

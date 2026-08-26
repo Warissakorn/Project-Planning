@@ -81,7 +81,7 @@ export function EditableCell({
     const raw = value === undefined || value === null ? '' : String(value)
     return (
       <Select
-        className={cx('h-7 border-transparent bg-transparent px-1 text-xs hover:border-slate-300', align === 'right' && 'text-right')}
+        className={cx('h-7 border-transparent bg-transparent px-1 text-[13px] hover:border-slate-300', align === 'right' && 'text-right')}
         value={raw}
         onChange={(e) => onCommit?.(e.target.value)}
       >
@@ -105,7 +105,7 @@ export function EditableCell({
         max={kind === 'percent' ? 100 : undefined}
         step={kind === 'currency' ? 'any' : undefined}
         autoFocus
-        className="h-7 px-1 py-0 text-xs"
+        className="h-7 px-1 py-0 text-[13px]"
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         onBlur={() => finish()}
@@ -123,7 +123,7 @@ export function EditableCell({
       onClick={start}
       title={derived ? t('derivedHint') : undefined}
       className={cx(
-        'flex h-7 cursor-default items-center truncate px-1 text-xs',
+        'flex h-7 cursor-default items-center truncate px-1 text-[13px]',
         align === 'right' && 'justify-end tabular-nums',
         derived ? 'italic text-slate-400' : 'text-slate-700 hover:bg-slate-50 hover:ring-1 hover:ring-slate-200',
       )}

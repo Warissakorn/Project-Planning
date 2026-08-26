@@ -62,7 +62,7 @@ export function ItemPickerModal({
                 className="block w-full truncate border-b border-slate-100 px-3 py-2 text-left text-sm text-slate-700 last:border-0 hover:bg-indigo-50"
               >
                 {item.label}
-                {item.sub ? <span className="ml-2 text-[11px] text-slate-400">{item.sub}</span> : null}
+                {item.sub ? <span className="ml-2 text-xs text-slate-400">{item.sub}</span> : null}
               </button>
             ))
           )}

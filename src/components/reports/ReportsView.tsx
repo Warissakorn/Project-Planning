@@ -33,15 +33,15 @@ export function ReportsView() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* bucket switch */}
-      <div className="flex h-8 shrink-0 items-center justify-end gap-1 border-b border-slate-200 bg-slate-50 px-2">
-        <span className="mr-auto text-[11px] text-slate-400">{t('reportsSubtitle')}</span>
+      <div className="flex h-9 shrink-0 items-center justify-end gap-1 border-b border-slate-200 bg-slate-50 px-2">
+        <span className="mr-auto truncate text-xs text-slate-400">{t('reportsSubtitle')}</span>
         {(['week', 'month'] as const).map((g) => (
           <button
             key={g}
             type="button"
             onClick={() => setGranularity(g)}
             className={cx(
-              'inline-flex h-6 items-center rounded px-2 text-xs font-medium',
+              'inline-flex h-7 shrink-0 items-center rounded px-2.5 text-xs font-medium transition-colors',
               granularity === g ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-100',
             )}
           >
