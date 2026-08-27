@@ -71,6 +71,6 @@ covers what that means in practice.
 
 ## Licence
 
-[Apache License 2.0](LICENSE) — Copyright 2026 Warissakorn. Bundled fonts (IBM Plex Sans
-Thai and IBM Plex Mono) are licensed separately under the SIL Open Font License; see
+[MIT](LICENSE) — Copyright (c) 2026 Warissakorn. Bundled fonts (IBM Plex Sans Thai and
+IBM Plex Mono) are licensed separately under the SIL Open Font License; see
 [NOTICE](NOTICE) and `public/fonts/OFL.txt`.

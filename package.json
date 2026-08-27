@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Offline-first WBS, CPM scheduling and Gantt planning in the browser.",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "author": "Warissakorn",
   "homepage": "https://github.com/Warissakorn/Project-Planning",
   "repository": {
