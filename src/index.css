@@ -1,7 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Segoe UI", "Leelawadee UI", system-ui, -apple-system, sans-serif;
+  /* Loaded from public/fonts (see index.html). One family carries Thai and
+     Latin, so a Thai task name inside an English UI still renders correctly. */
+  --font-sans: "IBM Plex Sans Thai", "Leelawadee UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
 
   --color-status-todo: #94a3b8;
   --color-status-progress: #3b82f6;

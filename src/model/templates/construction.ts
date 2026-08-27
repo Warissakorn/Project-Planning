@@ -11,78 +11,78 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
       th: 'ตั้งแต่สำรวจที่ดิน ออกแบบ ขออนุญาต จนถึงงานระบบและส่งมอบ',
       en: 'From survey and permits through structure, MEP and handover',
     },
-    build: () =>
+    build: (lang) =>
       buildSample({
-        name: 'สร้างบ้านใหม่ 1 ชั้น (2 ห้องนอน)',
+        name: { th: 'สร้างบ้านใหม่ 1 ชั้น (2 ห้องนอน)', en: 'Build a single-storey house (2 bedrooms)' },
         wbs: [
           {
             key: 'pre',
-            name: 'งานก่อนก่อสร้าง',
+            name: { th: 'งานก่อนก่อสร้าง', en: 'Pre-construction' },
             children: [
-              { key: 'survey', name: 'สำรวจที่ดินและวัดระดับ', duration: 5, cost: 15000 },
+              { key: 'survey', name: { th: 'สำรวจที่ดินและวัดระดับ', en: 'Land survey and levelling' }, duration: 5, cost: 15000 },
               {
                 key: 'design',
-                name: 'ออกแบบและประมาณราคา',
+                name: { th: 'ออกแบบและประมาณราคา', en: 'Design and cost estimate' },
                 children: [
-                  { key: 'draw', name: 'ออกแบบแปลนบ้าน', duration: 12, cost: 40000 },
-                  { key: 'boq', name: 'เขียน BOQ และประมาณการ', duration: 18, cost: 20000 },
+                  { key: 'draw', name: { th: 'ออกแบบแปลนบ้าน', en: 'Design the house plans' }, duration: 12, cost: 40000 },
+                  { key: 'boq', name: { th: 'เขียน BOQ และประมาณการ', en: 'Write the BOQ and cost estimate' }, duration: 18, cost: 20000 },
                 ],
               },
-              { key: 'permit', name: 'ได้ใบอนุญาตก่อสร้าง', milestone: true },
-              { key: 'clear', name: 'ปัดตวาดและปรับพื้นที่', duration: 4, cost: 20000 },
+              { key: 'permit', name: { th: 'ได้ใบอนุญาตก่อสร้าง', en: 'Construction permit granted' }, milestone: true },
+              { key: 'clear', name: { th: 'ปัดตวาดและปรับพื้นที่', en: 'Clear and level the site' }, duration: 4, cost: 20000 },
             ],
           },
           {
             key: 'struct',
-            name: 'งานโครงสร้าง',
+            name: { th: 'งานโครงสร้าง', en: 'Structural works' },
             children: [
               {
                 key: 'foundation',
-                name: 'ฐานรากและคานสะพาน',
+                name: { th: 'ฐานรากและคานสะพาน', en: 'Footings and ground beams' },
                 children: [
-                  { key: 'piles', name: 'เสาเข็มคอนกรีตและหัวเข็ม', duration: 8, cost: 110000 },
-                  { key: 'groundBeam', name: 'คานสะพานและหน้าดิน', duration: 6, cost: 70000 },
+                  { key: 'piles', name: { th: 'เสาเข็มคอนกรีตและหัวเข็ม', en: 'Concrete piles and pile caps' }, duration: 8, cost: 110000 },
+                  { key: 'groundBeam', name: { th: 'คานสะพานและหน้าดิน', en: 'Ground beams and subgrade' }, duration: 6, cost: 70000 },
                 ],
               },
-              { key: 'slab', name: 'เทพื้นคอนกรีต', duration: 6, cost: 90000 },
-              { key: 'walls', name: 'ก่อผนังและเสาคาน', duration: 18, cost: 220000 },
-              { key: 'roof', name: 'โครงหลังคาและกระเบื้อง', duration: 10, cost: 130000 },
+              { key: 'slab', name: { th: 'เทพื้นคอนกรีต', en: 'Pour the concrete slab' }, duration: 6, cost: 90000 },
+              { key: 'walls', name: { th: 'ก่อผนังและเสาคาน', en: 'Masonry walls, columns and beams' }, duration: 18, cost: 220000 },
+              { key: 'roof', name: { th: 'โครงหลังคาและกระเบื้อง', en: 'Roof frame and tiles' }, duration: 10, cost: 130000 },
             ],
           },
           {
             key: 'mep',
-            name: 'งานระบบ',
+            name: { th: 'งานระบบ', en: 'Building services' },
             children: [
-              { key: 'electric', name: 'เดินท่อร้อยสายไฟฟ้า', duration: 8, cost: 70000 },
-              { key: 'plumb', name: 'งานประปาและระบบน้ำเสีย', duration: 8, cost: 65000 },
-              { key: 'ac', name: 'ติดตั้งแอร์และระบายอากาศ', duration: 5, cost: 85000 },
+              { key: 'electric', name: { th: 'เดินท่อร้อยสายไฟฟ้า', en: 'Run electrical conduit' }, duration: 8, cost: 70000 },
+              { key: 'plumb', name: { th: 'งานประปาและระบบน้ำเสีย', en: 'Plumbing and wastewater' }, duration: 8, cost: 65000 },
+              { key: 'ac', name: { th: 'ติดตั้งแอร์และระบายอากาศ', en: 'Install air conditioning and ventilation' }, duration: 5, cost: 85000 },
             ],
           },
           {
             key: 'finish',
-            name: 'งานสถาปัตยกรรม',
+            name: { th: 'งานสถาปัตยกรรม', en: 'Architectural works' },
             children: [
-              { key: 'plaster', name: 'ฉาบผนังและเพดาน', duration: 12, cost: 110000 },
-              { key: 'tile', name: 'กระเบื้องพื้นและผนัง', duration: 10, cost: 95000 },
-              { key: 'paint', name: 'งานสีภายใน-ภายนอก', duration: 8, cost: 55000 },
+              { key: 'plaster', name: { th: 'ฉาบผนังและเพดาน', en: 'Plaster walls and ceilings' }, duration: 12, cost: 110000 },
+              { key: 'tile', name: { th: 'กระเบื้องพื้นและผนัง', en: 'Floor and wall tiling' }, duration: 10, cost: 95000 },
+              { key: 'paint', name: { th: 'งานสีภายใน-ภายนอก', en: 'Interior and exterior painting' }, duration: 8, cost: 55000 },
               {
                 key: 'doors',
-                name: 'งานไม้และครัว',
+                name: { th: 'งานไม้และครัว', en: 'Joinery and kitchen' },
                 children: [
-                  { key: 'carpentry', name: 'งานไม้ในตัวและครัวบิ้วอิน', duration: 4, cost: 70000 },
-                  { key: 'installDoors', name: 'ติดตั้งประตู-หน้าต่าง', duration: 3, cost: 50000 },
+                  { key: 'carpentry', name: { th: 'งานไม้ในตัวและครัวบิ้วอิน', en: 'Built-in joinery and fitted kitchen' }, duration: 4, cost: 70000 },
+                  { key: 'installDoors', name: { th: 'ติดตั้งประตู-หน้าต่าง', en: 'Install doors and windows' }, duration: 3, cost: 50000 },
                 ],
               },
-              { key: 'bath', name: 'ตกแต่งห้องน้ำและสุขภัณฑ์', duration: 5, cost: 75000 },
+              { key: 'bath', name: { th: 'ตกแต่งห้องน้ำและสุขภัณฑ์', en: 'Bathroom fit-out and sanitary ware' }, duration: 5, cost: 75000 },
             ],
           },
           {
             key: 'close',
-            name: 'ส่งมอบ',
+            name: { th: 'ส่งมอบ', en: 'Handover' },
             children: [
-              { key: 'testMep', name: 'ทดสอบระบบไฟ-น้ำ-แอร์', duration: 2, cost: 5000 },
-              { key: 'clean', name: 'ทำความสะอาดก่อนส่งมอบ', duration: 2, cost: 10000 },
-              { key: 'handover', name: 'ส่งมอบบ้าน', milestone: true },
+              { key: 'testMep', name: { th: 'ทดสอบระบบไฟ-น้ำ-แอร์', en: 'Test electrical, water and air conditioning' }, duration: 2, cost: 5000 },
+              { key: 'clean', name: { th: 'ทำความสะอาดก่อนส่งมอบ', en: 'Final clean before handover' }, duration: 2, cost: 10000 },
+              { key: 'handover', name: { th: 'ส่งมอบบ้าน', en: 'House handover' }, milestone: true },
             ],
           },
         ],
@@ -110,7 +110,7 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
           { from: 'testMep', to: 'clean' },
           { from: 'clean', to: 'handover' },
         ],
-      }),
+      }, lang),
   },
   {
     id: 'tpl-house-renovate',
@@ -119,77 +119,77 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
       th: 'รื้อ-ต่อเติมห้องหรือชั้นใหม่ พร้อมงานระบบและตกแต่งใหม่ทั้งหมด',
       en: 'Demolish, extend structure, rerun MEP and refinish',
     },
-    build: () =>
+    build: (lang) =>
       buildSample({
-        name: 'ต่อเติม / รีโนเวทบ้าน',
+        name: { th: 'ต่อเติม / รีโนเวทบ้าน', en: 'Home extension or renovation' },
         wbs: [
           {
             key: 'plan',
-            name: 'วางแผนและออกแบบ',
+            name: { th: 'วางแผนและออกแบบ', en: 'Planning and design' },
             children: [
-              { key: 'brief', name: 'สำรวจโครงสร้างเดิมและเก็บความต้องการ', duration: 5, cost: 8000 },
+              { key: 'brief', name: { th: 'สำรวจโครงสร้างเดิมและเก็บความต้องการ', en: 'Survey the existing structure and gather requirements' }, duration: 5, cost: 8000 },
               {
                 key: 'draw',
-                name: 'ออกแบบและประมาณราคา',
+                name: { th: 'ออกแบบและประมาณราคา', en: 'Design and cost estimate' },
                 children: [
-                  { key: 'conceptDesign', name: 'Concept + แปลนเบื้องต้น', duration: 5, cost: 12000 },
-                  { key: 'workingDwg', name: 'แบบก่อสร้าง + ใบเสนอราคา', duration: 5, cost: 13000 },
+                  { key: 'conceptDesign', name: { th: 'Concept + แปลนเบื้องต้น', en: 'Concept + preliminary plans' }, duration: 5, cost: 12000 },
+                  { key: 'workingDwg', name: { th: 'แบบก่อสร้าง + ใบเสนอราคา', en: 'Construction drawings + quotations' }, duration: 5, cost: 13000 },
                 ],
               },
-              { key: 'contract', name: 'ทำสัญญากับผู้รับเหมา', milestone: true },
+              { key: 'contract', name: { th: 'ทำสัญญากับผู้รับเหมา', en: 'Sign the contractor agreement' }, milestone: true },
             ],
           },
           {
             key: 'demo',
-            name: 'งานรื้อถอน',
-            children: [{ key: 'demolish', name: 'รื้อส่วนที่ต่อเติม/รื้อผนังเดิม', duration: 5, cost: 30000 }],
+            name: { th: 'งานรื้อถอน', en: 'Demolition' },
+            children: [{ key: 'demolish', name: { th: 'รื้อส่วนที่ต่อเติม/รื้อผนังเดิม', en: 'Strip out the extension and existing walls' }, duration: 5, cost: 30000 }],
           },
           {
             key: 'build',
-            name: 'งานโครงสร้างต่อเติม',
+            name: { th: 'งานโครงสร้างต่อเติม', en: 'Extension structural works' },
             children: [
-              { key: 'found', name: 'ฐานราก/คานเสริม', duration: 7, cost: 80000 },
-              { key: 'frame', name: 'ก่อผนังและโครงหลังคา', duration: 12, cost: 140000 },
+              { key: 'found', name: { th: 'ฐานราก/คานเสริม', en: 'Footings and tie beams' }, duration: 7, cost: 80000 },
+              { key: 'frame', name: { th: 'ก่อผนังและโครงหลังคา', en: 'Masonry walls and roof frame' }, duration: 12, cost: 140000 },
             ],
           },
           {
             key: 'systems',
-            name: 'งานระบบ',
+            name: { th: 'งานระบบ', en: 'Building services' },
             children: [
               {
                 key: 'wiring',
-                name: 'ต่อเติมระบบไฟ-น้ำ',
+                name: { th: 'ต่อเติมระบบไฟ-น้ำ', en: 'Extend the electrical and water systems' },
                 children: [
-                  { key: 'rewiring', name: 'ต่อเติมสายไฟและจุดไฟ', duration: 4, cost: 28000 },
-                  { key: 'plumbingFix', name: 'ต่อท่อประปาและจุดน้ำ', duration: 3, cost: 17000 },
+                  { key: 'rewiring', name: { th: 'ต่อเติมสายไฟและจุดไฟ', en: 'Extend wiring and lighting points' }, duration: 4, cost: 28000 },
+                  { key: 'plumbingFix', name: { th: 'ต่อท่อประปาและจุดน้ำ', en: 'Run water pipes and outlets' }, duration: 3, cost: 17000 },
                 ],
               },
-              { key: 'acUnit', name: 'ติดตั้งแอร์ใหม่', duration: 2, cost: 40000 },
+              { key: 'acUnit', name: { th: 'ติดตั้งแอร์ใหม่', en: 'Install the new air conditioning' }, duration: 2, cost: 40000 },
             ],
           },
           {
             key: 'refinish',
-            name: 'งานตกแต่ง',
+            name: { th: 'งานตกแต่ง', en: 'Fit-out works' },
             children: [
-              { key: 'plaster2', name: 'ฉาบและอุดรอย', duration: 6, cost: 35000 },
+              { key: 'plaster2', name: { th: 'ฉาบและอุดรอย', en: 'Plaster and fill' }, duration: 6, cost: 35000 },
               {
                 key: 'floorTile',
-                name: 'งานพื้นและผนัง',
+                name: { th: 'งานพื้นและผนัง', en: 'Floor and wall works' },
                 children: [
-                  { key: 'floorWork', name: 'ปูกระเบื้อง/ไม้ลอย', duration: 3, cost: 30000 },
-                  { key: 'wallTile', name: 'กระเบื้องผนังห้องเปียก', duration: 2, cost: 25000 },
+                  { key: 'floorWork', name: { th: 'ปูกระเบื้อง/ไม้ลอย', en: 'Lay tiles and laminate flooring' }, duration: 3, cost: 30000 },
+                  { key: 'wallTile', name: { th: 'กระเบื้องผนังห้องเปียก', en: 'Wet-area wall tiling' }, duration: 2, cost: 25000 },
                 ],
               },
-              { key: 'paint2', name: 'ทาสีใหม่', duration: 4, cost: 25000 },
-              { key: 'fittings', name: 'ติดตั้งสุขภัณฑ์และอุปกรณ์', duration: 3, cost: 45000 },
+              { key: 'paint2', name: { th: 'ทาสีใหม่', en: 'Repaint' }, duration: 4, cost: 25000 },
+              { key: 'fittings', name: { th: 'ติดตั้งสุขภัณฑ์และอุปกรณ์', en: 'Install sanitary ware and fittings' }, duration: 3, cost: 45000 },
             ],
           },
           {
             key: 'done',
-            name: 'ปิดงาน',
+            name: { th: 'ปิดงาน', en: 'Closeout' },
             children: [
-              { key: 'inspect', name: 'ตรวจงานร่วมกับเจ้าของบ้าน', duration: 1 },
-              { key: 'finalClean', name: 'ทำความสะอาดและส่งมอบ', duration: 1, cost: 5000 },
+              { key: 'inspect', name: { th: 'ตรวจงานร่วมกับเจ้าของบ้าน', en: 'Walk the works with the homeowner' }, duration: 1 },
+              { key: 'finalClean', name: { th: 'ทำความสะอาดและส่งมอบ', en: 'Cleaning and handover' }, duration: 1, cost: 5000 },
             ],
           },
         ],
@@ -211,7 +211,7 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
           { from: 'fittings', to: 'inspect' },
           { from: 'inspect', to: 'finalClean' },
         ],
-      }),
+      }, lang),
   },
   {
     id: 'tpl-mep-install',
@@ -220,48 +220,48 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
       th: 'งานรับเหมา MEP ขนาดเล็ก ตั้งแต่สำรวจหน้างานจนทดสอบระบบ',
       en: 'Small MEP job from site survey through system testing',
     },
-    build: () =>
+    build: (lang) =>
       buildSample({
-        name: 'ติดตั้งแอร์ + ระบบไฟฟ้า',
+        name: { th: 'ติดตั้งแอร์ + ระบบไฟฟ้า', en: 'Install air conditioning + electrical' },
         wbs: [
           {
             key: 'prep',
-            name: 'เตรียมงาน',
+            name: { th: 'เตรียมงาน', en: 'Preparation' },
             children: [
-              { key: 'siteCheck', name: 'สำรวจหน้างานและวางแผนเดินท่อ/ราง', duration: 2, cost: 3000 },
-              { key: 'procure', name: 'จัดซื้อวัสดุและเครื่องปรับอากาศ', duration: 5, cost: 160000 },
+              { key: 'siteCheck', name: { th: 'สำรวจหน้างานและวางแผนเดินท่อ/ราง', en: 'Site survey and containment routing plan' }, duration: 2, cost: 3000 },
+              { key: 'procure', name: { th: 'จัดซื้อวัสดุและเครื่องปรับอากาศ', en: 'Procure materials and air conditioning units' }, duration: 5, cost: 160000 },
             ],
           },
           {
             key: 'elec',
-            name: 'งานไฟฟ้า',
+            name: { th: 'งานไฟฟ้า', en: 'Electrical works' },
             children: [
               {
                 key: 'conduit',
-                name: 'รางและตู้ควบคุม',
+                name: { th: 'รางและตู้ควบคุม', en: 'Trays and control panels' },
                 children: [
-                  { key: 'conduitRun', name: 'เดินท่อร้อยตามแปลน', duration: 3, cost: 18000 },
-                  { key: 'panelBox', name: 'ติดตั้งตู้ MDB และเบรกเกอร์', duration: 1, cost: 10000 },
+                  { key: 'conduitRun', name: { th: 'เดินท่อร้อยตามแปลน', en: 'Run conduit to the drawings' }, duration: 3, cost: 18000 },
+                  { key: 'panelBox', name: { th: 'ติดตั้งตู้ MDB และเบรกเกอร์', en: 'Install the MDB and breakers' }, duration: 1, cost: 10000 },
                 ],
               },
-              { key: 'wire', name: 'ร้อยสายและติดตั้งโคมไฟ', duration: 4, cost: 22000 },
+              { key: 'wire', name: { th: 'ร้อยสายและติดตั้งโคมไฟ', en: 'Pull cables and install light fittings' }, duration: 4, cost: 22000 },
             ],
           },
           {
             key: 'cool',
-            name: 'งานแอร์',
+            name: { th: 'งานแอร์', en: 'Air conditioning works' },
             children: [
-              { key: 'bracket', name: 'ติดตั้งแขวนและท่อน้ำยา', duration: 3, cost: 15000 },
-              { key: 'unit', name: 'ติดตั้งตัวเครื่องและเชื่อมท่อ', duration: 3, cost: 12000 },
+              { key: 'bracket', name: { th: 'ติดตั้งแขวนและท่อน้ำยา', en: 'Install hangers and refrigerant pipework' }, duration: 3, cost: 15000 },
+              { key: 'unit', name: { th: 'ติดตั้งตัวเครื่องและเชื่อมท่อ', en: 'Install the units and connect the pipework' }, duration: 3, cost: 12000 },
             ],
           },
           {
             key: 'qa',
-            name: 'ทดสอบและส่งมอบ',
+            name: { th: 'ทดสอบและส่งมอบ', en: 'Testing and handover' },
             children: [
-              { key: 'megger', name: 'วัดค่าความต้านทานและกราวด์', duration: 1, cost: 4000 },
-              { key: 'runTest', name: 'เปิดทดสอบเครื่องปรับอากาศ', duration: 1 },
-              { key: 'punchList', name: 'แก้ punch list และส่งมอบงาน', duration: 1, cost: 2000 },
+              { key: 'megger', name: { th: 'วัดค่าความต้านทานและกราวด์', en: 'Measure resistance and earthing' }, duration: 1, cost: 4000 },
+              { key: 'runTest', name: { th: 'เปิดทดสอบเครื่องปรับอากาศ', en: 'Commission the air conditioning' }, duration: 1 },
+              { key: 'punchList', name: { th: 'แก้ punch list และส่งมอบงาน', en: 'Clear the punch list and hand over' }, duration: 1, cost: 2000 },
             ],
           },
         ],
@@ -277,6 +277,6 @@ export const CONSTRUCTION_TEMPLATES: TemplateEntry[] = [
           { from: 'megger', to: 'punchList' },
           { from: 'runTest', to: 'punchList' },
         ],
-      }),
+      }, lang),
   },
 ]

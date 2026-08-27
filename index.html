@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Breakdown Planner</title>
+    <meta
+      name="description"
+      content="Offline-first WBS, CPM scheduling and Gantt planning in the browser."
+    />
+    <!-- Self-hosted so the app renders identically offline and on every OS;
+         Thai has no dependable system font outside Windows. -->
+    <link rel="preload" href="/fonts/ibm-plex-sans-thai-400-thai.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-thai-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-thai-600-thai.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-thai-600-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
   </head>
   <body>
     <div id="root"></div>

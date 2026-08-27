@@ -4,13 +4,22 @@ import { formatDate } from '../../lib/date'
 import { useAppStore } from '../../state/store'
 import { useT } from '../../lib/i18n'
 import { cx } from '../../lib/cx'
-import { Input, Select } from '../ui/Input'
+import { Input } from '../ui/Input'
 
 const NUMERIC_KINDS: ColumnKind[] = ['number', 'currency', 'percent']
 
-function displayOf(kind: ColumnKind, value: string | number | boolean | null | undefined, lang: string): string {
+function displayOf(
+  kind: ColumnKind,
+  value: string | number | boolean | null | undefined,
+  lang: string,
+  optionLabels?: Record<string, string>,
+): string {
   if (value === undefined || value === null || value === '') return ''
   switch (kind) {
+    case 'select':
+      // A derived (roll-up) status still needs its label — without this the
+      // raw stored key shows through, e.g. 'in_progress' instead of 'In progress'.
+      return optionLabels?.[String(value)] ?? String(value)
     case 'date':
       return formatDate(String(value), lang === 'th' ? 'th' : 'en')
     case 'currency':
@@ -80,8 +89,16 @@ export function EditableCell({
     // Click-through select: render the select directly for zero-friction edits.
     const raw = value === undefined || value === null ? '' : String(value)
     return (
-      <Select
-        className={cx('h-7 border-transparent bg-transparent px-1 text-[13px] hover:border-slate-300', align === 'right' && 'text-right')}
+      // Not the shared <Select>: its padding is sized for a standalone form
+      // control and Tailwind emits `py-1.5` after `py-0`, so composing over it
+      // cannot win and the label ends up clipped inside a 28px grid row.
+      <select
+        className={cx(
+          'h-7 w-full cursor-pointer rounded-md border border-transparent bg-transparent px-1 py-0',
+          'text-[13px] leading-none text-slate-800 hover:border-slate-300',
+          'focus:border-indigo-500 focus:outline-none',
+          align === 'right' && 'text-right',
+        )}
         value={raw}
         onChange={(e) => onCommit?.(e.target.value)}
       >
@@ -91,7 +108,7 @@ export function EditableCell({
             {optionLabels?.[opt] ?? opt}
           </option>
         ))}
-      </Select>
+      </select>
     )
   }
 
@@ -118,7 +135,7 @@ export function EditableCell({
     )
   }
 
-  const shown = displayOf(kind, value, lang)
+  const shown = displayOf(kind, value, lang, optionLabels)
   return (
     <div
       onClick={start}

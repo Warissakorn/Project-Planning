@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { countTemplateTasks, TEMPLATE_CATEGORIES } from './templates'
 import type { Project, TreeNode } from './types'
 
+/** Any character in the Thai block. */
+const THAI = /[\u0E00-\u0E7F]/
+
 /** WBS nodes of a built project in DFS order with depth (root = 0). */
 function wbsRows(project: Project): { node: TreeNode; depth: number }[] {
   const wbs = project.structures[0]
@@ -36,7 +39,7 @@ describe('template library', () => {
         describe(entry.id, () => {
           // Build once per assertion batch — the builder throws on bad dep/link
           // keys, so any spec typo surfaces right here at test time.
-          const project = entry.build()
+          const project = entry.build('th')
           const rows = wbsRows(project)
           const leaves = rows.filter((r) => r.node.childIds.length === 0)
 
@@ -57,7 +60,7 @@ describe('template library', () => {
           })
 
           it('produces fresh ids on every instantiation', () => {
-            expect(project.id).not.toBe(entry.build().id)
+            expect(project.id).not.toBe(entry.build('th').id)
           })
 
           it('reports phase/task counts matching the built tree', () => {
@@ -69,4 +72,18 @@ describe('template library', () => {
       }
     })
   }
+
+  it('builds every template in English with no Thai left in it', () => {
+    for (const cat of TEMPLATE_CATEGORIES) {
+      expect(THAI.test(cat.label.en), `category: ${cat.label.en}`).toBe(false)
+      for (const entry of cat.templates) {
+        expect(THAI.test(entry.name.en), `template: ${entry.name.en}`).toBe(false)
+        expect(THAI.test(entry.desc.en), `template desc: ${entry.desc.en}`).toBe(false)
+        const p = entry.build('en')
+        for (const n of Object.values(p.nodes)) {
+          expect(THAI.test(n.name), `node name: ${n.name}`).toBe(false)
+        }
+      }
+    }
+  })
 })

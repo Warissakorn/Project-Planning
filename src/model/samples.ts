@@ -16,102 +16,102 @@
  */
 
 import { buildSample } from './specProject'
-import type { Project } from './types'
+import type { Bilingual, Lang, Project } from './types'
 
 // --- The five samples -----------------------------------------------------------
 
 export interface SampleEntry {
   id: string
-  name: string
-  build: () => Project
+  name: Bilingual
+  build: (lang: Lang) => Project
 }
 
 export const SAMPLE_PROJECTS: SampleEntry[] = [
   // ------------------------------------------------------------------ 1 · construction
   {
     id: 'sample-construction',
-    name: 'ตัวอย่าง 1 · ก่อสร้างอาคารสำนักงาน',
-    build: () =>
+    name: { th: 'ตัวอย่าง 1 · ก่อสร้างอาคารสำนักงาน', en: 'Sample 1 · Office building construction' },
+    build: (lang) =>
       buildSample({
         id: 'sample-construction',
-        name: 'ตัวอย่าง 1 · ก่อสร้างอาคารสำนักงาน',
+        name: { th: 'ตัวอย่าง 1 · ก่อสร้างอาคารสำนักงาน', en: 'Sample 1 · Office building construction' },
         startIso: '2026-06-01',
         wbs: [
           {
             key: 'pre',
-            name: 'งานก่อนก่อสร้าง',
+            name: { th: 'งานก่อนก่อสร้าง', en: 'Pre-construction' },
             children: [
-              { key: 'survey', name: 'สำรวจหน้างานและตรวจสอบดิน', duration: 10, cost: 80000 },
-              { key: 'arch', name: 'ออกแบบสถาปัตยกรรม', duration: 20, cost: 150000 },
-              { key: 'structDesign', name: 'ออกแบบโครงสร้างและระบบ MEP', duration: 25, cost: 180000 },
-              { key: 'boq', name: 'ประมาณการราคา (BOQ) และจ้างผู้รับเหมา', duration: 12, cost: 40000 },
-              { key: 'permit', name: 'ขอใบอนุญาตก่อสร้าง', duration: 30, cost: 30000 },
-              { key: 'permitDone', name: 'ได้รับใบอนุญาต', milestone: true },
-              { key: 'sitePrep', name: 'ปิดล้อมหน้างานและเตรียมพื้นที่', duration: 8, cost: 120000 },
+              { key: 'survey', name: { th: 'สำรวจหน้างานและตรวจสอบดิน', en: 'Site survey and soil investigation' }, duration: 10, cost: 80000 },
+              { key: 'arch', name: { th: 'ออกแบบสถาปัตยกรรม', en: 'Architectural design' }, duration: 20, cost: 150000 },
+              { key: 'structDesign', name: { th: 'ออกแบบโครงสร้างและระบบ MEP', en: 'Structural and MEP design' }, duration: 25, cost: 180000 },
+              { key: 'boq', name: { th: 'ประมาณการราคา (BOQ) และจ้างผู้รับเหมา', en: 'Cost estimate (BOQ) and contractor tender' }, duration: 12, cost: 40000 },
+              { key: 'permit', name: { th: 'ขอใบอนุญาตก่อสร้าง', en: 'Apply for the construction permit' }, duration: 30, cost: 30000 },
+              { key: 'permitDone', name: { th: 'ได้รับใบอนุญาต', en: 'Permit granted' }, milestone: true },
+              { key: 'sitePrep', name: { th: 'ปิดล้อมหน้างานและเตรียมพื้นที่', en: 'Hoard the site and prepare the ground' }, duration: 8, cost: 120000 },
             ],
           },
           {
             key: 'foundation',
-            name: 'งานฐานราก',
+            name: { th: 'งานฐานราก', en: 'Foundation works' },
             children: [
-              { key: 'pilingA', name: 'ตอกเสาเข็มโซน A', duration: 12, cost: 250000 },
-              { key: 'pilingB', name: 'ตอกเสาเข็มโซน B', duration: 10, cost: 230000 },
-              { key: 'excavation', name: 'ขุดคันดินและระบบระบายน้ำกันน้ำท่วมหน้างาน', duration: 8, cost: 90000 },
-              { key: 'footing', name: 'หล่อฐานรากและคานค้ำ', duration: 15, cost: 380000 },
-              { key: 'waterproof', name: 'งานกันซึมฐานราก', duration: 4, cost: 70000 },
+              { key: 'pilingA', name: { th: 'ตอกเสาเข็มโซน A', en: 'Pile driving, zone A' }, duration: 12, cost: 250000 },
+              { key: 'pilingB', name: { th: 'ตอกเสาเข็มโซน B', en: 'Pile driving, zone B' }, duration: 10, cost: 230000 },
+              { key: 'excavation', name: { th: 'ขุดคันดินและระบบระบายน้ำกันน้ำท่วมหน้างาน', en: 'Earthworks and site drainage against flooding' }, duration: 8, cost: 90000 },
+              { key: 'footing', name: { th: 'หล่อฐานรากและคานค้ำ', en: 'Cast the footings and tie beams' }, duration: 15, cost: 380000 },
+              { key: 'waterproof', name: { th: 'งานกันซึมฐานราก', en: 'Foundation waterproofing' }, duration: 4, cost: 70000 },
             ],
           },
           {
             key: 'structure',
-            name: 'งานโครงสร้างอาคาร',
+            name: { th: 'งานโครงสร้างอาคาร', en: 'Building structural works' },
             children: [
-              { key: 'floor1', name: 'โครงสร้างชั้น 1', duration: 18, cost: 320000 },
-              { key: 'floor2', name: 'โครงสร้างชั้น 2', duration: 15, cost: 310000 },
-              { key: 'floor3', name: 'โครงสร้างชั้น 3', duration: 15, cost: 300000 },
-              { key: 'topOut', name: 'Topping out — ยกหลังคาอาคารสำเร็จ', milestone: true },
-              { key: 'roofSlab', name: 'งานหลังคาและถังน้ำบนดาดฟ้า', duration: 8, cost: 160000 },
+              { key: 'floor1', name: { th: 'โครงสร้างชั้น 1', en: 'Level 1 structure' }, duration: 18, cost: 320000 },
+              { key: 'floor2', name: { th: 'โครงสร้างชั้น 2', en: 'Level 2 structure' }, duration: 15, cost: 310000 },
+              { key: 'floor3', name: { th: 'โครงสร้างชั้น 3', en: 'Level 3 structure' }, duration: 15, cost: 300000 },
+              { key: 'topOut', name: { th: 'Topping out — ยกหลังคาอาคารสำเร็จ', en: 'Topping out — roof structure complete' }, milestone: true },
+              { key: 'roofSlab', name: { th: 'งานหลังคาและถังน้ำบนดาดฟ้า', en: 'Roofing and rooftop water tanks' }, duration: 8, cost: 160000 },
             ],
           },
           {
             key: 'mep',
-            name: 'งานระบบ MEP',
+            name: { th: 'งานระบบ MEP', en: 'MEP works' },
             children: [
-              { key: 'riser', name: 'ระบบหลักและชัฟท์เดินท่อ–สายไฟ', duration: 14, cost: 210000 },
-              { key: 'elec', name: 'ระบบไฟฟ้าและไฟส่องสว่างภายใน', duration: 22, cost: 280000 },
-              { key: 'plumbing', name: 'ระบบประปาและสุขาภิบาล', duration: 18, cost: 190000 },
-              { key: 'hvac', name: 'ติดตั้งเครื่องปรับอากาศและระบายอากาศ', duration: 16, cost: 240000 },
-              { key: 'fire', name: 'ระบบดับเพลิงและสัญญาณแจ้งเหตุ', duration: 10, cost: 130000 },
-              { key: 'lift', name: 'ติดตั้งลิฟต์โดยสาร', duration: 14, cost: 520000 },
+              { key: 'riser', name: { th: 'ระบบหลักและชัฟท์เดินท่อ–สายไฟ', en: 'Main systems and service shafts' }, duration: 14, cost: 210000 },
+              { key: 'elec', name: { th: 'ระบบไฟฟ้าและไฟส่องสว่างภายใน', en: 'Electrical and interior lighting' }, duration: 22, cost: 280000 },
+              { key: 'plumbing', name: { th: 'ระบบประปาและสุขาภิบาล', en: 'Plumbing and sanitary systems' }, duration: 18, cost: 190000 },
+              { key: 'hvac', name: { th: 'ติดตั้งเครื่องปรับอากาศและระบายอากาศ', en: 'Install air conditioning and ventilation' }, duration: 16, cost: 240000 },
+              { key: 'fire', name: { th: 'ระบบดับเพลิงและสัญญาณแจ้งเหตุ', en: 'Fire fighting and alarm systems' }, duration: 10, cost: 130000 },
+              { key: 'lift', name: { th: 'ติดตั้งลิฟต์โดยสาร', en: 'Install the passenger lift' }, duration: 14, cost: 520000 },
             ],
           },
           {
             key: 'finish',
-            name: 'งานสถาปัตยกรรมและตกแต่ง',
+            name: { th: 'งานสถาปัตยกรรมและตกแต่ง', en: 'Architectural and fit-out works' },
             children: [
-              { key: 'masonry', name: 'งานก่อฉากผนัง', duration: 20, cost: 350000 },
-              { key: 'tile', name: 'กระเบื้องพื้นและผนัง', duration: 14, cost: 300000 },
-              { key: 'doorWin', name: 'ประตู หน้าต่าง และกระจกเคลือบ', duration: 10, cost: 260000 },
-              { key: 'ceiling', name: 'ฝ้าเพดานและโคมไฟ', duration: 8, cost: 140000 },
-              { key: 'paint', name: 'งานทาสีทั้งอาคาร', duration: 12, cost: 170000 },
-              { key: 'lobby', name: 'ตกแต่งล็อบบี้และห้องรับรอง', duration: 12, cost: 290000 },
+              { key: 'masonry', name: { th: 'งานก่อฉากผนัง', en: 'Partition walls' }, duration: 20, cost: 350000 },
+              { key: 'tile', name: { th: 'กระเบื้องพื้นและผนัง', en: 'Floor and wall tiling' }, duration: 14, cost: 300000 },
+              { key: 'doorWin', name: { th: 'ประตู หน้าต่าง และกระจกเคลือบ', en: 'Doors, windows and coated glazing' }, duration: 10, cost: 260000 },
+              { key: 'ceiling', name: { th: 'ฝ้าเพดานและโคมไฟ', en: 'Ceilings and light fittings' }, duration: 8, cost: 140000 },
+              { key: 'paint', name: { th: 'งานทาสีทั้งอาคาร', en: 'Painting throughout the building' }, duration: 12, cost: 170000 },
+              { key: 'lobby', name: { th: 'ตกแต่งล็อบบี้และห้องรับรอง', en: 'Fit out the lobby and reception rooms' }, duration: 12, cost: 290000 },
             ],
           },
           {
             key: 'external',
-            name: 'งานภายนอกอาคาร',
+            name: { th: 'งานภายนอกอาคาร', en: 'External works' },
             children: [
-              { key: 'landscape', name: 'งานภูมิทัศน์และที่จอดรถ', duration: 15, cost: 220000 },
-              { key: 'driveway', name: 'ถนนภายในและระบบระบายน้ำหน้างาน', duration: 10, cost: 180000 },
+              { key: 'landscape', name: { th: 'งานภูมิทัศน์และที่จอดรถ', en: 'Landscaping and car park' }, duration: 15, cost: 220000 },
+              { key: 'driveway', name: { th: 'ถนนภายในและระบบระบายน้ำหน้างาน', en: 'Internal roads and site drainage' }, duration: 10, cost: 180000 },
             ],
           },
           {
             key: 'close',
-            name: 'ทดสอบและส่งมอบ',
+            name: { th: 'ทดสอบและส่งมอบ', en: 'Testing and handover' },
             children: [
-              { key: 'commissioning', name: 'ทดสอบระบบทั้งหมด (commissioning)', duration: 8, cost: 90000 },
-              { key: 'inspection', name: 'ตรวจรับกับผู้ควบคุมงานและเจ้าของโครงการ', duration: 5, cost: 20000 },
-              { key: 'handoverDay', name: 'ส่งมอบอาคาร', milestone: true },
-              { key: 'asbuilt', name: 'ส่งแบบ as-built และคู่มือดูแลอาคาร', duration: 6, cost: 40000 },
+              { key: 'commissioning', name: { th: 'ทดสอบระบบทั้งหมด (commissioning)', en: 'Whole-system commissioning' }, duration: 8, cost: 90000 },
+              { key: 'inspection', name: { th: 'ตรวจรับกับผู้ควบคุมงานและเจ้าของโครงการ', en: 'Inspection with the site supervisor and the owner' }, duration: 5, cost: 20000 },
+              { key: 'handoverDay', name: { th: 'ส่งมอบอาคาร', en: 'Building handover' }, milestone: true },
+              { key: 'asbuilt', name: { th: 'ส่งแบบ as-built และคู่มือดูแลอาคาร', en: 'Issue as-built drawings and the building manual' }, duration: 6, cost: 40000 },
             ],
           },
         ],
@@ -169,99 +169,99 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
         extraStructures: [
           {
             typeId: 'obs',
-            name: 'หน่วยงานในโครงการ (OBS)',
+            name: { th: 'หน่วยงานในโครงการ (OBS)', en: 'Org units (OBS)' },
             nodes: [
-              { key: 'pm', name: 'ผู้จัดการโครงการ', attrs: { owner: 'คุณสมชาย วงศ์ประเสริฐ' } },
-              { key: 'designOrg', name: 'ฝ่ายออกแบบ', attrs: { owner: 'บจก. สถาปนิก ร่วมแบบ' } },
-              { key: 'contractorStruct', name: 'ผู้รับเหมางานโครงสร้าง', attrs: { owner: 'บจก. สร้างการ' } },
-              { key: 'contractorMep', name: 'ผู้รับเหมาระบบ MEP', attrs: { owner: 'บจก. ระบบสมบูรณ์' } },
-              { key: 'contractorFin', name: 'ผู้รับเหมางานตกแต่ง', attrs: { owner: 'หจก. สวยงามตกแต่ง' } },
-              { key: 'extOrg', name: 'ผู้รับเหมางานภูมิทัศน์', attrs: { owner: 'บจก. เขียวขจีแลนด์' } },
-              { key: 'qa', name: 'ฝ่ายควบคุมคุณภาพและความปลอดภัย', attrs: { owner: 'วศ. อารีย์ ใจดี' } },
-              { key: 'procurement', name: 'ฝ่ายจัดซื้อวัสดุ', attrs: { owner: 'คุณมะลิ ซื้อของดี' } },
+              { key: 'pm', name: { th: 'ผู้จัดการโครงการ', en: 'Project manager' }, attrs: { owner: 'คุณสมชาย วงศ์ประเสริฐ' } },
+              { key: 'designOrg', name: { th: 'ฝ่ายออกแบบ', en: 'Design department' }, attrs: { owner: 'บจก. สถาปนิก ร่วมแบบ' } },
+              { key: 'contractorStruct', name: { th: 'ผู้รับเหมางานโครงสร้าง', en: 'Structural contractor' }, attrs: { owner: 'บจก. สร้างการ' } },
+              { key: 'contractorMep', name: { th: 'ผู้รับเหมาระบบ MEP', en: 'MEP contractor' }, attrs: { owner: 'บจก. ระบบสมบูรณ์' } },
+              { key: 'contractorFin', name: { th: 'ผู้รับเหมางานตกแต่ง', en: 'Fit-out contractor' }, attrs: { owner: 'หจก. สวยงามตกแต่ง' } },
+              { key: 'extOrg', name: { th: 'ผู้รับเหมางานภูมิทัศน์', en: 'Landscaping contractor' }, attrs: { owner: 'บจก. เขียวขจีแลนด์' } },
+              { key: 'qa', name: { th: 'ฝ่ายควบคุมคุณภาพและความปลอดภัย', en: 'Quality and safety department' }, attrs: { owner: 'วศ. อารีย์ ใจดี' } },
+              { key: 'procurement', name: { th: 'ฝ่ายจัดซื้อวัสดุ', en: 'Materials procurement department' }, attrs: { owner: 'คุณมะลิ ซื้อของดี' } },
             ],
           },
           {
             typeId: 'cbs',
-            name: 'หมวดต้นทุน (CBS)',
+            name: { th: 'หมวดต้นทุน (CBS)', en: 'Cost categories (CBS)' },
             nodes: [
-              { key: 'cSoft', name: 'ค่าออกแบบและขออนุญาต', attrs: { budget: 400000 } },
+              { key: 'cSoft', name: { th: 'ค่าออกแบบและขออนุญาต', en: 'Design and permit cost' }, attrs: { budget: 400000 } },
               {
                 key: 'cMaterial',
-                name: 'ค่าวัสดุก่อสร้าง',
+                name: { th: 'ค่าวัสดุก่อสร้าง', en: 'Construction material cost' },
                 children: [
-                  { key: 'matStruct', name: 'วัสดุงานฐานรากและโครงสร้าง', attrs: { budget: 1600000 } },
-                  { key: 'matMep', name: 'วัสดุระบบ MEP และลิฟต์', attrs: { budget: 900000 } },
-                  { key: 'matFin', name: 'วัสดุงานตกแต่ง', attrs: { budget: 800000 } },
+                  { key: 'matStruct', name: { th: 'วัสดุงานฐานรากและโครงสร้าง', en: 'Foundation and structural materials' }, attrs: { budget: 1600000 } },
+                  { key: 'matMep', name: { th: 'วัสดุระบบ MEP และลิฟต์', en: 'MEP materials and lift' }, attrs: { budget: 900000 } },
+                  { key: 'matFin', name: { th: 'วัสดุงานตกแต่ง', en: 'Fit-out materials' }, attrs: { budget: 800000 } },
                 ],
               },
               {
                 key: 'cLabour',
-                name: 'ค่าแรงงาน',
+                name: { th: 'ค่าแรงงาน', en: 'Labour cost' },
                 children: [
-                  { key: 'labStruct', name: 'แรงงานงานโครงสร้าง', attrs: { budget: 700000 } },
-                  { key: 'labMep', name: 'แรงงานระบบ MEP', attrs: { budget: 450000 } },
-                  { key: 'labFin', name: 'แรงงานงานตกแต่ง', attrs: { budget: 500000 } },
+                  { key: 'labStruct', name: { th: 'แรงงานงานโครงสร้าง', en: 'Structural labour' }, attrs: { budget: 700000 } },
+                  { key: 'labMep', name: { th: 'แรงงานระบบ MEP', en: 'MEP labour' }, attrs: { budget: 450000 } },
+                  { key: 'labFin', name: { th: 'แรงงานงานตกแต่ง', en: 'Fit-out labour' }, attrs: { budget: 500000 } },
                 ],
               },
-              { key: 'cEquip', name: 'ค่าเช่าเครื่องจักรและนั่งร้าน', attrs: { budget: 350000 } },
-              { key: 'cClose', name: 'ค่าทดสอบและส่งมอบ', attrs: { budget: 150000 } },
-              { key: 'cCont', name: 'สำรองเผื่อฉุกเฉิน (contingency)', attrs: { budget: 500000 } },
+              { key: 'cEquip', name: { th: 'ค่าเช่าเครื่องจักรและนั่งร้าน', en: 'Plant and scaffolding hire' }, attrs: { budget: 350000 } },
+              { key: 'cClose', name: { th: 'ค่าทดสอบและส่งมอบ', en: 'Testing and handover cost' }, attrs: { budget: 150000 } },
+              { key: 'cCont', name: { th: 'สำรองเผื่อฉุกเฉิน (contingency)', en: 'Contingency reserve' }, attrs: { budget: 500000 } },
             ],
           },
           {
             typeId: 'rbs',
-            name: 'ทะเบียนความเสี่ยง (RBS)',
+            name: { th: 'ทะเบียนความเสี่ยง (RBS)', en: 'Risk register (RBS)' },
             nodes: [
               {
                 key: 'rExternal',
-                name: 'ความเสี่ยงภายนอก',
+                name: { th: 'ความเสี่ยงภายนอก', en: 'External risks' },
                 children: [
                   {
                     key: 'rain',
-                    name: 'ฝนตกซ้ำซากทำงานโครงสร้างล่าช้า',
+                    name: { th: 'ฝนตกซ้ำซากทำงานโครงสร้างล่าช้า', en: 'Persistent rain delays the structural works' },
                     attrs: { probability: 40, impact: 'high', response: 'เผื่อเวลาในแผนงานกลางแจ้ง + เตรียมผ้าคลุมคอนกรีต' },
                   },
                   {
                     key: 'price',
-                    name: 'ราคาเหล็กและคอนกรีตผันผวน',
+                    name: { th: 'ราคาเหล็กและคอนกรีตผันผวน', en: 'Steel and concrete prices swing' },
                     attrs: { probability: 50, impact: 'medium', response: 'ล็อกราคากับซัพพลายเออร์ล่วงหน้า' },
                   },
                   {
                     key: 'regulation',
-                    name: 'เอกสารขออนุญาตถูกตีกลับ',
+                    name: { th: 'เอกสารขออนุญาตถูกตีกลับ', en: 'The permit application is rejected' },
                     attrs: { probability: 20, impact: 'high', response: 'ให้ที่ปรึกษาตรวจแบบตาม รพน. ก่อนยื่นจริง' },
                   },
                 ],
               },
               {
                 key: 'rOps',
-                name: 'ความเสี่ยงการดำเนินงาน',
+                name: { th: 'ความเสี่ยงการดำเนินงาน', en: 'Operational risks' },
                 children: [
                   {
                     key: 'labour',
-                    name: 'แรงงานขาดมือช่วงเร่งงานโครงสร้าง',
+                    name: { th: 'แรงงานขาดมือช่วงเร่งงานโครงสร้าง', en: 'Labour shortage during the structural push' },
                     attrs: { probability: 30, impact: 'high', response: 'สัญญาระบุโทษความล่าช้า + มีผู้รับเหมาสำรอง' },
                   },
                   {
                     key: 'change',
-                    name: 'เจ้าของงานขอแบบเปลี่ยนกลางทาง',
+                    name: { th: 'เจ้าของงานขอแบบเปลี่ยนกลางทาง', en: 'The client changes the design mid-project' },
                     attrs: { probability: 35, impact: 'medium', response: 'ตรึงแบบก่อนเริ่มงาน + change control' },
                   },
                   {
                     key: 'liftDelay',
-                    name: 'ลิฟต์นำเข้ามาไม่ทันจังหวะติดตั้ง',
+                    name: { th: 'ลิฟต์นำเข้ามาไม่ทันจังหวะติดตั้ง', en: 'The imported lift misses its installation window' },
                     attrs: { probability: 25, impact: 'high', response: 'สั่งจองลิฟต์ตั้งแต่ต้นโครงการ พร้อมติดตาม shipment' },
                   },
                 ],
               },
               {
                 key: 'rFinance',
-                name: 'ความเสี่ยงด้านการเงิน',
+                name: { th: 'ความเสี่ยงด้านการเงิน', en: 'Financial risks' },
                 children: [
                   {
                     key: 'cashflow',
-                    name: 'กระแสเงินสดติดลบช่วงงานโครงสร้าง',
+                    name: { th: 'กระแสเงินสดติดลบช่วงงานโครงสร้าง', en: 'Negative cash flow during structural works' },
                     attrs: { probability: 30, impact: 'medium', response: 'วางแผน billing รายเดือนให้ตรงความก้าวหน้า' },
                   },
                 ],
@@ -308,81 +308,81 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           { kind: 'charges', from: 'commissioning', to: 'cClose' },
           { kind: 'charges', from: 'inspection', to: 'cClose' },
         ],
-      }),
+      }, lang),
   },
 
   // ------------------------------------------------------------------ 2 · mobile app
   {
     id: 'sample-mobile-app',
-    name: 'ตัวอย่าง 2 · พัฒนาแอปมือถือ FoodieGo',
-    build: () =>
+    name: { th: 'ตัวอย่าง 2 · พัฒนาแอปมือถือ FoodieGo', en: 'Sample 2 · FoodieGo mobile app' },
+    build: (lang) =>
       buildSample({
         id: 'sample-mobile-app',
-        name: 'ตัวอย่าง 2 · พัฒนาแอปมือถือ FoodieGo',
+        name: { th: 'ตัวอย่าง 2 · พัฒนาแอปมือถือ FoodieGo', en: 'Sample 2 · FoodieGo mobile app' },
         startIso: '2026-09-01',
         wbs: [
           {
             key: 'discovery',
             name: 'Discovery',
             children: [
-              { key: 'research', name: 'สัมภาษณ์ผู้ใช้และร้านค้า', duration: 8 },
-              { key: 'competitor', name: 'วิเคราะห์แอปคู่แข่ง', duration: 4 },
-              { key: 'scope', name: 'สรุป scope และ user story', duration: 5 },
+              { key: 'research', name: { th: 'สัมภาษณ์ผู้ใช้และร้านค้า', en: 'Interview users and restaurants' }, duration: 8 },
+              { key: 'competitor', name: { th: 'วิเคราะห์แอปคู่แข่ง', en: 'Analyse competitor apps' }, duration: 4 },
+              { key: 'scope', name: { th: 'สรุป scope และ user story', en: 'Agree the scope and user stories' }, duration: 5 },
             ],
           },
           {
             key: 'ux',
-            name: 'ออกแบบประสบการณ์',
+            name: { th: 'ออกแบบประสบการณ์', en: 'Experience design' },
             children: [
-              { key: 'wireframe', name: 'Wireframe หน้าจอหลัก', duration: 7 },
-              { key: 'uikit', name: 'UI Kit และ Design System', duration: 8 },
-              { key: 'prototype', name: 'Prototype คลิกได้', duration: 5 },
-              { key: 'usability', name: 'Usability test กับผู้ใช้จริง', duration: 5 },
+              { key: 'wireframe', name: { th: 'Wireframe หน้าจอหลัก', en: 'Wireframe the main screens' }, duration: 7 },
+              { key: 'uikit', name: { th: 'UI Kit และ Design System', en: 'UI kit and design system' }, duration: 8 },
+              { key: 'prototype', name: { th: 'Prototype คลิกได้', en: 'Clickable prototype' }, duration: 5 },
+              { key: 'usability', name: { th: 'Usability test กับผู้ใช้จริง', en: 'Usability test with real users' }, duration: 5 },
             ],
           },
           {
             key: 'dev',
-            name: 'พัฒนา',
+            name: { th: 'พัฒนา', en: 'Development' },
             children: [
               {
                 key: 'devBackend',
-                name: 'ฝั่ง Backend',
+                name: { th: 'ฝั่ง Backend', en: 'Backend' },
                 children: [
-                  { key: 'backend', name: 'ตั้งโครง backend + CI/CD', duration: 6 },
-                  { key: 'authApi', name: 'API สมาชิกและล็อกอิน', duration: 10 },
-                  { key: 'menuApi', name: 'API เมนูและค้นหาร้าน', duration: 12 },
-                  { key: 'payApi', name: 'API ชำระเงินและ receipt', duration: 10 },
+                  { key: 'backend', name: { th: 'ตั้งโครง backend + CI/CD', en: 'Scaffold the backend + CI/CD' }, duration: 6 },
+                  { key: 'authApi', name: { th: 'API สมาชิกและล็อกอิน', en: 'Account and login API' }, duration: 10 },
+                  { key: 'menuApi', name: { th: 'API เมนูและค้นหาร้าน', en: 'Menu and restaurant search API' }, duration: 12 },
+                  { key: 'payApi', name: { th: 'API ชำระเงินและ receipt', en: 'Payment and receipt API' }, duration: 10 },
                 ],
               },
               {
                 key: 'devApp',
-                name: 'แอปมือถือ',
+                name: { th: 'แอปมือถือ', en: 'Mobile app' },
                 children: [
-                  { key: 'appShell', name: 'โครงแอปและ navigation', duration: 6 },
-                  { key: 'uiAuth', name: 'หน้าจอสมาชิก', duration: 6 },
-                  { key: 'uiMenu', name: 'หน้าจอเมนู–ค้นหา', duration: 9 },
-                  { key: 'uiCart', name: 'หน้าจอตะกร้า–ชำระเงิน', duration: 9 },
-                  { key: 'notify', name: 'แจ้งเตือนสถานะออเดอร์', duration: 5 },
+                  { key: 'appShell', name: { th: 'โครงแอปและ navigation', en: 'App shell and navigation' }, duration: 6 },
+                  { key: 'uiAuth', name: { th: 'หน้าจอสมาชิก', en: 'Account screens' }, duration: 6 },
+                  { key: 'uiMenu', name: { th: 'หน้าจอเมนู–ค้นหา', en: 'Menu and search screens' }, duration: 9 },
+                  { key: 'uiCart', name: { th: 'หน้าจอตะกร้า–ชำระเงิน', en: 'Cart and checkout screens' }, duration: 9 },
+                  { key: 'notify', name: { th: 'แจ้งเตือนสถานะออเดอร์', en: 'Order status notifications' }, duration: 5 },
                 ],
               },
             ],
           },
           {
             key: 'test',
-            name: 'ทดสอบ',
+            name: { th: 'ทดสอบ', en: 'Testing' },
             children: [
-              { key: 'qa', name: 'QA รวมทุกโมดูล', duration: 10 },
-              { key: 'perf', name: 'ทดสอบ load และประสิทธิภาพ', duration: 5 },
-              { key: 'beta', name: 'Beta กับร้านนำร่อง 10 ร้าน', duration: 10 },
+              { key: 'qa', name: { th: 'QA รวมทุกโมดูล', en: 'QA across all modules' }, duration: 10 },
+              { key: 'perf', name: { th: 'ทดสอบ load และประสิทธิภาพ', en: 'Load and performance testing' }, duration: 5 },
+              { key: 'beta', name: { th: 'Beta กับร้านนำร่อง 10 ร้าน', en: 'Beta with 10 pilot restaurants' }, duration: 10 },
             ],
           },
           {
             key: 'launch',
-            name: 'เปิดตัว',
+            name: { th: 'เปิดตัว', en: 'Launch' },
             children: [
-              { key: 'assets', name: 'สื่อแนะนำแอปใน App Store', duration: 5 },
-              { key: 'storeReview', name: 'ส่งรีวิว App Store / Play Store', duration: 7 },
-              { key: 'launchDay', name: 'เปิดตัว v1.0', milestone: true },
+              { key: 'assets', name: { th: 'สื่อแนะนำแอปใน App Store', en: 'App Store listing assets' }, duration: 5 },
+              { key: 'storeReview', name: { th: 'ส่งรีวิว App Store / Play Store', en: 'Submit for App Store / Play Store review' }, duration: 7 },
+              { key: 'launchDay', name: { th: 'เปิดตัว v1.0', en: 'v1.0 launch' }, milestone: true },
             ],
           },
         ],
@@ -420,25 +420,25 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
         extraStructures: [
           {
             typeId: 'pbs',
-            name: 'โครงสร้างผลผลิต (PBS)',
+            name: { th: 'โครงสร้างผลผลิต (PBS)', en: 'Product breakdown (PBS)' },
             nodes: [
-              { key: 'pAuth', name: 'โมดูลสมาชิก', attrs: { version: '1.0' } },
-              { key: 'pMenu', name: 'โมดูลเมนูและค้นหา', attrs: { version: '1.0' } },
-              { key: 'pCart', name: 'โมดูลสั่งซื้อ/ชำระเงิน', attrs: { version: '1.0' } },
-              { key: 'pNotify', name: 'ระบบแจ้งเตือน', attrs: { version: '1.0' } },
-              { key: 'pReview', name: 'ระบบรีวิวร้าน', attrs: { version: '1.1 (roadmap)' } },
-              { key: 'pAnalytics', name: 'Dashboard analytics ร้านค้า', attrs: { version: '1.1 (roadmap)' } },
+              { key: 'pAuth', name: { th: 'โมดูลสมาชิก', en: 'Account module' }, attrs: { version: '1.0' } },
+              { key: 'pMenu', name: { th: 'โมดูลเมนูและค้นหา', en: 'Menu and search module' }, attrs: { version: '1.0' } },
+              { key: 'pCart', name: { th: 'โมดูลสั่งซื้อ/ชำระเงิน', en: 'Ordering and payment module' }, attrs: { version: '1.0' } },
+              { key: 'pNotify', name: { th: 'ระบบแจ้งเตือน', en: 'Notifications' }, attrs: { version: '1.0' } },
+              { key: 'pReview', name: { th: 'ระบบรีวิวร้าน', en: 'Restaurant review system' }, attrs: { version: '1.1 (roadmap)' } },
+              { key: 'pAnalytics', name: { th: 'Dashboard analytics ร้านค้า', en: 'Restaurant analytics dashboard' }, attrs: { version: '1.1 (roadmap)' } },
             ],
           },
           {
             typeId: 'obs',
-            name: 'ทีมงาน (OBS)',
+            name: { th: 'ทีมงาน (OBS)', en: 'Teams (OBS)' },
             nodes: [
               { key: 'po', name: 'Product Owner', attrs: { owner: 'คุณไผ่ เตชะณรงค์' } },
-              { key: 'designers', name: 'ทีมออกแบบ UX/UI', attrs: { owner: 'คุณมิน ศรีสุข' } },
-              { key: 'devs', name: 'ทีม Developer', attrs: { owner: 'คุณโอ๊ต พัฒนกิจ' } },
-              { key: 'qas', name: 'ทีม QA', attrs: { owner: 'คุณเจ Jirapat' } },
-              { key: 'marketing', name: 'ทีม Marketing', attrs: { owner: 'คุณแพร วัลย์พร' } },
+              { key: 'designers', name: { th: 'ทีมออกแบบ UX/UI', en: 'UX/UI design team' }, attrs: { owner: 'คุณมิน ศรีสุข' } },
+              { key: 'devs', name: { th: 'ทีม Developer', en: 'Development team' }, attrs: { owner: 'คุณโอ๊ต พัฒนกิจ' } },
+              { key: 'qas', name: { th: 'ทีม QA', en: 'QA team' }, attrs: { owner: 'คุณเจ Jirapat' } },
+              { key: 'marketing', name: { th: 'ทีม Marketing', en: 'Marketing team' }, attrs: { owner: 'คุณแพร วัลย์พร' } },
             ],
           },
         ],
@@ -460,63 +460,63 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           { kind: 'assigns', from: 'beta', to: 'qas' },
           { kind: 'assigns', from: 'assets', to: 'marketing' },
         ],
-      }),
+      }, lang),
   },
 
   // ------------------------------------------------------------------ 3 · seminar
   {
     id: 'sample-seminar',
-    name: 'ตัวอย่าง 3 · จัดสัมมนา Digital Transformation',
-    build: () =>
+    name: { th: 'ตัวอย่าง 3 · จัดสัมมนา Digital Transformation', en: 'Sample 3 · Digital Transformation seminar' },
+    build: (lang) =>
       buildSample({
         id: 'sample-seminar',
-        name: 'ตัวอย่าง 3 · จัดสัมมนา Digital Transformation',
+        name: { th: 'ตัวอย่าง 3 · จัดสัมมนา Digital Transformation', en: 'Sample 3 · Digital Transformation seminar' },
         startIso: '2026-08-10',
         wbs: [
           {
             key: 'plan',
-            name: 'วางแผนงาน',
+            name: { th: 'วางแผนงาน', en: 'Planning' },
             children: [
-              { key: 'topic', name: 'กำหนดหัวข้อและวิทยากรเป้าหมาย', duration: 4 },
-              { key: 'budget', name: 'งบประมาณและจุดคุ้มทุน', duration: 3 },
-              { key: 'sponsor', name: 'ติดต่อสปอนเซอร์และบูธแสดงสินค้า', duration: 6 },
+              { key: 'topic', name: { th: 'กำหนดหัวข้อและวิทยากรเป้าหมาย', en: 'Define the topics and target speakers' }, duration: 4 },
+              { key: 'budget', name: { th: 'งบประมาณและจุดคุ้มทุน', en: 'Budget and break-even' }, duration: 3 },
+              { key: 'sponsor', name: { th: 'ติดต่อสปอนเซอร์และบูธแสดงสินค้า', en: 'Approach sponsors and exhibition booths' }, duration: 6 },
             ],
           },
           {
             key: 'content',
-            name: 'วิทยากรและเนื้อหา',
+            name: { th: 'วิทยากรและเนื้อหา', en: 'Speakers and content' },
             children: [
-              { key: 'invite', name: 'เชิญและยืนยันวิทยากร', duration: 14 },
-              { key: 'agenda', name: 'จัด agenda และลำดับช่วงบรรยาย', duration: 3 },
-              { key: 'rehearse', name: 'รับสไลด์และซ้อมพูด', duration: 5 },
+              { key: 'invite', name: { th: 'เชิญและยืนยันวิทยากร', en: 'Invite and confirm the speakers' }, duration: 14 },
+              { key: 'agenda', name: { th: 'จัด agenda และลำดับช่วงบรรยาย', en: 'Build the agenda and session order' }, duration: 3 },
+              { key: 'rehearse', name: { th: 'รับสไลด์และซ้อมพูด', en: 'Collect the slides and rehearse' }, duration: 5 },
             ],
           },
           {
             key: 'venue',
-            name: 'สถานที่และอุปกรณ์',
+            name: { th: 'สถานที่และอุปกรณ์', en: 'Venue and equipment' },
             children: [
-              { key: 'room', name: 'จองห้องประชุมและที่พักวิทยากร', duration: 5 },
-              { key: 'av', name: 'เตรียม AV และระบบสตรีมมิง', duration: 8 },
-              { key: 'catering', name: 'จัดเลี้ยงและอาหารว่าง', duration: 4 },
-              { key: 'badgeKit', name: 'ป้าย เอกสาร และของที่ระลึก', duration: 4 },
+              { key: 'room', name: { th: 'จองห้องประชุมและที่พักวิทยากร', en: 'Book the meeting room and speaker accommodation' }, duration: 5 },
+              { key: 'av', name: { th: 'เตรียม AV และระบบสตรีมมิง', en: 'Prepare AV and streaming' }, duration: 8 },
+              { key: 'catering', name: { th: 'จัดเลี้ยงและอาหารว่าง', en: 'Catering and refreshments' }, duration: 4 },
+              { key: 'badgeKit', name: { th: 'ป้าย เอกสาร และของที่ระลึก', en: 'Signage, handouts and souvenirs' }, duration: 4 },
             ],
           },
           {
             key: 'promo',
-            name: 'ประชาสัมพันธ์และลงทะเบียน',
+            name: { th: 'ประชาสัมพันธ์และลงทะเบียน', en: 'Promotion and registration' },
             children: [
-              { key: 'poster', name: 'โพสเตอร์และหน้าลงทะเบียนออนไลน์', duration: 5 },
-              { key: 'social', name: 'โซเชียลมีเดียและ email blast', duration: 8 },
-              { key: 'regClose', name: 'ปิดรับลงทะเบียน', milestone: true },
+              { key: 'poster', name: { th: 'โพสเตอร์และหน้าลงทะเบียนออนไลน์', en: 'Poster and online registration page' }, duration: 5 },
+              { key: 'social', name: { th: 'โซเชียลมีเดียและ email blast', en: 'Social media and email blast' }, duration: 8 },
+              { key: 'regClose', name: { th: 'ปิดรับลงทะเบียน', en: 'Close registration' }, milestone: true },
             ],
           },
           {
             key: 'event',
-            name: 'วันงาน',
+            name: { th: 'วันงาน', en: 'Event day' },
             children: [
-              { key: 'checkin', name: 'ลงทะเบียนหน้างานและอำนวยความสะดวก', duration: 1 },
-              { key: 'eventDay', name: 'วันจัดสัมมนา', milestone: true },
-              { key: 'retro', name: 'สรุปบทเรียนและส่งแบบประเมิน', duration: 3 },
+              { key: 'checkin', name: { th: 'ลงทะเบียนหน้างานและอำนวยความสะดวก', en: 'On-site registration and guest services' }, duration: 1 },
+              { key: 'eventDay', name: { th: 'วันจัดสัมมนา', en: 'Seminar day' }, milestone: true },
+              { key: 'retro', name: { th: 'สรุปบทเรียนและส่งแบบประเมิน', en: 'Capture lessons learned and send the evaluation form' }, duration: 3 },
             ],
           },
         ],
@@ -541,25 +541,25 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
         extraStructures: [
           {
             typeId: 'obs',
-            name: 'คณะทำงาน (OBS)',
+            name: { th: 'คณะทำงาน (OBS)', en: 'Working teams (OBS)' },
             nodes: [
-              { key: 'chair', name: 'ประธานจัดงาน', attrs: { owner: 'คุณอร วิไลลักษณ์' } },
-              { key: 'contentTeam', name: 'ฝ่ายเนื้อหา', attrs: { owner: 'คุณต้น ฤทธิ์มะนาว' } },
-              { key: 'venueTeam', name: 'ฝ่ายสถานที่', attrs: { owner: 'คุณกล้วย มณีรัตน์' } },
-              { key: 'prTeam', name: 'ฝ่ายประชาสัมพันธ์', attrs: { owner: 'คุณเบลล์ กมลชนก' } },
-              { key: 'bizTeam', name: 'ฝ่ายพันธมิตรและผู้สนับสนุน', attrs: { owner: 'คุณน็อต ธนกฤต' } },
+              { key: 'chair', name: { th: 'ประธานจัดงาน', en: 'Event chair' }, attrs: { owner: 'คุณอร วิไลลักษณ์' } },
+              { key: 'contentTeam', name: { th: 'ฝ่ายเนื้อหา', en: 'Content department' }, attrs: { owner: 'คุณต้น ฤทธิ์มะนาว' } },
+              { key: 'venueTeam', name: { th: 'ฝ่ายสถานที่', en: 'Venue department' }, attrs: { owner: 'คุณกล้วย มณีรัตน์' } },
+              { key: 'prTeam', name: { th: 'ฝ่ายประชาสัมพันธ์', en: 'Communications department' }, attrs: { owner: 'คุณเบลล์ กมลชนก' } },
+              { key: 'bizTeam', name: { th: 'ฝ่ายพันธมิตรและผู้สนับสนุน', en: 'Partners and sponsors department' }, attrs: { owner: 'คุณน็อต ธนกฤต' } },
             ],
           },
           {
             typeId: 'cbs',
-            name: 'งบประมาณ (CBS)',
+            name: { th: 'งบประมาณ (CBS)', en: 'Budget (CBS)' },
             nodes: [
-              { key: 'cRoom', name: 'ค่าห้องและอุปกรณ์', attrs: { budget: 60000 } },
-              { key: 'cSpeaker', name: 'ค่าวิทยากร', attrs: { budget: 45000 } },
-              { key: 'cFood', name: 'ค่าจัดเลี้ยง', attrs: { budget: 30000 } },
-              { key: 'cAds', name: 'ค่าสื่อโฆษณา', attrs: { budget: 25000 } },
-              { key: 'cPrint', name: 'ค่าเอกสารและของที่ระลึก', attrs: { budget: 12000 } },
-              { key: 'cSponsorBooth', name: 'ตกแต่งบูธสปอนเซอร์', attrs: { budget: 18000 } },
+              { key: 'cRoom', name: { th: 'ค่าห้องและอุปกรณ์', en: 'Venue and equipment cost' }, attrs: { budget: 60000 } },
+              { key: 'cSpeaker', name: { th: 'ค่าวิทยากร', en: 'Speaker fees' }, attrs: { budget: 45000 } },
+              { key: 'cFood', name: { th: 'ค่าจัดเลี้ยง', en: 'Catering cost' }, attrs: { budget: 30000 } },
+              { key: 'cAds', name: { th: 'ค่าสื่อโฆษณา', en: 'Media cost' }, attrs: { budget: 25000 } },
+              { key: 'cPrint', name: { th: 'ค่าเอกสารและของที่ระลึก', en: 'Handout and souvenir cost' }, attrs: { budget: 12000 } },
+              { key: 'cSponsorBooth', name: { th: 'ตกแต่งบูธสปอนเซอร์', en: 'Dress the sponsor booths' }, attrs: { budget: 18000 } },
             ],
           },
         ],
@@ -578,67 +578,67 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           { kind: 'charges', from: 'badgeKit', to: 'cPrint' },
           { kind: 'charges', from: 'sponsor', to: 'cSponsorBooth' },
         ],
-      }),
+      }, lang),
   },
 
   // ------------------------------------------------------------------ 4 · marketing launch
   {
     id: 'sample-marketing-launch',
-    name: 'ตัวอย่าง 4 · แคมเปญเปิดตัวเครื่องฟอกอากาศ AIRA X1',
-    build: () =>
+    name: { th: 'ตัวอย่าง 4 · แคมเปญเปิดตัวเครื่องฟอกอากาศ AIRA X1', en: 'Sample 4 · AIRA X1 air purifier launch campaign' },
+    build: (lang) =>
       buildSample({
         id: 'sample-marketing-launch',
-        name: 'ตัวอย่าง 4 · แคมเปญเปิดตัวเครื่องฟอกอากาศ AIRA X1',
+        name: { th: 'ตัวอย่าง 4 · แคมเปญเปิดตัวเครื่องฟอกอากาศ AIRA X1', en: 'Sample 4 · AIRA X1 air purifier launch campaign' },
         startIso: '2026-09-15',
         wbs: [
           {
             key: 'prep',
-            name: 'งานเตรียม',
+            name: { th: 'งานเตรียม', en: 'Preparation' },
             children: [
-              { key: 'positioning', name: 'กำหนด positioning และข้อความหลัก', duration: 7 },
-              { key: 'kpi', name: 'ตั้ง KPI และงบแคมเปญ', duration: 4 },
+              { key: 'positioning', name: { th: 'กำหนด positioning และข้อความหลัก', en: 'Set positioning and key messages' }, duration: 7 },
+              { key: 'kpi', name: { th: 'ตั้ง KPI และงบแคมเปญ', en: 'Set the campaign KPIs and budget' }, duration: 4 },
             ],
           },
           {
             key: 'content',
-            name: 'สื่อและคอนเทนต์',
+            name: { th: 'สื่อและคอนเทนต์', en: 'Assets and content' },
             children: [
-              { key: 'video', name: 'ถ่ายทำวิดีโอโฆษณาหลัก', duration: 12 },
-              { key: 'unbox', name: 'คอนเทนต์ unboxing และรีวิวเชิงลึก', duration: 8 },
-              { key: 'socialContent', name: 'คอนเทนต์โซเชียล 30 ชิ้น', duration: 15 },
-              { key: 'website', name: 'หน้าเว็บผลิตภัณฑ์', duration: 10 },
+              { key: 'video', name: { th: 'ถ่ายทำวิดีโอโฆษณาหลัก', en: 'Shoot the hero advertising video' }, duration: 12 },
+              { key: 'unbox', name: { th: 'คอนเทนต์ unboxing และรีวิวเชิงลึก', en: 'Unboxing content and in-depth reviews' }, duration: 8 },
+              { key: 'socialContent', name: { th: 'คอนเทนต์โซเชียล 30 ชิ้น', en: '30 pieces of social content' }, duration: 15 },
+              { key: 'website', name: { th: 'หน้าเว็บผลิตภัณฑ์', en: 'Product pages' }, duration: 10 },
             ],
           },
           {
             key: 'ads',
-            name: 'สื่อโฆษณา',
+            name: { th: 'สื่อโฆษณา', en: 'Advertising assets' },
             children: [
-              { key: 'mediaPlan', name: 'วางแผนซื้อสื่อ (media plan)', duration: 6 },
-              { key: 'goLive', name: 'ปล่อยแคมเปญออนไลน์', duration: 3 },
+              { key: 'mediaPlan', name: { th: 'วางแผนซื้อสื่อ (media plan)', en: 'Media plan' }, duration: 6 },
+              { key: 'goLive', name: { th: 'ปล่อยแคมเปญออนไลน์', en: 'Launch the online campaign' }, duration: 3 },
             ],
           },
           {
             key: 'pr',
-            name: 'PR และพาร์ตเนอร์',
+            name: { th: 'PR และพาร์ตเนอร์', en: 'PR and partners' },
             children: [
-              { key: 'pressEvent', name: 'จัด press launch event', duration: 5 },
-              { key: 'influencer', name: 'ติดต่อ influencer รีวิวสินค้า', duration: 12 },
+              { key: 'pressEvent', name: { th: 'จัด press launch event', en: 'Run the press launch event' }, duration: 5 },
+              { key: 'influencer', name: { th: 'ติดต่อ influencer รีวิวสินค้า', en: 'Line up influencers for product reviews' }, duration: 12 },
             ],
           },
           {
             key: 'sales',
-            name: 'ช่องทางขาย',
+            name: { th: 'ช่องทางขาย', en: 'Sales channels' },
             children: [
-              { key: 'marketplace', name: 'เปิดร้านบน marketplace ออนไลน์', duration: 7 },
-              { key: 'csTrain', name: 'ฝึกทีมบริการลูกค้าและสคริปต์ตอบคำถาม', duration: 4 },
+              { key: 'marketplace', name: { th: 'เปิดร้านบน marketplace ออนไลน์', en: 'Open the online marketplace storefront' }, duration: 7 },
+              { key: 'csTrain', name: { th: 'ฝึกทีมบริการลูกค้าและสคริปต์ตอบคำถาม', en: 'Train the support team and write the response scripts' }, duration: 4 },
             ],
           },
           {
             key: 'measure',
-            name: 'เปิดขายและวัดผล',
+            name: { th: 'เปิดขายและวัดผล', en: 'On-sale and measurement' },
             children: [
-              { key: 'onSale', name: 'เริ่มเปิดขายพร้อมแคมเปญ', milestone: true },
-              { key: 'track', name: 'ติดตาม KPI รายสัปดาห์', duration: 28 },
+              { key: 'onSale', name: { th: 'เริ่มเปิดขายพร้อมแคมเปญ', en: 'Go on sale alongside the campaign' }, milestone: true },
+              { key: 'track', name: { th: 'ติดตาม KPI รายสัปดาห์', en: 'Track KPIs weekly' }, duration: 28 },
             ],
           },
         ],
@@ -664,36 +664,36 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
         extraStructures: [
           {
             typeId: 'rbs',
-            name: 'ความเสี่ยงแคมเปญ (RBS)',
+            name: { th: 'ความเสี่ยงแคมเปญ (RBS)', en: 'Campaign risks (RBS)' },
             nodes: [
               {
                 key: 'market',
-                name: 'ความเสี่ยงตลาด',
+                name: { th: 'ความเสี่ยงตลาด', en: 'Market risks' },
                 children: [
                   {
                     key: 'competitor',
-                    name: 'คู่แข่งปล่อยโปรโมชันตีราคาช่วงเดียวกัน',
+                    name: { th: 'คู่แข่งปล่อยโปรโมชันตีราคาช่วงเดียวกัน', en: 'A competitor undercuts prices in the same window' },
                     attrs: { probability: 40, impact: 'high', response: 'เตรียม bundle และสิทธิพิเศษล่วงหน้า' },
                   },
                   {
                     key: 'viralMiss',
-                    name: 'คอนเทนต์ไม่ไวรัลตามเป้า',
+                    name: { th: 'คอนเทนต์ไม่ไวรัลตามเป้า', en: 'Content fails to reach its reach target' },
                     attrs: { probability: 35, impact: 'medium', response: 'สำรองงบ boost โพสต์ที่ engagement ดี' },
                   },
                 ],
               },
               {
                 key: 'supply',
-                name: 'ความเสี่ยงอุปทาน',
+                name: { th: 'ความเสี่ยงอุปทาน', en: 'Supply risks' },
                 children: [
                   {
                     key: 'stock',
-                    name: 'สต๊อกสินค้าไม่ทันวันเปิดขาย',
+                    name: { th: 'สต๊อกสินค้าไม่ทันวันเปิดขาย', en: 'Stock does not arrive before the on-sale date' },
                     attrs: { probability: 25, impact: 'high', response: 'เปิด pre-order + สื่อสารวันส่งมอบชัดเจน' },
                   },
                   {
                     key: 'overspend',
-                    name: 'งบโฆษณาบานปลาย',
+                    name: { th: 'งบโฆษณาบานปลาย', en: 'Ad budget overruns' },
                     attrs: { probability: 30, impact: 'medium', response: 'รีวิว spend รายสัปดาห์กับทีมการเงิน' },
                   },
                 ],
@@ -702,13 +702,13 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           },
           {
             typeId: 'cbs',
-            name: 'งบแคมเปญ (CBS)',
+            name: { th: 'งบแคมเปญ (CBS)', en: 'Campaign budget (CBS)' },
             nodes: [
-              { key: 'cProduce', name: 'งบผลิตสื่อ', attrs: { budget: 800000 } },
-              { key: 'cMedia', name: 'งบซื้อสื่อโฆษณา', attrs: { budget: 1500000 } },
-              { key: 'cEvent', name: 'งบอีเวนต์และ PR', attrs: { budget: 500000 } },
-              { key: 'cInfluencer', name: 'ค่าอินฟลูเอนเซอร์', attrs: { budget: 400000 } },
-              { key: 'cChannel', name: 'ค่าธรรมเนียม marketplace', attrs: { budget: 60000 } },
+              { key: 'cProduce', name: { th: 'งบผลิตสื่อ', en: 'Production budget' }, attrs: { budget: 800000 } },
+              { key: 'cMedia', name: { th: 'งบซื้อสื่อโฆษณา', en: 'Media buying budget' }, attrs: { budget: 1500000 } },
+              { key: 'cEvent', name: { th: 'งบอีเวนต์และ PR', en: 'Event and PR budget' }, attrs: { budget: 500000 } },
+              { key: 'cInfluencer', name: { th: 'ค่าอินฟลูเอนเซอร์', en: 'Influencer cost' }, attrs: { budget: 400000 } },
+              { key: 'cChannel', name: { th: 'ค่าธรรมเนียม marketplace', en: 'Marketplace fees' }, attrs: { budget: 60000 } },
             ],
           },
         ],
@@ -721,56 +721,56 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           { kind: 'charges', from: 'influencer', to: 'cInfluencer' },
           { kind: 'charges', from: 'marketplace', to: 'cChannel' },
         ],
-      }),
+      }, lang),
   },
 
   // ------------------------------------------------------------------ 5 · office move
   {
     id: 'sample-office-move',
-    name: 'ตัวอย่าง 5 · ย้ายสำนักงาน',
-    build: () =>
+    name: { th: 'ตัวอย่าง 5 · ย้ายสำนักงาน', en: 'Sample 5 · Office relocation' },
+    build: (lang) =>
       buildSample({
         id: 'sample-office-move',
-        name: 'ตัวอย่าง 5 · ย้ายสำนักงาน',
+        name: { th: 'ตัวอย่าง 5 · ย้ายสำนักงาน', en: 'Sample 5 · Office relocation' },
         startIso: '2026-10-01',
         wbs: [
           {
             key: 'prep',
-            name: 'เตรียมการ',
+            name: { th: 'เตรียมการ', en: 'Preparation' },
             children: [
-              { key: 'survey', name: 'สำรวจความต้องการพื้นที่', duration: 5 },
-              { key: 'lease', name: 'เลือกและเซ็นสัญญาอาคารใหม่', duration: 10 },
-              { key: 'layout', name: 'ออกแบบผังสำนักงาน', duration: 10 },
-              { key: 'itInventory', name: 'จัดทำบัญชีอุปกรณ์ IT ที่ต้องย้าย', duration: 4 },
+              { key: 'survey', name: { th: 'สำรวจความต้องการพื้นที่', en: 'Survey the space requirements' }, duration: 5 },
+              { key: 'lease', name: { th: 'เลือกและเซ็นสัญญาอาคารใหม่', en: 'Choose and sign for the new building' }, duration: 10 },
+              { key: 'layout', name: { th: 'ออกแบบผังสำนักงาน', en: 'Design the office layout' }, duration: 10 },
+              { key: 'itInventory', name: { th: 'จัดทำบัญชีอุปกรณ์ IT ที่ต้องย้าย', en: 'Inventory the IT equipment to be moved' }, duration: 4 },
             ],
           },
           {
             key: 'fitout',
-            name: 'ปรับปรุงอาคารใหม่',
+            name: { th: 'ปรับปรุงอาคารใหม่', en: 'Refurbish the new premises' },
             children: [
-              { key: 'decor', name: 'ตกแต่งและระบบไฟ–แอร์', duration: 20 },
-              { key: 'network', name: 'ติดตั้งเน็ตและโทรศัพท์', duration: 5 },
-              { key: 'furniture', name: 'จัดซื้อโต๊ะ เก้าอี้ และตู้ล็อกเกอร์', duration: 15 },
-              { key: 'security', name: 'ติดตั้งกล้องวงจรปิดและ door access', duration: 6 },
+              { key: 'decor', name: { th: 'ตกแต่งและระบบไฟ–แอร์', en: 'Fit-out, lighting and air conditioning' }, duration: 20 },
+              { key: 'network', name: { th: 'ติดตั้งเน็ตและโทรศัพท์', en: 'Install internet and phone lines' }, duration: 5 },
+              { key: 'furniture', name: { th: 'จัดซื้อโต๊ะ เก้าอี้ และตู้ล็อกเกอร์', en: 'Procure desks, chairs and lockers' }, duration: 15 },
+              { key: 'security', name: { th: 'ติดตั้งกล้องวงจรปิดและ door access', en: 'Install CCTV and door access' }, duration: 6 },
             ],
           },
           {
             key: 'move',
-            name: 'การย้าย',
+            name: { th: 'การย้าย', en: 'The move' },
             children: [
-              { key: 'mover', name: 'จ้างบริษัทขนย้ายและวางแผนวันย้าย', duration: 4 },
-              { key: 'packIt', name: 'แพ็กอุปกรณ์ IT และเซิร์ฟเวอร์', duration: 2 },
-              { key: 'packDoc', name: 'แพ็กเอกสารและของแต่ละแผนก', duration: 5 },
-              { key: 'moveIt', name: 'ย้ายและตั้งระบบ IT ที่อาคารใหม่', duration: 2 },
-              { key: 'moveDay', name: 'วันย้ายจริง', milestone: true },
+              { key: 'mover', name: { th: 'จ้างบริษัทขนย้ายและวางแผนวันย้าย', en: 'Hire the movers and plan moving day' }, duration: 4 },
+              { key: 'packIt', name: { th: 'แพ็กอุปกรณ์ IT และเซิร์ฟเวอร์', en: 'Pack the IT equipment and servers' }, duration: 2 },
+              { key: 'packDoc', name: { th: 'แพ็กเอกสารและของแต่ละแผนก', en: 'Pack each department\'s files and belongings' }, duration: 5 },
+              { key: 'moveIt', name: { th: 'ย้ายและตั้งระบบ IT ที่อาคารใหม่', en: 'Move and set up IT at the new building' }, duration: 2 },
+              { key: 'moveDay', name: { th: 'วันย้ายจริง', en: 'Moving day' }, milestone: true },
             ],
           },
           {
             key: 'after',
-            name: 'หลังย้าย',
+            name: { th: 'หลังย้าย', en: 'After the move' },
             children: [
-              { key: 'oldSite', name: 'คืนอาคารเก่า', duration: 5 },
-              { key: 'settle', name: 'แก้ปัญหาช่วงเริ่มใช้งาน', duration: 10 },
+              { key: 'oldSite', name: { th: 'คืนอาคารเก่า', en: 'Hand back the old premises' }, duration: 5 },
+              { key: 'settle', name: { th: 'แก้ปัญหาช่วงเริ่มใช้งาน', en: 'Troubleshoot the early usage period' }, duration: 10 },
             ],
           },
         ],
@@ -793,6 +793,6 @@ export const SAMPLE_PROJECTS: SampleEntry[] = [
           { from: 'moveDay', to: 'oldSite' },
           { from: 'moveDay', to: 'settle' },
         ],
-      }),
+      }, lang),
   },
 ]

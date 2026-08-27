@@ -6,7 +6,7 @@
  * is a fresh project scheduled to start today via the CPM builder.
  */
 
-import type { Bilingual, ID, Project } from '../types'
+import type { Bilingual, ID, Lang, Project } from '../types'
 import { CONSTRUCTION_TEMPLATES } from './construction'
 import { SOFTWARE_TEMPLATES } from './software'
 import { MARKETING_TEMPLATES } from './marketing'
@@ -19,7 +19,7 @@ export interface TemplateEntry {
   id: string
   name: Bilingual
   desc: Bilingual
-  build: () => Project
+  build: (lang: Lang) => Project
 }
 
 export interface TemplateCategory {
@@ -68,9 +68,12 @@ export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
   },
 ]
 
-/** Phase (top-level branch) and leaf counts for the picker's meta line. */
+/**
+ * Phase (top-level branch) and leaf counts for the picker's meta line. The
+ * shape is language-independent, so counting in Thai is enough.
+ */
 export function countTemplateTasks(t: TemplateEntry): { phases: number; tasks: number } {
-  const p = t.build()
+  const p = t.build('th')
   const wbs = p.structures[0]
   const root = p.nodes[wbs.rootId]
   const leaves = (id: ID): number => {

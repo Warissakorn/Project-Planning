@@ -13,8 +13,10 @@
 import { computeCpmOffsets } from '../engine/cpm'
 import { addDaysIso, endIso, todayIso } from '../lib/date'
 import type {
+  Bilingual,
   DependencyType,
   ID,
+  Lang,
   LinkKind,
   Project,
   TreeNode,
@@ -23,9 +25,20 @@ import { createNode, createStructure, newProject } from './defaults'
 
 // --- Spec types ---------------------------------------------------------------
 
+/**
+ * Content the user reads. Samples and templates give both languages so an
+ * English session gets an English project; anything language-neutral (a code,
+ * a number) may stay a plain string.
+ */
+export type SpecName = string | Bilingual
+
+/** Resolve a spec name for the language the project is being built in. */
+export const specName = (name: SpecName, lang: Lang): string =>
+  typeof name === 'string' ? name : name[lang]
+
 export interface LeafSpec {
   key: string
-  name: string
+  name: SpecName
   /** Duration in days; milestones ignore it. Omitted → plain undated node. */
   duration?: number
   milestone?: boolean
@@ -50,14 +63,14 @@ export interface LinkSpec {
 
 export interface ExtraStructureSpec {
   typeId: 'obs' | 'cbs' | 'rbs' | 'pbs'
-  name: string
+  name: SpecName
   nodes: NodeSpec[]
 }
 
 export interface ProjectSpec {
   /** Fixed id (samples); omit to keep the generated nanoid (templates). */
   id?: string
-  name: string
+  name: SpecName
   /** ISO date the whole network starts from. Omit → today (templates). */
   startIso?: string
   wbs: NodeSpec[]
@@ -76,10 +89,11 @@ function buildSubtree(
   parentId: ID,
   specs: NodeSpec[],
   projectNodes: Record<ID, TreeNode>,
+  lang: Lang,
 ): KeyMap {
   const keys: KeyMap = {}
   for (const spec of specs) {
-    const node = createNode(structureId, spec.name)
+    const node = createNode(structureId, specName(spec.name, lang))
     if (spec.cost !== undefined) node.cost = spec.cost
     if (spec.notes !== undefined) node.notes = spec.notes
     if (spec.attrs) node.attrs = spec.attrs
@@ -91,7 +105,7 @@ function buildSubtree(
     keys[spec.key] = node.id
 
     if (spec.children?.length) {
-      Object.assign(keys, buildSubtree(structureId, node.id, spec.children, projectNodes))
+      Object.assign(keys, buildSubtree(structureId, node.id, spec.children, projectNodes, lang))
     }
   }
   return keys
@@ -159,8 +173,8 @@ function scheduleWbs(
   }
 }
 
-export function buildSample(spec: ProjectSpec): Project {
-  const project = newProject(spec.name)
+export function buildSample(spec: ProjectSpec, lang: Lang): Project {
+  const project = newProject(specName(spec.name, lang))
   if (spec.id !== undefined) project.id = spec.id
 
   const wbsKeys = buildSubtree(
@@ -168,21 +182,24 @@ export function buildSample(spec: ProjectSpec): Project {
     project.structures[0].rootId,
     spec.wbs,
     project.nodes,
+    lang,
   )
   scheduleWbs(project, spec.wbs, wbsKeys, spec.deps ?? [], spec.startIso ?? todayIso())
 
   const structureKeys: Record<string, KeyMap> = {}
   for (const extra of spec.extraStructures ?? []) {
-    const created = createStructure(extra.typeId, extra.name)
+    const extraName = specName(extra.name, lang)
+    const created = createStructure(extra.typeId, extraName)
     project.structures.push(created.structure)
     Object.assign(project.nodes, created.nodes)
     // Name the synthetic root so Gantt rows read nicely when included.
-    created.nodes[created.structure.rootId].name = extra.name
+    created.nodes[created.structure.rootId].name = extraName
     structureKeys[extra.typeId] = buildSubtree(
       created.structure.id,
       created.structure.rootId,
       extra.nodes,
       project.nodes,
+      lang,
     )
   }
 

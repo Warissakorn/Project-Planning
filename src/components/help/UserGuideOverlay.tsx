@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { BookOpen, X } from 'lucide-react'
 // The designed guide ships with the app; ?raw keeps it a build-time string so
-// the overlay works fully offline (Google Fonts degrade to their fallbacks).
-import guideHtml from '../../../docs/user-guide.th.html?raw'
+// the overlay works fully offline.
+import guideEn from '../../../docs/user-guide.en.html?raw'
+import guideTh from '../../../docs/user-guide.th.html?raw'
 import { useT } from '../../lib/i18n'
+import { useAppStore } from '../../state/store'
 import { Button } from '../ui/Button'
 
 /**
@@ -12,8 +14,14 @@ import { Button } from '../ui/Button'
  * standalone HTML gives us its TOC sidebar layout without adding any
  * markdown/rich-text dependency.
  */
+// srcDoc resolves relative URLs against about:srcdoc, so the guide asks for the
+// fonts through a placeholder we swap for the real base at render time.
+const withBase = (html: string) => html.replaceAll('__BASE__', import.meta.env.BASE_URL)
+const guides = { th: withBase(guideTh), en: withBase(guideEn) }
+
 export function UserGuideOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const t = useT()
+  const lang = useAppStore((s) => s.lang)
 
   useEffect(() => {
     if (!open) return
@@ -48,7 +56,7 @@ export function UserGuideOverlay({ open, onClose }: { open: boolean; onClose: ()
         </div>
         <iframe
           title={t('helpTitle')}
-          srcDoc={guideHtml}
+          srcDoc={guides[lang]}
           className="h-full w-full flex-1 border-0"
         />
       </div>
