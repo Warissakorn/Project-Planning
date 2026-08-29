@@ -68,6 +68,6 @@ leveling และการเทียบ baseline · CSV ส่งออกไ
 
 ## สัญญาอนุญาต
 
-[Apache License 2.0](LICENSE) — Copyright 2026 Warissakorn ส่วนฟอนต์ที่แนบมา
+[MIT](LICENSE) — Copyright (c) 2026 Warissakorn ส่วนฟอนต์ที่แนบมา
 (IBM Plex Sans Thai และ IBM Plex Mono) อยู่ภายใต้ SIL Open Font License แยกต่างหาก
 ดู [NOTICE](NOTICE) และ `public/fonts/OFL.txt`

@@ -22,7 +22,13 @@ import { ListTree, Plus } from 'lucide-react'
 import { TreeNodeRow, type DropHint } from './TreeNodeRow'
 
 const NAME_COL = 'minmax(260px, 38fr)'
-const ATTR_COL = 'minmax(96px, 1fr)'
+// A fixed default, not `minmax(96px, 1fr)`: a flexible track only ever
+// rendered at its 96px floor anyway (name's 38fr outweighs it in the
+// browser's flex-distribution and starves it first), while ColGrip assumed
+// an unset column started at 140px — so the very first drag on any column
+// jumped by the gap between those two numbers before the mouse had moved at
+// all. A literal 140px removes the mismatch and matches what ColGrip expects.
+const ATTR_COL = '140px'
 const NAME_KEY = '__name'
 
 /** Drag handle on a column header's right edge; double-click resets the width. */
@@ -51,7 +57,15 @@ export function ColGrip({
       onPointerDown={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        drag.current = { startX: e.clientX, startW: width }
+        // Measure the column's actual rendered box instead of trusting the
+        // `width` prop: for an unset column that prop is a caller's guess
+        // (e.g. the tree's 140px default), which can disagree with what the
+        // browser actually laid out — CSS grid may render it narrower still
+        // (see ATTR_COL above). Starting from a wrong width makes the column
+        // jump the moment you touch the grip, before you've dragged at all.
+        const parent = (e.currentTarget as HTMLElement).parentElement
+        const liveWidth = parent?.getBoundingClientRect().width ?? width
+        drag.current = { startX: e.clientX, startW: liveWidth }
         ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
       }}
       onPointerMove={(e) => {
